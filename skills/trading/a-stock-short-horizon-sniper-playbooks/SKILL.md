@@ -1,96 +1,111 @@
----
-name: a-stock-short-horizon-sniper-playbooks
-description: A股短周期狙击策略总库：覆盖盘后/盘前候选生成、集合竞价确认、盘中题材共振、首板起爆、隔夜套利、T+1退出、回测审计与自动化运行验证。
-version: 1.0.0
-author: Hermes Agent
-license: MIT
-metadata:
-  hermes:
-    tags: [trading, a-share, sniper, auction, theme, t1, short-horizon]
----
+# a-stock-short-horizon-sniper-playbooks — A-Share Short-Horizon Sniper Strategy Library
 
-# A股短周期狙击策略 Playbooks
+Strategy library for short-cycle sniper systems: candidate generation, call-auction confirmation, intraday theme resonance, first-board detonation, overnight arbitrage, T+1 exit, backtesting, and audit. Covers the full "candidate pool → auction confirm → intraday trigger → position entry → T+1 exit → backtest/audit" lifecycle.
 
-用于维护“候选池 → 竞价确认 → 盘中触发 → 仓位落盘 → T+1退出 → 回测/审计”的同一类短周期交易系统。具体打法应作为本技能的命名章节与参考文件维护，而不是继续拆成单次策略、版本号或审计会话技能。
+## Unified Lifecycle
 
-## 适用范围
+1. **T-1/Premarket candidate generation**: Use only available data. Record data date, source, unit, degradation path.
+2. **09:25 Auction confirmation**: Batch real-time snapshot for change, volume, turnover, sector linkage. Don't rely on unrefreshed "today's limit-up" broad table.
+3. **Intraday trigger**: Cover morning, lunch news window, afternoon/close. Don't mistake 09:30-10:00 for the whole day.
+4. **Cut first, record later**: Top-N cutoff before position recording. Same-day same-symbol idempotency required.
+5. **Exit management**: A-share T+0 sell-protection; T+1 execute stop-profit/stop-loss by strategy.
+6. **Verification closure**: Syntax check + offline fixtures + real data small-sample + state file readback + trade流水 reconciliation + worst-case time budget.
 
-- 首板起爆、竞价爆量、强势突破等次日狙击
-- 非主线低位题材的盘前发现、盘中共振与隔夜套利
-- 09:25竞价矩阵、午间催化、午后/尾盘补涨触发
-- T+0保护、T+1止盈止损、持仓幂等和交易流水
-- 候选扫描、历史回测、数据源限制与多轮代码审计
+## General Data & Engineering Iron Rules
 
-不用于交易基础设施故障、MCP服务恢复或券商账户修复；这些归 `trading-infra-troubleshooting`。
+- Normalize units (shares/lots, yuan/10K-yuan, ratio/percentage, cumulative/daily PnL) before scoring
+- Time point determines available data: premarket cannot query today's domestic futures. 09:25 cannot treat empty today's broad table as real zero
+- External API empty: distinguish no-candidate, quota-exhausted, data-not-refreshed, MCP-error, parse-failure
+- Use `tmp + replace` atomic writes for config/positions/state. JSON-RPC: check both `error` and empty `content`
+- Compute worst-case total time for retries + timeouts, ensure < parent cron timeout
+- After multi-round auto code modification: check duplicate functions, imports, old implementation residue, and call sites
 
-## 统一生命周期
+## Playbook A: First-Board Detonation & Auction Decisive (Ignition)
 
-1. **T-1/盘前生成候选**：只使用当时真实可得的数据，记录数据日期、来源、单位和降级路径。
-2. **09:25竞价确认**：批量实时快照确认涨幅、成交额/量、换手、板块联动；不能依赖尚未刷新的“今日涨停”宽表。
-3. **盘中触发**：覆盖上午、午间消息窗口及午后/尾盘，不把09:30-10:00误当成全天。
-4. **先截断、后落盘**：排名和Top-N截断完成后才能记录持仓，且同日同标的必须幂等。
-5. **退出管理**：A股T+0禁卖保护；T+1按策略执行止盈、止损、冲高回落或涨停持有。
-6. **验证闭环**：语法检查、离线夹具、真实数据小样本、状态文件读回、交易流水核对和最坏耗时预算缺一不可。
+For near-breakout, volume-active candidates from T-1 full market pool, confirmed at T 09:25 by auction change, volume ratio, turnover, sector linkage, and theme heat.
 
-## 通用数据与工程铁律
+**Key discipline**:
+- Unify historical and auction volume to shares
+- Tiered config for postmarket score, auction score, market condition params
+- Top-N cutoff before `record_position()`. Prevent duplicate opening
+- Unify sell流水 price field — no `current_price`/`price` key mismatch
+- Backtest date: first > scan day by K-line ascending. Wencai: Chinese month-day format
 
-- 明确“手/股、元/万元、比例/百分数、累计盈亏/当日涨跌”等量纲，进入评分前统一转换。
-- 时间点决定可用数据：盘前不得查询尚未开盘的国内期货“今日涨幅”；09:25不得把空的今日宽表当作真实零值。
-- 外部API返回空时先区分无候选、额度耗尽、数据未刷新、MCP错误与解析失败。
-- 配置、持仓和运行状态使用 `tmp + replace` 原子写入；JSON-RPC同时检查 `error` 和空 `content`。
-- 重试次数、单次超时和退避必须计算最坏总耗时，并小于父级任务/cron timeout。
-- 多轮自动改码后检查重复函数、重复导入、旧实现残留及调用位置，不只做语法检查。
+References: `references/ignition-v1-playbook.md`, `references/ignition-v1-agy-session-2026-09-09.md`
 
-## Playbook A：首板起爆与竞价决杀（Ignition）
+## Playbook B: Low-Position Theme Overnight Arbitrage
 
-适合从T-1全市场候选池中寻找临近突破、放量活跃标的，并在T日09:25用竞价涨幅、爆量比、竞价换手、联动和板块热度二次确认。
+For non-mainline themes with overseas mapping, seasonality, prior-day K-line penetration, sentiment rotation, or lunch catalyst, confirmed by same-theme multi-stock auction/intraday resonance.
 
-关键纪律：
+**Key discipline**:
+- Overseas mapping: use already-closed instruments or traceable news. Fallback labeled
+- Resonance requires >= 2 independent stocks
+- Engine covers 09:30-11:30, 13:00-14:50 with separate lunch and close-session modes
+- Excessive gap-up: don't chase. Exit by T+1 discipline, no long-term hold
+- Cron: use `no_agent` with correct `workdir`, verify by actual execution
 
-- 历史量与竞价量先统一为股；避免100倍量纲错误。
-- 盘后评分、竞价评分和市况参数分层配置，禁止把阈值散落硬编码。
-- Top-N截断后再 `record_position()`；持仓写入要防重复开仓。
-- 卖出流水统一价格字段，不能因 `current_price`/`price` 键不一致写成0。
-- 回测日期按K线正序找第一个大于扫描日的交易日；问财历史日期使用中文月日格式。
-- 详细参数、回测、审计缺陷链和数据源限制见：
-  - `references/ignition-v1-playbook.md`
-  - `references/ignition-v1-agy-session-2026-09-09.md`
+References: `references/overnight-theme-arbitrage-playbook.md`, `references/overnight-theme-arbitrage-implementation-details.md`
 
-## Playbook B：低位异动题材隔夜套利
+## Playbook C: Call Auction Selection Method (Premarket Strong Stocks)
 
-适合捕捉非主线但出现外盘映射、季节性、前日K线渗透、情绪高低切或午间催化的低位题材，再以同题材多股竞价/盘中共振确认。
+For screening strong stocks during 09:15-09:30 call auction via volume-price behavior.
 
-关键纪律：
+### Three Auction Time Segments
 
-- 盘前外盘映射使用已收盘海外品种或可追溯新闻；fallback必须标记，不能伪装成实时值。
-- 共振至少需要两只独立标的，防止单票“自证题材热度”。
-- 引擎覆盖09:30-11:30、13:00-14:50，并单列午间和尾盘模式。
-- 高开过度不追；隔夜套利按T+1纪律退出，不演变成长线持仓。
-- cron直接运行脚本时使用 `no_agent` 与正确 `workdir`，并实际执行验证。
-- 详细时序、打分、模式与实现记录见：
-  - `references/overnight-theme-arbitrage-playbook.md`
-  - `references/overnight-theme-arbitrage-implementation-details.md`
+| Period | Rules | Characteristics |
+|--------|-------|-----------------|
+| 9:15-9:20 | Can place & cancel orders | Virtual auction, possible deception |
+| 9:20-9:25 | Can place, cannot cancel | Real auction, reflects true intent |
+| 9:25-9:30 | Cannot place or cancel | Selection time — key 5 minutes (orders queued in broker system) |
 
-## 新增打法的归档规范
+### Four-Step Process
+1. Open gain ranking (type `60` in TongDaxin)
+2. Sort volume high-to-low (volume = capital attention)
+3. Filter gain **1%-4%** from top 30 by volume. Prefer high turnover + volume ratio
+4. Form filter: stocks breaking platform resistance, bullish MA alignment, or at theme风口
 
-新增短周期打法时，优先在本技能增加一个 `## Playbook X` 章节：
+### Dark Horse Selection (Premarket Limit-Up Method)
+**Core conditions**: Volume ratio > 5, bottom-start form (near recent low, prev drop > 50%), price < 50 yuan, gain > 3%, circulating cap < 1B shares / < 2B yuan. Best buy at 3%-4% gain.
 
-- 稳定的类级规则写入主 `SKILL.md`
-- 具体参数、历史样本、审计轮次、复现记录写入 `references/`
-- 可复制配置写入 `templates/`
-- 可重复执行的回测、探针或验证程序写入 `scripts/`
+**Steps**: Sort by volume ratio, pick top 20 with ratio > 5. Remove gain > 7% (limited upside) and < 3% (not strong). Remove ST stocks.
 
-只有当新策略拥有完全不同的生命周期、风险模型和工具链时，才考虑独立技能。
+**Trading principle**: Strong stocks need limit-up price buy order for priority execution (price priority > time priority).
 
-## 验证清单
+## Playbook D: Step-by-Step Lotus (BuBuLianHua)
 
-- [ ] 数据时间点与来源真实可用
-- [ ] 代码、交易所和涨停阈值归一化
-- [ ] 所有数量和百分比量纲统一
-- [ ] Top-N截断发生在持仓落盘之前
-- [ ] 同日同标的写入幂等
-- [ ] T+0保护与T+1退出规则有测试
-- [ ] 状态文件原子写入并可读回
-- [ ] cron时区、工作目录、timeout和运行模式已实跑
-- [ ] 回测明确样本来源、覆盖率和统计局限
-- [ ] 自动改码后完成语法、重复定义和全模式验证
+For screening first/second-board strong stocks postmarket, using limit-up next-day gap +实体 form for sniper.
+
+### 7 Morphology Rules
+1. **Limit-up base**: Requires limit-up stock with bullish MA alignment
+2. **Gap-up open**: Next day gaps up, forms small yang or bald实体 yang line ("lotus")
+3. **Gap unfilled**: After lotus forms, low open doesn't fill gap-up → buy opportunity
+4. **Volume support**: Pre-lotus必须有 volume accumulation, lotus can shrink but prior volume must exist
+5. **Best entry**: Next day大幅低开 below lotus实体 → optimal buy timing
+6. **Board limit**: Best at 1st or 2nd board (early stage), reserving upside potential
+7. **Entity standard**: Limit-up K must be实体 yang. Lotus can be limit-up yang, but lotus实体 only half of limit-up K's实体
+
+### Buy/Sell/Stop
+- **Buy**: Large low-open below lotus实体 = entry. If large gap-up no pullback, enter 10% position at close
+- **Sell**: Fixed 5%-7% profit. If strong uptrend → hold along MA5 until broken
+- **Stop**: At limit-up K's midline. If gap > 3%, only 10% position above gap, wider stop
+
+**Selection**: `ZRZT` (yesterday's limit-up) list, look for today's yang with gap.
+
+**Board strength**: 3 boards = minor demon, 5 boards = major demon, 7 boards = god-tier.
+
+## New Playbook Archiving Standard
+
+Add `## Playbook X` section here. Stable rules → main SKILL.md. Parameters/samples/audit → `references/`. Configs → `templates/`. Scripts → `scripts/`. Only standalone skill for completely different lifecycle/risk/toolchain.
+
+## Verification Checklist
+
+- [ ] Data time point and source verifiable
+- [ ] Code, exchange, price-limit thresholds normalized
+- [ ] All quantities and percentages unified
+- [ ] Top-N cutoff before position recording
+- [ ] Same-day same-symbol write idempotent
+- [ ] T+0 protection and T+1 exit rules have tests
+- [ ] State file atomically written and readable
+- [ ] Cron timezone, workdir, timeout, run mode verified by actual execution
+- [ ] Backtest states sample source, coverage, statistical limitations
+- [ ] After auto code mod: syntax, duplicate definition, full-mode verification

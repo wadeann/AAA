@@ -24,6 +24,7 @@ _INTEL_TOOLS = {
     "get_financial_report",
     "tdx_kline", "tdx_quotes", "tdx_screener", "tdx_f10", "tdx_news", "tdx_health",
     "analyze_stock_with_antigravity",
+    "historical_market_snapshot",
 }
 
 _RISK_TOOLS = {"check_intent", "batch_check", "get_blacklist", "daily_pnl"}
