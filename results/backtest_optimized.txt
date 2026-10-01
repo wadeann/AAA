@@ -1,0 +1,2125 @@
+====================================================================================================
+  全市场动量回测  v5-ext
+  股票池: 910 只 | 时间: 2024-10-01 ~ 2026-10-01
+  初始资金: 400,000
+  行业覆盖: 29
+====================================================================================================
+
+──────────────────────────────────────── 加载数据 ────────────────────────────────────────
+  [Cache] Loaded 910 cached symbols
+  Progress:   50/910 (5%) | Loaded: 50 | 725658.1 stocks/s | Elapsed: 0s
+  Progress:  100/910 (11%) | Loaded: 100 | 643298.2 stocks/s | Elapsed: 0s
+  Progress:  150/910 (16%) | Loaded: 150 | 756184.6 stocks/s | Elapsed: 0s
+  Progress:  200/910 (22%) | Loaded: 200 | 805048.8 stocks/s | Elapsed: 0s
+  Progress:  250/910 (27%) | Loaded: 250 | 863736.4 stocks/s | Elapsed: 0s
+  Progress:  300/910 (33%) | Loaded: 300 | 909827.3 stocks/s | Elapsed: 0s
+  Progress:  350/910 (38%) | Loaded: 350 | 891862.9 stocks/s | Elapsed: 0s
+  Progress:  400/910 (44%) | Loaded: 400 | 928971.0 stocks/s | Elapsed: 0s
+  Progress:  450/910 (49%) | Loaded: 450 | 955664.2 stocks/s | Elapsed: 0s
+  Progress:  500/910 (55%) | Loaded: 500 | 973608.2 stocks/s | Elapsed: 0s
+  Progress:  550/910 (60%) | Loaded: 550 | 993055.2 stocks/s | Elapsed: 0s
+  Progress:  600/910 (66%) | Loaded: 600 | 1005426.4 stocks/s | Elapsed: 0s
+  Progress:  650/910 (71%) | Loaded: 650 | 1021085.2 stocks/s | Elapsed: 0s
+  Progress:  700/910 (77%) | Loaded: 700 | 989889.7 stocks/s | Elapsed: 0s
+  Progress:  750/910 (82%) | Loaded: 750 | 1000231.5 stocks/s | Elapsed: 0s
+  Progress:  800/910 (88%) | Loaded: 800 | 997456.4 stocks/s | Elapsed: 0s
+  Progress:  850/910 (93%) | Loaded: 850 | 1011966.6 stocks/s | Elapsed: 0s
+  Progress:  900/910 (99%) | Loaded: 900 | 1028856.3 stocks/s | Elapsed: 0s
+  Progress:  910/910 (100%) | Loaded: 910 | 1073723.7 stocks/s | Elapsed: 0s
+
+  Data loaded: 910/910 (min 120 bars)
+  Load time: 0s
+  [Cache] Saved 910 symbols to /home/wade/workspace/ai/Astock/data/kline_cache.json
+
+  Trading days: 485
+  Universe: 910 stocks
+====================================================================================================
+
+  Backtest: 49/485 days (10%) | Cash: 344,043 | Positions: 1
+  Backtest: 50/485 days (10%) | Cash: 147,127 | Positions: 4
+  Backtest: 51/485 days (11%) | Cash: 204,562 | Positions: 4
+  Backtest: 52/485 days (11%) | Cash: 414,253 | Positions: 1
+  Backtest: 53/485 days (11%) | Cash: 238,591 | Positions: 2
+  Backtest: 54/485 days (11%) | Cash: 207,537 | Positions: 3
+  Backtest: 55/485 days (11%) | Cash: 389,654 | Positions: 2
+  Backtest: 56/485 days (12%) | Cash: 203,061 | Positions: 3
+  Backtest: 57/485 days (12%) | Cash: 246,283 | Positions: 2
+  Backtest: 58/485 days (12%) | Cash: 258,626 | Positions: 3
+  Backtest: 59/485 days (12%) | Cash: 250,221 | Positions: 3
+  Backtest: 60/485 days (12%) | Cash: 380,667 | Positions: 1
+  Backtest: 61/485 days (13%) | Cash: 302,609 | Positions: 2
+  Backtest: 62/485 days (13%) | Cash: 309,092 | Positions: 2
+  Backtest: 63/485 days (13%) | Cash: 477,844 | Positions: 0
+  Backtest: 64/485 days (13%) | Cash: 481,328 | Positions: 0
+  Backtest: 65/485 days (13%) | Cash: 308,549 | Positions: 2
+  Backtest: 66/485 days (14%) | Cash: 308,549 | Positions: 2
+  Backtest: 67/485 days (14%) | Cash: 375,040 | Positions: 1
+  Backtest: 68/485 days (14%) | Cash: 387,441 | Positions: 1
+  Backtest: 69/485 days (14%) | Cash: 359,171 | Positions: 1
+  Backtest: 70/485 days (14%) | Cash: 241,212 | Positions: 2
+  Backtest: 71/485 days (15%) | Cash: 246,885 | Positions: 3
+  Backtest: 72/485 days (15%) | Cash: 367,127 | Positions: 2
+  Backtest: 73/485 days (15%) | Cash: 243,103 | Positions: 3
+  Backtest: 74/485 days (15%) | Cash: 151,358 | Positions: 4
+  Backtest: 75/485 days (15%) | Cash: 318,478 | Positions: 3
+  Backtest: 76/485 days (16%) | Cash: 309,938 | Positions: 3
+  Backtest: 77/485 days (16%) | Cash: 329,944 | Positions: 2
+  Backtest: 78/485 days (16%) | Cash: 251,501 | Positions: 3
+  Backtest: 79/485 days (16%) | Cash: 197,430 | Positions: 4
+  Backtest: 80/485 days (16%) | Cash: 383,717 | Positions: 2
+  Backtest: 81/485 days (17%) | Cash: 388,375 | Positions: 2
+  Backtest: 82/485 days (17%) | Cash: 388,375 | Positions: 2
+  Backtest: 83/485 days (17%) | Cash: 518,104 | Positions: 0
+  Backtest: 84/485 days (17%) | Cash: 389,571 | Positions: 1
+  Backtest: 85/485 days (18%) | Cash: 389,571 | Positions: 1
+  Backtest: 86/485 days (18%) | Cash: 389,571 | Positions: 1
+  Backtest: 87/485 days (18%) | Cash: 433,940 | Positions: 1
+  Backtest: 88/485 days (18%) | Cash: 331,029 | Positions: 2
+  Backtest: 89/485 days (18%) | Cash: 331,029 | Positions: 2
+  Backtest: 90/485 days (19%) | Cash: 411,579 | Positions: 1
+  Backtest: 91/485 days (19%) | Cash: 427,386 | Positions: 1
+  Backtest: 92/485 days (19%) | Cash: 270,835 | Positions: 3
+  Backtest: 93/485 days (19%) | Cash: 206,457 | Positions: 4
+  Backtest: 94/485 days (19%) | Cash: 373,048 | Positions: 2
+  Backtest: 95/485 days (20%) | Cash: 381,422 | Positions: 2
+  Backtest: 96/485 days (20%) | Cash: 328,937 | Positions: 3
+  Backtest: 97/485 days (20%) | Cash: 213,147 | Positions: 4
+  Backtest: 98/485 days (20%) | Cash: 356,640 | Positions: 2
+  Backtest: 99/485 days (20%) | Cash: 410,850 | Positions: 2
+  Backtest: 100/485 days (21%) | Cash: 417,111 | Positions: 2
+  Backtest: 101/485 days (21%) | Cash: 372,533 | Positions: 2
+  Backtest: 102/485 days (21%) | Cash: 372,533 | Positions: 2
+  Backtest: 103/485 days (21%) | Cash: 536,922 | Positions: 0
+  Backtest: 104/485 days (21%) | Cash: 539,547 | Positions: 0
+  Backtest: 105/485 days (22%) | Cash: 405,306 | Positions: 1
+  Backtest: 106/485 days (22%) | Cash: 218,116 | Positions: 4
+  Backtest: 107/485 days (22%) | Cash: 351,672 | Positions: 3
+  Backtest: 108/485 days (22%) | Cash: 481,489 | Positions: 1
+  Backtest: 109/485 days (22%) | Cash: 539,471 | Positions: 0
+  Backtest: 110/485 days (23%) | Cash: 542,893 | Positions: 0
+  Backtest: 111/485 days (23%) | Cash: 545,571 | Positions: 0
+  Backtest: 112/485 days (23%) | Cash: 464,922 | Positions: 1
+  Backtest: 113/485 days (23%) | Cash: 325,130 | Positions: 2
+  Backtest: 114/485 days (24%) | Cash: 218,205 | Positions: 3
+  Backtest: 115/485 days (24%) | Cash: 443,748 | Positions: 1
+  Backtest: 116/485 days (24%) | Cash: 229,261 | Positions: 3
+  Backtest: 117/485 days (24%) | Cash: 100,592 | Positions: 5
+  Backtest: 118/485 days (24%) | Cash: 354,882 | Positions: 3
+  Backtest: 119/485 days (25%) | Cash: 434,198 | Positions: 1
+  Backtest: 120/485 days (25%) | Cash: 83,220 | Positions: 5
+  Backtest: 121/485 days (25%) | Cash: 210,513 | Positions: 4
+  Backtest: 122/485 days (25%) | Cash: 451,338 | Positions: 2
+  Backtest: 123/485 days (25%) | Cash: 552,106 | Positions: 0
+  Backtest: 124/485 days (26%) | Cash: 354,807 | Positions: 2
+  Backtest: 125/485 days (26%) | Cash: 354,807 | Positions: 2
+  Backtest: 126/485 days (26%) | Cash: 563,934 | Positions: 0
+  Backtest: 127/485 days (26%) | Cash: 375,072 | Positions: 2
+  Backtest: 128/485 days (26%) | Cash: 249,554 | Positions: 3
+  Backtest: 129/485 days (27%) | Cash: 288,992 | Positions: 3
+  Backtest: 130/485 days (27%) | Cash: 432,468 | Positions: 2
+  Backtest: 131/485 days (27%) | Cash: 447,708 | Positions: 2
+  Backtest: 132/485 days (27%) | Cash: 510,548 | Positions: 1
+  Backtest: 133/485 days (27%) | Cash: 575,670 | Positions: 0
+  Backtest: 134/485 days (28%) | Cash: 467,827 | Positions: 1
+  Backtest: 135/485 days (28%) | Cash: 288,219 | Positions: 3
+  Backtest: 136/485 days (28%) | Cash: 299,164 | Positions: 3
+  Backtest: 137/485 days (28%) | Cash: 407,517 | Positions: 2
+  Backtest: 138/485 days (28%) | Cash: 456,944 | Positions: 1
+  Backtest: 139/485 days (29%) | Cash: 93,856 | Positions: 5
+  Backtest: 140/485 days (29%) | Cash: 93,856 | Positions: 5
+  Backtest: 141/485 days (29%) | Cash: 611,219 | Positions: 0
+  Backtest: 142/485 days (29%) | Cash: 471,182 | Positions: 1
+  Backtest: 143/485 days (29%) | Cash: 471,182 | Positions: 1
+  Backtest: 144/485 days (30%) | Cash: 625,372 | Positions: 0
+  Backtest: 145/485 days (30%) | Cash: 486,551 | Positions: 1
+  Backtest: 146/485 days (30%) | Cash: 294,172 | Positions: 3
+  Backtest: 147/485 days (30%) | Cash: 427,972 | Positions: 2
+  Backtest: 148/485 days (31%) | Cash: 427,972 | Positions: 2
+  Backtest: 149/485 days (31%) | Cash: 425,427 | Positions: 2
+  Backtest: 150/485 days (31%) | Cash: 281,759 | Positions: 3
+  Backtest: 151/485 days (31%) | Cash: 189,788 | Positions: 4
+  Backtest: 152/485 days (31%) | Cash: 260,580 | Positions: 4
+  Backtest: 153/485 days (32%) | Cash: 170,085 | Positions: 5
+  Backtest: 154/485 days (32%) | Cash: 470,825 | Positions: 2
+  Backtest: 155/485 days (32%) | Cash: 549,851 | Positions: 1
+  Backtest: 156/485 days (32%) | Cash: 508,073 | Positions: 2
+  Backtest: 157/485 days (32%) | Cash: 157,601 | Positions: 5
+  Backtest: 158/485 days (33%) | Cash: 227,350 | Positions: 4
+  Backtest: 159/485 days (33%) | Cash: 511,586 | Positions: 2
+  Backtest: 160/485 days (33%) | Cash: 327,939 | Positions: 3
+  Backtest: 161/485 days (33%) | Cash: 327,939 | Positions: 3
+  Backtest: 162/485 days (33%) | Cash: 402,185 | Positions: 3
+  Backtest: 163/485 days (34%) | Cash: 467,896 | Positions: 2
+  Backtest: 164/485 days (34%) | Cash: 656,847 | Positions: 0
+  Backtest: 165/485 days (34%) | Cash: 255,703 | Positions: 3
+  Backtest: 166/485 days (34%) | Cash: 111,111 | Positions: 5
+  Backtest: 167/485 days (34%) | Cash: 382,759 | Positions: 3
+  Backtest: 168/485 days (35%) | Cash: 388,414 | Positions: 3
+  Backtest: 169/485 days (35%) | Cash: 304,614 | Positions: 3
+  Backtest: 170/485 days (35%) | Cash: 427,668 | Positions: 2
+  Backtest: 171/485 days (35%) | Cash: 324,221 | Positions: 3
+  Backtest: 172/485 days (35%) | Cash: 447,367 | Positions: 2
+  Backtest: 173/485 days (36%) | Cash: 678,918 | Positions: 0
+  Backtest: 174/485 days (36%) | Cash: 322,178 | Positions: 3
+  Backtest: 175/485 days (36%) | Cash: 137,984 | Positions: 5
+  Backtest: 176/485 days (36%) | Cash: 534,971 | Positions: 2
+  Backtest: 177/485 days (36%) | Cash: 534,971 | Positions: 2
+  Backtest: 178/485 days (37%) | Cash: 727,376 | Positions: 0
+  Backtest: 179/485 days (37%) | Cash: 345,193 | Positions: 3
+  Backtest: 180/485 days (37%) | Cash: 148,054 | Positions: 5
+  Backtest: 181/485 days (37%) | Cash: 550,750 | Positions: 2
+  Backtest: 182/485 days (38%) | Cash: 625,013 | Positions: 1
+  Backtest: 183/485 days (38%) | Cash: 378,214 | Positions: 3
+  Backtest: 184/485 days (38%) | Cash: 249,071 | Positions: 4
+  Backtest: 185/485 days (38%) | Cash: 630,532 | Positions: 1
+  Backtest: 186/485 days (38%) | Cash: 785,038 | Positions: 0
+  Backtest: 187/485 days (39%) | Cash: 646,445 | Positions: 1
+  Backtest: 188/485 days (39%) | Cash: 646,445 | Positions: 1
+  Backtest: 189/485 days (39%) | Cash: 382,856 | Positions: 3
+  Backtest: 190/485 days (39%) | Cash: 246,202 | Positions: 4
+  Backtest: 191/485 days (39%) | Cash: 292,233 | Positions: 4
+  Backtest: 192/485 days (40%) | Cash: 329,463 | Positions: 4
+  Backtest: 193/485 days (40%) | Cash: 215,198 | Positions: 5
+  Backtest: 194/485 days (40%) | Cash: 678,173 | Positions: 1
+  Backtest: 195/485 days (40%) | Cash: 797,330 | Positions: 0
+  Backtest: 196/485 days (40%) | Cash: 658,667 | Positions: 1
+  Backtest: 197/485 days (41%) | Cash: 658,667 | Positions: 1
+  Backtest: 198/485 days (41%) | Cash: 313,815 | Positions: 4
+  Backtest: 199/485 days (41%) | Cash: 205,243 | Positions: 5
+  Backtest: 200/485 days (41%) | Cash: 585,514 | Positions: 2
+  Backtest: 201/485 days (41%) | Cash: 334,172 | Positions: 4
+  Backtest: 202/485 days (42%) | Cash: 440,720 | Positions: 3
+  Backtest: 203/485 days (42%) | Cash: 196,940 | Positions: 5
+  Backtest: 204/485 days (42%) | Cash: 573,092 | Positions: 2
+  Backtest: 205/485 days (42%) | Cash: 550,080 | Positions: 2
+  Backtest: 206/485 days (42%) | Cash: 550,080 | Positions: 2
+  Backtest: 207/485 days (43%) | Cash: 845,697 | Positions: 0
+  Backtest: 208/485 days (43%) | Cash: 851,705 | Positions: 0
+  Backtest: 209/485 days (43%) | Cash: 304,632 | Positions: 4
+  Backtest: 210/485 days (43%) | Cash: 299,477 | Positions: 4
+  Backtest: 211/485 days (44%) | Cash: 586,332 | Positions: 2
+  Backtest: 212/485 days (44%) | Cash: 485,021 | Positions: 3
+  Backtest: 213/485 days (44%) | Cash: 485,021 | Positions: 3
+  Backtest: 214/485 days (44%) | Cash: 880,708 | Positions: 0
+  Backtest: 215/485 days (44%) | Cash: 741,985 | Positions: 1
+  Backtest: 216/485 days (45%) | Cash: 741,985 | Positions: 1
+  Backtest: 217/485 days (45%) | Cash: 741,985 | Positions: 1
+  Backtest: 218/485 days (45%) | Cash: 878,911 | Positions: 0
+  Backtest: 219/485 days (45%) | Cash: 599,704 | Positions: 2
+  Backtest: 220/485 days (45%) | Cash: 599,704 | Positions: 2
+  Backtest: 221/485 days (46%) | Cash: 600,874 | Positions: 2
+  Backtest: 222/485 days (46%) | Cash: 345,050 | Positions: 4
+  Backtest: 223/485 days (46%) | Cash: 509,590 | Positions: 3
+  Backtest: 224/485 days (46%) | Cash: 601,488 | Positions: 2
+  Backtest: 225/485 days (46%) | Cash: 733,346 | Positions: 1
+  Backtest: 226/485 days (47%) | Cash: 594,074 | Positions: 2
+  Backtest: 227/485 days (47%) | Cash: 597,522 | Positions: 2
+  Backtest: 228/485 days (47%) | Cash: 617,029 | Positions: 2
+  Backtest: 229/485 days (47%) | Cash: 507,541 | Positions: 3
+  Backtest: 230/485 days (47%) | Cash: 515,138 | Positions: 3
+  Backtest: 231/485 days (48%) | Cash: 640,890 | Positions: 2
+  Backtest: 232/485 days (48%) | Cash: 777,837 | Positions: 1
+  Backtest: 233/485 days (48%) | Cash: 920,551 | Positions: 0
+  Backtest: 234/485 days (48%) | Cash: 781,349 | Positions: 1
+  Backtest: 235/485 days (48%) | Cash: 781,349 | Positions: 1
+  Backtest: 236/485 days (49%) | Cash: 367,542 | Positions: 4
+  Backtest: 237/485 days (49%) | Cash: 377,523 | Positions: 4
+  Backtest: 238/485 days (49%) | Cash: 517,237 | Positions: 3
+  Backtest: 239/485 days (49%) | Cash: 636,724 | Positions: 2
+  Backtest: 240/485 days (49%) | Cash: 375,398 | Positions: 4
+  Backtest: 241/485 days (50%) | Cash: 534,493 | Positions: 3
+  Backtest: 242/485 days (50%) | Cash: 790,617 | Positions: 1
+  Backtest: 243/485 days (50%) | Cash: 664,026 | Positions: 2
+  Backtest: 244/485 days (50%) | Cash: 791,300 | Positions: 1
+  Backtest: 245/485 days (51%) | Cash: 379,069 | Positions: 4
+  Backtest: 246/485 days (51%) | Cash: 517,269 | Positions: 3
+  Backtest: 247/485 days (51%) | Cash: 931,944 | Positions: 0
+  Backtest: 248/485 days (51%) | Cash: 393,968 | Positions: 4
+  Backtest: 249/485 days (51%) | Cash: 400,718 | Positions: 4
+  Backtest: 250/485 days (52%) | Cash: 783,977 | Positions: 1
+  Backtest: 251/485 days (52%) | Cash: 384,776 | Positions: 4
+  Backtest: 252/485 days (52%) | Cash: 250,435 | Positions: 5
+  Backtest: 253/485 days (52%) | Cash: 785,213 | Positions: 1
+  Backtest: 254/485 days (52%) | Cash: 644,760 | Positions: 2
+  Backtest: 255/485 days (53%) | Cash: 514,495 | Positions: 3
+  Backtest: 256/485 days (53%) | Cash: 785,577 | Positions: 1
+  Backtest: 257/485 days (53%) | Cash: 928,952 | Positions: 0
+  Backtest: 258/485 days (53%) | Cash: 937,141 | Positions: 0
+  Backtest: 259/485 days (53%) | Cash: 797,359 | Positions: 1
+  Backtest: 260/485 days (54%) | Cash: 797,359 | Positions: 1
+  Backtest: 261/485 days (54%) | Cash: 399,601 | Positions: 4
+  Backtest: 262/485 days (54%) | Cash: 271,034 | Positions: 5
+  Backtest: 263/485 days (54%) | Cash: 814,992 | Positions: 1
+  Backtest: 264/485 days (54%) | Cash: 686,015 | Positions: 2
+  Backtest: 265/485 days (55%) | Cash: 669,654 | Positions: 2
+  Backtest: 266/485 days (55%) | Cash: 669,654 | Positions: 2
+  Backtest: 267/485 days (55%) | Cash: 528,514 | Positions: 3
+  Backtest: 268/485 days (55%) | Cash: 668,419 | Positions: 2
+  Backtest: 269/485 days (55%) | Cash: 526,308 | Positions: 3
+  Backtest: 270/485 days (56%) | Cash: 390,167 | Positions: 4
+  Backtest: 271/485 days (56%) | Cash: 535,436 | Positions: 3
+  Backtest: 272/485 days (56%) | Cash: 803,613 | Positions: 1
+  Backtest: 273/485 days (56%) | Cash: 791,725 | Positions: 1
+  Backtest: 274/485 days (56%) | Cash: 647,343 | Positions: 2
+  Backtest: 275/485 days (57%) | Cash: 650,720 | Positions: 2
+  Backtest: 276/485 days (57%) | Cash: 671,835 | Positions: 2
+  Backtest: 277/485 days (57%) | Cash: 818,428 | Positions: 1
+  Backtest: 278/485 days (57%) | Cash: 955,410 | Positions: 0
+  Backtest: 279/485 days (58%) | Cash: 962,540 | Positions: 0
+  Backtest: 280/485 days (58%) | Cash: 829,009 | Positions: 1
+  Backtest: 281/485 days (58%) | Cash: 280,156 | Positions: 5
+  Backtest: 282/485 days (58%) | Cash: 409,684 | Positions: 4
+  Backtest: 283/485 days (58%) | Cash: 837,984 | Positions: 1
+  Backtest: 284/485 days (59%) | Cash: 846,312 | Positions: 1
+  Backtest: 285/485 days (59%) | Cash: 853,395 | Positions: 1
+  Backtest: 286/485 days (59%) | Cash: 719,975 | Positions: 2
+  Backtest: 287/485 days (59%) | Cash: 593,611 | Positions: 3
+  Backtest: 288/485 days (59%) | Cash: 469,489 | Positions: 4
+  Backtest: 289/485 days (60%) | Cash: 621,080 | Positions: 3
+  Backtest: 290/485 days (60%) | Cash: 761,726 | Positions: 2
+  Backtest: 291/485 days (60%) | Cash: 758,971 | Positions: 2
+  Backtest: 292/485 days (60%) | Cash: 481,360 | Positions: 4
+  Backtest: 293/485 days (60%) | Cash: 632,674 | Positions: 3
+  Backtest: 294/485 days (61%) | Cash: 926,953 | Positions: 1
+  Backtest: 295/485 days (61%) | Cash: 657,492 | Positions: 3
+  Backtest: 296/485 days (61%) | Cash: 379,303 | Positions: 5
+  Backtest: 297/485 days (61%) | Cash: 811,665 | Positions: 2
+  Backtest: 298/485 days (61%) | Cash: 1,090,706 | Positions: 0
+  Backtest: 299/485 days (62%) | Cash: 1,077,803 | Positions: 0
+  Backtest: 300/485 days (62%) | Cash: 941,406 | Positions: 1
+  Backtest: 301/485 days (62%) | Cash: 941,406 | Positions: 1
+  Backtest: 302/485 days (62%) | Cash: 1,081,299 | Positions: 0
+  Backtest: 303/485 days (62%) | Cash: 941,469 | Positions: 1
+  Backtest: 304/485 days (63%) | Cash: 530,314 | Positions: 4
+  Backtest: 305/485 days (63%) | Cash: 391,084 | Positions: 5
+  Backtest: 306/485 days (63%) | Cash: 927,130 | Positions: 1
+  Backtest: 307/485 days (63%) | Cash: 927,130 | Positions: 1
+  Backtest: 308/485 days (64%) | Cash: 931,444 | Positions: 1
+  Backtest: 309/485 days (64%) | Cash: 931,444 | Positions: 1
+  Backtest: 310/485 days (64%) | Cash: 1,084,351 | Positions: 0
+  Backtest: 311/485 days (64%) | Cash: 944,933 | Positions: 1
+  Backtest: 312/485 days (64%) | Cash: 944,933 | Positions: 1
+  Backtest: 313/485 days (65%) | Cash: 1,080,103 | Positions: 0
+  Backtest: 314/485 days (65%) | Cash: 525,357 | Positions: 4
+  Backtest: 315/485 days (65%) | Cash: 525,357 | Positions: 4
+  Backtest: 316/485 days (65%) | Cash: 679,920 | Positions: 3
+  Backtest: 317/485 days (65%) | Cash: 683,361 | Positions: 3
+  Backtest: 318/485 days (66%) | Cash: 406,356 | Positions: 5
+  Backtest: 319/485 days (66%) | Cash: 702,277 | Positions: 3
+  Backtest: 320/485 days (66%) | Cash: 562,041 | Positions: 4
+  Backtest: 321/485 days (66%) | Cash: 693,787 | Positions: 3
+  Backtest: 322/485 days (66%) | Cash: 834,271 | Positions: 2
+  Backtest: 323/485 days (67%) | Cash: 570,854 | Positions: 4
+  Backtest: 324/485 days (67%) | Cash: 577,227 | Positions: 4
+  Backtest: 325/485 days (67%) | Cash: 735,798 | Positions: 3
+  Backtest: 326/485 days (67%) | Cash: 1,006,876 | Positions: 1
+  Backtest: 327/485 days (67%) | Cash: 884,861 | Positions: 2
+  Backtest: 328/485 days (68%) | Cash: 752,891 | Positions: 3
+  Backtest: 329/485 days (68%) | Cash: 1,053,574 | Positions: 1
+  Backtest: 330/485 days (68%) | Cash: 908,676 | Positions: 2
+  Backtest: 331/485 days (68%) | Cash: 908,676 | Positions: 2
+  Backtest: 332/485 days (68%) | Cash: 937,699 | Positions: 2
+  Backtest: 333/485 days (69%) | Cash: 937,699 | Positions: 2
+  Backtest: 334/485 days (69%) | Cash: 1,222,982 | Positions: 0
+  Backtest: 335/485 days (69%) | Cash: 804,759 | Positions: 3
+  Backtest: 336/485 days (69%) | Cash: 529,989 | Positions: 5
+  Backtest: 337/485 days (69%) | Cash: 816,299 | Positions: 3
+  Backtest: 338/485 days (70%) | Cash: 979,737 | Positions: 2
+  Backtest: 339/485 days (70%) | Cash: 979,737 | Positions: 2
+  Backtest: 340/485 days (70%) | Cash: 1,264,764 | Positions: 0
+  Backtest: 341/485 days (70%) | Cash: 857,276 | Positions: 3
+  Backtest: 342/485 days (71%) | Cash: 857,276 | Positions: 3
+  Backtest: 343/485 days (71%) | Cash: 1,103,938 | Positions: 1
+  Backtest: 344/485 days (71%) | Cash: 973,731 | Positions: 2
+  Backtest: 345/485 days (71%) | Cash: 833,045 | Positions: 3
+  Backtest: 346/485 days (71%) | Cash: 823,576 | Positions: 3
+  Backtest: 347/485 days (72%) | Cash: 821,768 | Positions: 3
+  Backtest: 348/485 days (72%) | Cash: 833,403 | Positions: 3
+  Backtest: 349/485 days (72%) | Cash: 1,116,638 | Positions: 1
+  Backtest: 350/485 days (72%) | Cash: 979,120 | Positions: 2
+  Backtest: 351/485 days (72%) | Cash: 983,426 | Positions: 2
+  Backtest: 352/485 days (73%) | Cash: 1,277,970 | Positions: 0
+  Backtest: 353/485 days (73%) | Cash: 1,282,745 | Positions: 0
+  Backtest: 354/485 days (73%) | Cash: 1,150,885 | Positions: 1
+  Backtest: 355/485 days (73%) | Cash: 1,012,364 | Positions: 2
+  Backtest: 356/485 days (73%) | Cash: 1,012,364 | Positions: 2
+  Backtest: 357/485 days (74%) | Cash: 1,135,534 | Positions: 1
+  Backtest: 358/485 days (74%) | Cash: 996,409 | Positions: 2
+  Backtest: 359/485 days (74%) | Cash: 867,116 | Positions: 3
+  Backtest: 360/485 days (74%) | Cash: 1,012,783 | Positions: 2
+  Backtest: 361/485 days (74%) | Cash: 1,138,698 | Positions: 1
+  Backtest: 362/485 days (75%) | Cash: 727,843 | Positions: 4
+  Backtest: 363/485 days (75%) | Cash: 729,968 | Positions: 4
+  Backtest: 364/485 days (75%) | Cash: 998,409 | Positions: 2
+  Backtest: 365/485 days (75%) | Cash: 1,269,240 | Positions: 0
+  Backtest: 366/485 days (75%) | Cash: 1,275,273 | Positions: 0
+  Backtest: 367/485 days (76%) | Cash: 1,137,783 | Positions: 1
+  Backtest: 368/485 days (76%) | Cash: 1,137,783 | Positions: 1
+  Backtest: 369/485 days (76%) | Cash: 1,274,010 | Positions: 0
+  Backtest: 370/485 days (76%) | Cash: 1,006,451 | Positions: 2
+  Backtest: 371/485 days (76%) | Cash: 1,006,451 | Positions: 2
+  Backtest: 372/485 days (77%) | Cash: 1,284,067 | Positions: 0
+  Backtest: 373/485 days (77%) | Cash: 1,145,399 | Positions: 1
+  Backtest: 374/485 days (77%) | Cash: 1,145,399 | Positions: 1
+  Backtest: 375/485 days (77%) | Cash: 1,291,019 | Positions: 0
+  Backtest: 376/485 days (78%) | Cash: 1,153,338 | Positions: 1
+  Backtest: 377/485 days (78%) | Cash: 1,153,338 | Positions: 1
+  Backtest: 378/485 days (78%) | Cash: 882,217 | Positions: 3
+  Backtest: 379/485 days (78%) | Cash: 887,099 | Positions: 3
+  Backtest: 380/485 days (78%) | Cash: 749,875 | Positions: 4
+  Backtest: 381/485 days (79%) | Cash: 611,420 | Positions: 5
+  Backtest: 382/485 days (79%) | Cash: 743,254 | Positions: 4
+  Backtest: 383/485 days (79%) | Cash: 1,302,930 | Positions: 0
+  Backtest: 384/485 days (79%) | Cash: 1,168,484 | Positions: 1
+  Backtest: 385/485 days (79%) | Cash: 1,168,484 | Positions: 1
+  Backtest: 386/485 days (80%) | Cash: 1,307,849 | Positions: 0
+  Backtest: 387/485 days (80%) | Cash: 1,168,554 | Positions: 1
+  Backtest: 388/485 days (80%) | Cash: 1,168,554 | Positions: 1
+  Backtest: 389/485 days (80%) | Cash: 1,037,288 | Positions: 2
+  Backtest: 390/485 days (80%) | Cash: 1,039,679 | Positions: 2
+  Backtest: 391/485 days (81%) | Cash: 1,158,169 | Positions: 1
+  Backtest: 392/485 days (81%) | Cash: 879,721 | Positions: 3
+  Backtest: 393/485 days (81%) | Cash: 752,214 | Positions: 4
+  Backtest: 394/485 days (81%) | Cash: 885,462 | Positions: 3
+  Backtest: 395/485 days (81%) | Cash: 1,178,033 | Positions: 1
+  Backtest: 396/485 days (82%) | Cash: 919,316 | Positions: 3
+  Backtest: 397/485 days (82%) | Cash: 786,455 | Positions: 4
+  Backtest: 398/485 days (82%) | Cash: 1,050,416 | Positions: 2
+  Backtest: 399/485 days (82%) | Cash: 924,224 | Positions: 3
+  Backtest: 400/485 days (82%) | Cash: 1,073,056 | Positions: 2
+  Backtest: 401/485 days (83%) | Cash: 1,198,041 | Positions: 1
+  Backtest: 402/485 days (83%) | Cash: 646,855 | Positions: 5
+  Backtest: 403/485 days (83%) | Cash: 777,366 | Positions: 4
+  Backtest: 404/485 days (83%) | Cash: 1,351,314 | Positions: 0
+  Backtest: 405/485 days (84%) | Cash: 1,221,290 | Positions: 1
+  Backtest: 406/485 days (84%) | Cash: 1,082,530 | Positions: 2
+  Backtest: 407/485 days (84%) | Cash: 1,096,977 | Positions: 2
+  Backtest: 408/485 days (84%) | Cash: 1,235,855 | Positions: 1
+  Backtest: 409/485 days (84%) | Cash: 944,552 | Positions: 3
+  Backtest: 410/485 days (85%) | Cash: 668,022 | Positions: 5
+  Backtest: 411/485 days (85%) | Cash: 1,112,086 | Positions: 2
+  Backtest: 412/485 days (85%) | Cash: 1,419,503 | Positions: 0
+  Backtest: 413/485 days (85%) | Cash: 1,280,231 | Positions: 1
+  Backtest: 414/485 days (85%) | Cash: 1,280,231 | Positions: 1
+  Backtest: 415/485 days (86%) | Cash: 1,426,791 | Positions: 0
+  Backtest: 416/485 days (86%) | Cash: 1,308,061 | Positions: 1
+  Backtest: 417/485 days (86%) | Cash: 895,112 | Positions: 4
+  Backtest: 418/485 days (86%) | Cash: 1,043,314 | Positions: 3
+  Backtest: 419/485 days (86%) | Cash: 1,468,674 | Positions: 0
+  Backtest: 420/485 days (87%) | Cash: 1,210,808 | Positions: 2
+  Backtest: 421/485 days (87%) | Cash: 936,700 | Positions: 4
+  Backtest: 422/485 days (87%) | Cash: 1,092,197 | Positions: 3
+  Backtest: 423/485 days (87%) | Cash: 1,363,112 | Positions: 1
+  Backtest: 424/485 days (87%) | Cash: 1,111,357 | Positions: 3
+  Backtest: 425/485 days (88%) | Cash: 834,218 | Positions: 5
+  Backtest: 426/485 days (88%) | Cash: 1,267,393 | Positions: 2
+  Backtest: 427/485 days (88%) | Cash: 1,398,460 | Positions: 1
+  Backtest: 428/485 days (88%) | Cash: 1,271,938 | Positions: 2
+  Backtest: 429/485 days (88%) | Cash: 1,145,601 | Positions: 3
+  Backtest: 430/485 days (89%) | Cash: 1,293,668 | Positions: 2
+  Backtest: 431/485 days (89%) | Cash: 1,407,652 | Positions: 1
+  Backtest: 432/485 days (89%) | Cash: 1,272,034 | Positions: 2
+  Backtest: 433/485 days (89%) | Cash: 1,425,147 | Positions: 1
+  Backtest: 434/485 days (89%) | Cash: 1,429,949 | Positions: 1
+  Backtest: 435/485 days (90%) | Cash: 1,298,898 | Positions: 2
+  Backtest: 436/485 days (90%) | Cash: 1,448,616 | Positions: 1
+  Backtest: 437/485 days (90%) | Cash: 1,314,773 | Positions: 2
+  Backtest: 438/485 days (90%) | Cash: 1,178,408 | Positions: 3
+  Backtest: 439/485 days (91%) | Cash: 1,453,340 | Positions: 1
+  Backtest: 440/485 days (91%) | Cash: 1,311,162 | Positions: 2
+  Backtest: 441/485 days (91%) | Cash: 1,032,363 | Positions: 4
+  Backtest: 442/485 days (91%) | Cash: 1,189,788 | Positions: 3
+  Backtest: 443/485 days (91%) | Cash: 1,478,141 | Positions: 1
+  Backtest: 444/485 days (92%) | Cash: 1,346,084 | Positions: 2
+  Backtest: 445/485 days (92%) | Cash: 1,354,189 | Positions: 2
+  Backtest: 446/485 days (92%) | Cash: 1,355,075 | Positions: 2
+  Backtest: 447/485 days (92%) | Cash: 1,497,574 | Positions: 1
+  Backtest: 448/485 days (92%) | Cash: 1,629,120 | Positions: 0
+  Backtest: 449/485 days (93%) | Cash: 1,489,340 | Positions: 1
+  Backtest: 450/485 days (93%) | Cash: 1,489,340 | Positions: 1
+  Backtest: 451/485 days (93%) | Cash: 1,489,340 | Positions: 1
+  Backtest: 452/485 days (93%) | Cash: 1,627,155 | Positions: 0
+  Backtest: 453/485 days (93%) | Cash: 1,492,381 | Positions: 1
+  Backtest: 454/485 days (94%) | Cash: 1,223,553 | Positions: 3
+  Backtest: 455/485 days (94%) | Cash: 1,356,030 | Positions: 2
+  Backtest: 456/485 days (94%) | Cash: 1,499,745 | Positions: 1
+  Backtest: 457/485 days (94%) | Cash: 1,353,502 | Positions: 2
+  Backtest: 458/485 days (94%) | Cash: 1,237,860 | Positions: 3
+  Backtest: 459/485 days (95%) | Cash: 1,237,860 | Positions: 3
+  Backtest: 460/485 days (95%) | Cash: 1,655,307 | Positions: 0
+  Backtest: 461/485 days (95%) | Cash: 1,386,918 | Positions: 2
+  Backtest: 462/485 days (95%) | Cash: 1,390,628 | Positions: 2
+  Backtest: 463/485 days (95%) | Cash: 1,665,025 | Positions: 0
+  Backtest: 464/485 days (96%) | Cash: 1,525,049 | Positions: 1
+  Backtest: 465/485 days (96%) | Cash: 1,525,049 | Positions: 1
+  Backtest: 466/485 days (96%) | Cash: 1,667,957 | Positions: 0
+  Backtest: 467/485 days (96%) | Cash: 1,109,353 | Positions: 4
+  Backtest: 468/485 days (96%) | Cash: 1,112,678 | Positions: 4
+  Backtest: 469/485 days (97%) | Cash: 1,268,191 | Positions: 3
+  Backtest: 470/485 days (97%) | Cash: 1,394,631 | Positions: 2
+  Backtest: 471/485 days (97%) | Cash: 1,123,730 | Positions: 4
+  Backtest: 472/485 days (97%) | Cash: 1,120,098 | Positions: 4
+  Backtest: 473/485 days (98%) | Cash: 1,367,477 | Positions: 2
+  Backtest: 474/485 days (98%) | Cash: 1,346,516 | Positions: 2
+  Backtest: 475/485 days (98%) | Cash: 1,312,176 | Positions: 2
+  Backtest: 476/485 days (98%) | Cash: 1,631,325 | Positions: 0
+  Backtest: 477/485 days (98%) | Cash: 1,365,692 | Positions: 2
+  Backtest: 478/485 days (99%) | Cash: 1,096,120 | Positions: 4
+  Backtest: 479/485 days (99%) | Cash: 1,253,123 | Positions: 3
+  Backtest: 480/485 days (99%) | Cash: 1,572,298 | Positions: 1
+  Backtest: 481/485 days (99%) | Cash: 1,723,910 | Positions: 0
+  Backtest: 482/485 days (99%) | Cash: 1,726,875 | Positions: 0
+  Backtest: 483/485 days (100%) | Cash: 1,464,906 | Positions: 2
+  Backtest: 484/485 days (100%) | Cash: 1,464,906 | Positions: 2
+  Backtest: 485/485 days (100%) | Cash: 1,598,992 | Positions: 1
+====================================================================================================
+  全市场动量回测结果 (v5-ext)
+====================================================================================================
+
+  回测参数:
+    时间范围: 2024-10-01 ~ 2026-10-01  (485 个交易日)
+    初始资金: 400,000
+    股票池:   910 只 (有效: 910)
+    行业覆盖: 29
+    数据量:   500 根 K 线/只, 最少 120 根
+
+  ================================================================================
+  最终统计
+  ================================================================================
+    总收益:          +332.78%
+    年化收益:        +108.03%
+    最终权益:      1,731,117
+    净利润:       +1,331,117
+    月均收益:          +6.34%
+    月收益标准差:       3.23%
+    夏普比率:           6.61
+    胜率:               67.1%
+    盈亏比:             1.99
+    平均盈利:         +5,425
+    平均亏损:         +5,573
+    最大回撤:           6.22%
+    回撤区间:     2024-11-06 ~ 2024-11-14
+    交易次数:            751
+    总佣金:          145,136
+
+  ================================================================================
+  月度收益汇总
+  ================================================================================
+  月份                月收益       累计收益
+  ------------------------------
+  2024-10    +    +5.09%     +5.09%
+  2024-11    +    +6.55%    +11.64%
+  2024-12    +    +6.20%    +17.84%
+  2025-01    +    +7.02%    +24.86%
+  2025-02    +    +4.79%    +29.65%
+  2025-03    +    +4.39%    +34.04%
+  2025-04    +    +7.01%    +41.06%
+  2025-05    +    +9.28%    +50.34%
+  2025-06    +   +12.63%    +62.97%
+  2025-07    +   +11.39%    +74.36%
+  2025-08    +    +6.28%    +80.64%
+  2025-09    +    +5.50%    +86.14%
+  2025-10    +    +2.65%    +88.79%
+  2025-11    +    +2.76%    +91.54%
+  2025-12    +   +10.75%   +102.30%
+  2026-01    +    +7.21%   +109.51%
+  2026-02    +    +9.60%   +119.11%
+  2026-03    +    +1.39%   +120.51%
+  2026-04    +    +2.00%   +122.50%
+  2026-05    +    +2.98%   +125.49%
+  2026-06    +   +11.86%   +137.35%
+  2026-07    +    +8.44%   +145.79%
+  2026-08    +    +2.29%   +148.07%
+  2026-09    +    +4.17%   +152.24%
+
+  盈利月: 24/24 (100%)
+  最佳月: +12.63%
+  最差月: +1.39%
+
+  ================================================================================
+  交易记录
+  ================================================================================
+  Date       D  Symbol       Price    Qty Strat            PnL      % Hold Reason
+  --------------------------------------------------------------------------------
+  2024-10-09 B  601198.SH    11.44  12200 breakout         ---    ---      | euphoria
+  2024-10-09 B  000004.SZ    17.90   5000 breakout         ---    ---      | euphoria
+  2024-10-08 S  601198.SH    11.93  12200 breakout       +5764  +4.1%  -1d | 回落20%(高5.3%)
+  2024-10-10 S  000004.SZ    15.09   5000 breakout      -14148 -15.8%   1d | 止损-2%
+  2024-10-15 B  600837.SH    11.08   7000 breakout         ---    ---      | ice
+  2024-10-15 B  000004.SZ    18.26   3400 breakout         ---    ---      | ice
+  2024-10-14 S  600837.SH    11.56   7000 breakout       +3255  +4.2%  -1d | 回落20%(高5.4%)
+  2024-10-16 B  600837.SH    10.76  10200 breakout         ---    ---      | cooldown
+  2024-10-15 S  600837.SH    11.34  10200 breakout       +5806  +5.3%  -1d | 回落20%(高6.8%)
+  2024-10-17 B  600837.SH    11.59   9600 breakout         ---    ---      | cooldown
+  2024-10-16 S  000004.SZ    19.65   3400 breakout       +4646  +7.5%   1d | 回落20%(高9.5%)
+  2024-10-16 S  600837.SH    11.81   9600 breakout       +2003  +1.8%  -1d | 回落30%(高2.8%)
+  2024-10-18 B  600837.SH    12.56  10600 breakout         ---    ---      | cooldown
+  2024-10-18 B  603160.SH    82.75    900 breakout         ---    ---      | cooldown
+  2024-10-17 S  603160.SH    84.73    900 breakout       +1684  +2.3%  -1d | 回落30%(高3.4%)
+  2024-10-21 B  603160.SH    95.25   1000 breakout         ---    ---      | warmup
+  2024-10-21 B  688981.SH    94.00    600 breakout         ---    ---      | warmup
+  2024-10-21 B  000004.SZ    20.67   2000 breakout         ---    ---      | warmup
+  2024-10-18 S  603160.SH    91.41   1000 breakout       -3959  -4.2%  -3d | 止损-2%
+  2024-10-18 S  688981.SH    90.14    600 breakout       -2386  -4.2%  -3d | 止损-2%
+  2024-10-18 S  000004.SZ    21.71   2000 breakout       +2024  +4.9%  -3d | 回落20%(高6.3%)
+  2024-10-21 S  600837.SH    13.58  10600 breakout      +10583  +7.9%   3d | 回落20%(高10.1%)
+  2024-10-24 B  601615.SH    12.00  11600 breakout         ---    ---      | euphoria
+  2024-10-24 B  600438.SH    24.61   3900 ignition         ---    ---      | euphoria
+  2024-10-23 S  601615.SH    12.25  11600 breakout       +2738  +2.0%  -1d | 回落30%(高3.0%)
+  2024-10-25 B  002128.SZ    20.14   5500 ignition         ---    ---      | warmup
+  2024-10-25 B  300666.SZ    68.65    900 ignition         ---    ---      | warmup
+  2024-10-25 B  000151.SZ    13.59   3200 breakout         ---    ---      | warmup
+  2024-10-24 S  300666.SZ    71.17    900 ignition       +2185  +3.5%  -1d | 回落20%(高4.6%)
+  2024-10-24 S  000151.SZ    14.32   3200 breakout       +2270  +5.2%  -1d | 回落20%(高6.7%)
+  2024-10-28 B  000151.SZ    14.54   5100 breakout         ---    ---      | warmup
+  2024-10-28 B  002778.SZ    14.99   3200 breakout         ---    ---      | warmup
+  2024-10-25 S  600438.SH    27.67   3900 ignition      +11794 +12.3%   1d | 目标+8%
+  2024-10-25 S  002778.SZ    15.37   3200 breakout       +1146  +2.4%  -3d | 回落30%(高3.6%)
+  2024-10-28 S  002128.SZ    20.66   5500 ignition       +2701  +2.4%   3d | 回落30%(高3.7%)
+  2024-10-30 B  000045.SZ    13.23   9600 breakout         ---    ---      | warmup
+  2024-10-30 B  000066.SZ    13.77   6000 breakout         ---    ---      | warmup
+  2024-10-30 B  002416.SZ    13.29   4000 ignition         ---    ---      | warmup
+  2024-10-30 B  300075.SZ    20.00   1700 breakout         ---    ---      | warmup
+  2024-10-29 S  000151.SZ    15.43   5100 breakout       +4427  +6.0%   1d | 回落20%(高7.6%)
+  2024-10-29 S  000045.SZ    12.80   9600 breakout       -4288  -3.4%  -1d | 止损-2%
+  2024-10-29 S  000066.SZ    13.12   6000 breakout       -4002  -4.8%  -1d | 止损-2%
+  2024-10-29 S  002416.SZ    12.08   4000 ignition       -4903  -9.2%  -1d | 止损-2%
+  2024-10-31 B  000058.SZ    10.80  12700 breakout         ---    ---      | warmup
+  2024-10-31 B  002243.SZ    10.78   8300 breakout         ---    ---      | warmup
+  2024-10-31 B  002912.SZ    31.99   1800 breakout         ---    ---      | warmup
+  2024-10-31 B  603960.SH    23.66   1600 breakout         ---    ---      | warmup
+  2024-10-30 S  002243.SZ    10.33   8300 breakout       -3846  -4.3%  -1d | 止损-2%
+  2024-10-30 S  002912.SZ    29.85   1800 breakout       -3922  -6.8%  -1d | 止损-2%
+  2024-10-30 S  603960.SH    22.51   1600 breakout       -1887  -5.0%  -1d | 止损-2%
+  2024-11-01 B  000009.SZ    10.68   8100 breakout         ---    ---      | warmup
+  2024-11-01 B  002416.SZ    15.78   3500 breakout         ---    ---      | warmup
+  2024-11-01 B  300554.SZ    31.00   1100 breakout         ---    ---      | warmup
+  2024-10-31 S  300075.SZ    22.50   1700 breakout       +4207 +12.4%   1d | 回落20%(高15.6%)
+  2024-10-31 S  000009.SZ    10.93   8100 breakout       +1869  +2.2%  -1d | 回落30%(高3.3%)
+  2024-10-31 S  002416.SZ    14.62   3500 breakout       -4127  -7.5%  -1d | 止损-2%
+  2024-10-31 S  300554.SZ    28.21   1100 breakout       -3109  -9.1%  -1d | 止损-2%
+  2024-11-04 B  000066.SZ    17.47   5300 breakout         ---    ---      | cooldown
+  2024-11-04 B  000917.SZ    10.60   5800 breakout         ---    ---      | cooldown
+  2024-11-01 S  000058.SZ    11.62  12700 breakout      +10273  +7.5%   1d | 回落20%(高9.5%)
+  2024-11-01 S  000917.SZ    11.02   5800 breakout       +2330  +3.8%  -3d | 回落20%(高4.9%)
+  2024-11-05 B  002568.SZ    25.13   4700 breakout         ---    ---      | warmup
+  2024-11-05 B  002428.SZ    23.34   3200 breakout         ---    ---      | warmup
+  2024-11-05 B  601198.SH    12.66   4000 breakout         ---    ---      | warmup
+  2024-11-05 B  300024.SZ    16.15   2000 breakout         ---    ---      | warmup
+  2024-11-04 S  300024.SZ    15.46   2000 breakout       -1420  -4.4%  -1d | 止损-2%
+  2024-11-05 S  000066.SZ    17.81   5300 breakout       +1695  +1.8%   1d | 回落30%(高2.8%)
+  2024-11-06 S  002568.SZ    25.74   4700 breakout       +2705  +2.3%   1d | 回落30%(高3.5%)
+  2024-11-06 S  002428.SZ    26.91   3200 breakout      +11312 +15.1%   1d | 目标+8%
+  2024-11-06 S  601198.SH    13.83   4000 breakout       +4600  +9.1%   1d | 回落20%(高11.5%)
+  2024-11-08 B  000858.SZ   164.00    800 breakout         ---    ---      | euphoria
+  2024-11-08 B  002304.SZ    94.24   1100 breakout         ---    ---      | euphoria
+  2024-11-11 S  000858.SZ   154.82    800 breakout       -7505  -5.7%   3d | 止损-2%
+  2024-11-11 S  002304.SZ    89.95   1100 breakout       -4848  -4.7%   3d | 止损-2%
+  2024-11-13 B  000028.SZ    31.23   3400 breakout         ---    ---      | hot
+  2024-11-12 S  000028.SZ    32.56   3400 breakout       +4371  +4.1%  -1d | 回落20%(高5.3%)
+  2024-11-14 B  600741.SH    17.72   7900 breakout         ---    ---      | warmup
+  2024-11-14 B  688369.SH    26.21   4000 breakout         ---    ---      | warmup
+  2024-11-14 B  002230.SZ    54.59   1200 breakout         ---    ---      | warmup
+  2024-11-14 B  600104.SH    16.99   2600 breakout         ---    ---      | warmup
+  2024-11-14 B  002460.SZ    43.88    600 breakout         ---    ---      | warmup
+  2024-11-15 S  600741.SH    16.92   7900 breakout       -6494  -4.6%   1d | 止损-2%
+  2024-11-15 S  688369.SH    24.43   4000 breakout       -7247  -6.9%   1d | 止损-2%
+  2024-11-15 S  002230.SZ    55.93   1200 breakout       +1517  +2.3%   1d | 回落30%(高3.5%)
+  2024-11-15 S  600104.SH    17.79   2600 breakout       +2020  +4.6%   1d | 回落20%(高5.9%)
+  2024-11-15 S  002460.SZ    44.87    600 breakout        +561  +2.1%   1d | 回落30%(高3.2%)
+  2024-11-19 B  600508.SH    14.63   9500 breakout         ---    ---      | cooldown
+  2024-11-19 B  601186.SH     9.94   9700 breakout         ---    ---      | cooldown
+  2024-11-19 B  603877.SH    14.60   4400 breakout         ---    ---      | cooldown
+  2024-11-18 S  601186.SH    10.20   9700 breakout       +2384  +2.5%  -1d | 回落30%(高3.7%)
+  2024-11-18 S  603877.SH    15.68   4400 breakout       +4662  +7.3%  -1d | 回落20%(高9.2%)
+  2024-11-20 B  000815.SZ    11.69   8400 breakout         ---    ---      | cooldown
+  2024-11-20 B  000833.SZ    15.35   4300 breakout         ---    ---      | cooldown
+  2024-11-19 S  000815.SZ    11.28   8400 breakout       -3567  -3.6%  -1d | 止损-2%
+  2024-11-19 S  000833.SZ    13.95   4300 breakout       -6098  -9.2%  -1d | 止损-2%
+  2024-11-21 B  000815.SZ    12.00   8400 breakout         ---    ---      | warmup
+  2024-11-21 B  300058.SZ    10.54   6200 breakout         ---    ---      | warmup
+  2024-11-21 B  002182.SZ    11.76   3600 breakout         ---    ---      | warmup
+  2024-11-20 S  000815.SZ    12.29   8400 breakout       +2277  +2.3%  -1d | 回落30%(高3.4%)
+  2024-11-21 S  600508.SH    14.37   9500 breakout       -2647  -1.9%   2d | 弱2d
+  2024-11-22 S  300058.SZ    11.37   6200 breakout       +5067  +7.8%   1d | 回落20%(高9.9%)
+  2024-11-22 S  002182.SZ    10.70   3600 breakout       -3866  -9.1%   1d | 止损-2%
+  2024-11-26 B  002403.SZ    15.33   9100 breakout         ---    ---      | cooldown
+  2024-11-26 B  600137.SH    15.50   6100 breakout         ---    ---      | cooldown
+  2024-11-25 S  002403.SZ    16.86   9100 breakout      +13724  +9.8%  -1d | 目标+8%
+  2024-11-27 B  603899.SH    31.50   2200 breakout         ---    ---      | ice
+  2024-11-26 S  603899.SH    32.32   2200 breakout       +1709  +2.5%  -1d | 回落30%(高3.7%)
+  2024-11-28 B  300166.SZ    11.02  10400 breakout         ---    ---      | cooldown
+  2024-11-28 B  600885.SH    33.72   2300 breakout         ---    ---      | cooldown
+  2024-11-29 B  300625.SZ    12.58   4300 breakout         ---    ---      | warmup
+  2024-11-28 S  600137.SH    15.23   6100 breakout       -1768  -1.9%   2d | 弱2d
+  2024-11-28 S  300625.SZ    13.15   4300 breakout       +2369  +4.4%  -1d | 回落20%(高5.6%)
+  2024-12-02 B  000409.SZ    11.27   7800 breakout         ---    ---      | warmup
+  2024-12-02 B  000963.SZ    38.98   1400 breakout         ---    ---      | warmup
+  2024-12-02 B  300171.SZ    14.65   2600 breakout         ---    ---      | warmup
+  2024-11-29 S  300166.SZ    11.67  10400 breakout       +6581  +5.7%   1d | 回落20%(高7.4%)
+  2024-12-02 S  600885.SH    32.48   2300 breakout       -2949  -3.8%   4d | 止损-2%
+  2024-12-03 S  000409.SZ    11.93   7800 breakout       +5058  +5.8%   1d | 回落20%(高7.4%)
+  2024-12-03 S  300171.SZ    15.85   2600 breakout       +3066  +8.1%   1d | 回落20%(高10.2%)
+  2024-12-04 S  000963.SZ    37.15   1400 breakout       -2630  -4.8%   2d | 止损-2%
+  2024-12-06 B  002182.SZ    12.35   9100 breakout         ---    ---      | hot
+  2024-12-10 B  300354.SZ    42.57   2800 breakout         ---    ---      | warmup
+  2024-12-10 B  600295.SH    10.48   7400 breakout         ---    ---      | warmup
+  2024-12-10 B  300829.SZ    18.32   2700 breakout         ---    ---      | warmup
+  2024-12-10 B  000411.SZ    11.76   2800 breakout         ---    ---      | warmup
+  2024-12-09 S  002182.SZ    13.10   9100 breakout       +6688  +6.0%   3d | 回落20%(高7.6%)
+  2024-12-09 S  300354.SZ    40.55   2800 breakout       -5804  -4.9%  -1d | 止损-2%
+  2024-12-09 S  000411.SZ    12.18   2800 breakout       +1120  +3.4%  -1d | 回落20%(高4.4%)
+  2024-12-11 S  600295.SH    10.20   7400 breakout       -2170  -2.8%   1d | 止损-2%
+  2024-12-11 S  300829.SZ    19.18   2700 breakout       +2265  +4.6%   1d | 回落20%(高5.9%)
+  2024-12-13 B  002557.SZ    33.00   3400 breakout         ---    ---      | hot
+  2024-12-16 B  600933.SH    17.71   6700 breakout         ---    ---      | warmup
+  2024-12-16 B  603258.SH    24.05   3200 breakout         ---    ---      | warmup
+  2024-12-16 B  603986.SH    91.58    500 breakout         ---    ---      | warmup
+  2024-12-16 B  000610.SZ    16.00   2200 breakout         ---    ---      | warmup
+  2024-12-13 S  603258.SH    24.96   3200 breakout       +2815  +3.7%  -3d | 回落20%(高4.7%)
+  2024-12-17 B  600137.SH    18.01   2800 breakout         ---    ---      | warmup
+  2024-12-16 S  002557.SZ    31.77   3400 breakout       -4322  -3.9%   3d | 止损-2%
+  2024-12-17 S  600933.SH    18.38   6700 breakout       +4342  +3.7%   1d | 回落20%(高4.7%)
+  2024-12-17 S  603986.SH    98.32    500 breakout       +3304  +7.2%   1d | 回落20%(高9.2%)
+  2024-12-17 S  000610.SZ    17.11   2200 breakout       +2397  +6.8%   1d | 回落20%(高8.7%)
+  2024-12-19 B  600071.SH    24.90   5400 breakout         ---    ---      | cooldown
+  2024-12-19 B  603786.SH    62.00   1400 breakout         ---    ---      | cooldown
+  2024-12-18 S  600137.SH    16.33   2800 breakout       -4763  -9.4%   1d | 止损-2%
+  2024-12-20 B  000004.SZ    19.62   4200 breakout         ---    ---      | warmup
+  2024-12-20 B  000063.SZ    36.80   1400 breakout         ---    ---      | warmup
+  2024-12-20 B  002180.SZ    29.51   1200 breakout         ---    ---      | warmup
+  2024-12-19 S  000004.SZ    20.43   4200 breakout       +3282  +4.0%  -1d | 回落20%(高5.1%)
+  2024-12-19 S  000063.SZ    37.65   1400 breakout       +1127  +2.2%  -1d | 回落30%(高3.3%)
+  2024-12-23 B  002335.SZ    27.96   2500 breakout         ---    ---      | warmup
+  2024-12-23 B  002847.SZ    58.97    800 breakout         ---    ---      | warmup
+  2024-12-20 S  600071.SH    25.52   5400 breakout       +3185  +2.4%   1d | 回落30%(高3.6%)
+  2024-12-20 S  603786.SH    67.42   1400 breakout       +7471  +8.6%   1d | 回落20%(高10.9%)
+  2024-12-20 S  002335.SZ    26.96   2500 breakout       -2588  -3.7%  -3d | 止损-2%
+  2024-12-24 B  600072.SH    15.15   9000 breakout         ---    ---      | warmup
+  2024-12-24 B  601985.SH    10.30   8600 breakout         ---    ---      | warmup
+  2024-12-24 B  000338.SZ    13.68   4200 breakout         ---    ---      | warmup
+  2024-12-23 S  002180.SZ    31.14   1200 breakout       +1910  +5.4%   3d | 回落20%(高6.9%)
+  2024-12-23 S  000338.SZ    13.96   4200 breakout       +1100  +1.9%  -1d | 回落30%(高2.9%)
+  2024-12-25 B  600673.SH     9.90   7100 breakout         ---    ---      | warmup
+  2024-12-25 B  688668.SH    51.24    900 breakout         ---    ---      | warmup
+  2024-12-24 S  002847.SZ    62.07    800 breakout       +2419  +5.1%   1d | 回落20%(高6.6%)
+  2024-12-24 S  600673.SH    10.11   7100 breakout       +1398  +2.0%  -1d | 回落30%(高3.0%)
+  2024-12-24 S  688668.SH    42.70    900 breakout       -7736 -16.8%  -1d | 止损-2%
+  2024-12-26 B  688668.SH    52.51   1600 breakout         ---    ---      | warmup
+  2024-12-26 B  002085.SZ    20.80   2700 breakout         ---    ---      | warmup
+  2024-12-26 B  600845.SH    28.79   1200 breakout         ---    ---      | warmup
+  2024-12-25 S  600072.SH    14.45   9000 breakout       -6469  -4.7%   1d | 止损-2%
+  2024-12-25 S  002085.SZ    21.23   2700 breakout       +1078  +1.9%  -1d | 回落30%(高2.9%)
+  2024-12-27 B  002463.SZ    41.12   2200 breakout         ---    ---      | warmup
+  2024-12-27 B  600391.SH    21.78   2700 breakout         ---    ---      | warmup
+  2024-12-26 S  601985.SH    10.19   8600 breakout       -1060  -1.2%   2d | 弱2d
+  2024-12-26 S  600391.SH    19.80   2700 breakout       -5415  -9.2%  -1d | 止损-2%
+  2024-12-27 S  688668.SH    58.81   1600 breakout       +9951 +11.8%   1d | 回落20%(高15.0%)
+  2024-12-27 S  600845.SH    30.44   1200 breakout       +1930  +5.6%   1d | 回落20%(高7.2%)
+  2024-12-31 B  002648.SZ    19.02   7000 breakout         ---    ---      | warmup
+  2024-12-31 B  600621.SH    17.41   4900 breakout         ---    ---      | warmup
+  2024-12-31 B  300596.SZ    31.76   1700 breakout         ---    ---      | warmup
+  2024-12-31 B  002117.SZ    12.56   3000 breakout         ---    ---      | warmup
+  2024-12-30 S  002463.SZ    40.78   2200 breakout        -865  -1.0%   3d | 弱3d
+  2024-12-30 S  600621.SH    17.87   4900 breakout       +2150  +2.5%  -1d | 回落30%(高3.8%)
+  2024-12-30 S  300596.SZ    32.45   1700 breakout       +1106  +2.0%  -1d | 回落30%(高3.1%)
+  2025-01-02 B  000768.SZ    27.20   3800 breakout         ---    ---      | warmup
+  2025-01-02 B  002078.SZ    14.80   4700 breakout         ---    ---      | warmup
+  2024-12-31 S  000768.SZ    28.60   3800 breakout       +5179  +5.0%  -2d | 回落20%(高6.4%)
+  2024-12-31 S  002078.SZ    15.11   4700 breakout       +1355  +1.9%  -2d | 回落30%(高3.0%)
+  2025-01-02 S  002648.SZ    18.63   7000 breakout       -2900  -2.2%   2d | 弱2d
+  2025-01-02 S  002117.SZ    12.85   3000 breakout        +832  +2.2%   2d | 回落30%(高3.3%)
+  2025-01-06 B  002117.SZ    13.49   7000 breakout         ---    ---      | ice
+  2025-01-03 S  002117.SZ    14.01   7000 breakout       +3513  +3.7%  -3d | 回落20%(高4.8%)
+  2025-01-07 B  002603.SZ    17.45   5500 ignition         ---    ---      | ice
+  2025-01-07 B  600259.SH    29.52   2600 ignition         ---    ---      | ice
+  2025-01-09 B  000921.SZ    32.88   3200 breakout         ---    ---      | warmup
+  2025-01-09 B  600026.SH    12.22   5800 breakout         ---    ---      | warmup
+  2025-01-08 S  002603.SZ    16.58   5500 ignition       -4904  -5.1%   1d | 止损-2%
+  2025-01-08 S  600259.SH    30.16   2600 ignition       +1572  +2.0%   1d | 回落30%(高3.1%)
+  2025-01-08 S  600026.SH    12.64   5800 breakout       +2364  +3.3%  -1d | 回落20%(高4.3%)
+  2025-01-10 B  002041.SZ    11.17  11700 breakout         ---    ---      | warmup
+  2025-01-10 B  300715.SZ    10.55   8100 breakout         ---    ---      | warmup
+  2025-01-10 B  688200.SH   115.21    400 breakout         ---    ---      | warmup
+  2025-01-09 S  002041.SZ    11.39  11700 breakout       +2366  +1.8%  -1d | 回落30%(高2.8%)
+  2025-01-09 S  300715.SZ    11.69   8100 breakout       +9111 +10.7%  -1d | 目标+8%
+  2025-01-09 S  688200.SH   117.87    400 breakout       +1003  +2.2%  -1d | 回落30%(高3.3%)
+  2025-01-13 B  002050.SZ    27.20   4900 breakout         ---    ---      | warmup
+  2025-01-13 B  300433.SZ    22.60   3900 breakout         ---    ---      | warmup
+  2025-01-10 S  000921.SZ    31.94   3200 breakout       -3141  -3.0%   1d | 止损-2%
+  2025-01-10 S  300433.SZ    23.40   3900 breakout       +3001  +3.4%  -3d | 回落20%(高4.4%)
+  2025-01-14 B  600489.SH    12.68   9300 breakout         ---    ---      | cooldown
+  2025-01-15 B  002468.SZ    10.75   7800 breakout         ---    ---      | warmup
+  2025-01-15 B  300124.SZ    61.28    800 breakout         ---    ---      | warmup
+  2025-01-14 S  002050.SZ    28.32   4900 breakout       +5308  +4.0%   1d | 回落20%(高5.1%)
+  2025-01-15 S  600489.SH    12.95   9300 breakout       +2317  +2.0%   1d | 回落30%(高3.0%)
+  2025-01-17 B  000408.SZ    32.45   3900 breakout         ---    ---      | warmup
+  2025-01-17 B  002582.SZ    10.47   8000 breakout         ---    ---      | warmup
+  2025-01-17 B  601001.SH    13.72   3900 breakout         ---    ---      | warmup
+  2025-01-16 S  002468.SZ    10.97   7800 breakout       +1636  +2.0%   1d | 回落30%(高3.0%)
+  2025-01-16 S  601001.SH    13.96   3900 breakout        +885  +1.7%  -1d | 回落30%(高2.6%)
+  2025-01-20 B  002221.SZ    10.61   8000 breakout         ---    ---      | warmup
+  2025-01-20 B  002543.SZ    12.00   4600 breakout         ---    ---      | warmup
+  2025-01-17 S  300124.SZ    60.55    800 breakout        -647  -1.3%   2d | 弱2d
+  2025-01-21 B  000833.SZ    12.94   4000 breakout         ---    ---      | warmup
+  2025-01-20 S  000408.SZ    33.12   3900 breakout       +2426  +1.9%   3d | 回落30%(高2.9%)
+  2025-01-20 S  002582.SZ    11.25   8000 breakout       +6155  +7.3%   3d | 回落20%(高9.4%)
+  2025-01-22 B  300458.SZ    48.00   2300 breakout         ---    ---      | warmup
+  2025-01-22 B  600114.SH    17.39   4100 breakout         ---    ---      | warmup
+  2025-01-21 S  002543.SZ    12.90   4600 breakout       +4081  +7.4%   1d | 回落20%(高9.4%)
+  2025-01-21 S  300458.SZ    49.60   2300 breakout       +3532  +3.2%  -1d | 回落20%(高4.2%)
+  2025-01-23 B  688065.SH    43.50   2400 breakout         ---    ---      | warmup
+  2025-01-22 S  002221.SZ     9.76   8000 breakout       -6902  -8.1%   2d | 止损-2%
+  2025-01-22 S  000833.SZ    11.63   4000 breakout       -5300 -10.2%   1d | 止损-2%
+  2025-01-24 B  600184.SH    11.15  10300 ignition         ---    ---      | warmup
+  2025-01-24 B  002674.SZ    10.10   7400 breakout         ---    ---      | warmup
+  2025-01-23 S  600184.SH    10.81  10300 ignition       -3647  -3.2%  -1d | 止损-2%
+  2025-01-27 B  300677.SZ    27.37   3200 breakout         ---    ---      | warmup
+  2025-01-27 B  300687.SZ    19.91   2800 ignition         ---    ---      | warmup
+  2025-01-24 S  300677.SZ    27.94   3200 breakout       +1721  +2.0%  -3d | 回落30%(高3.0%)
+  2025-02-05 B  000830.SZ    11.86   5800 breakout         ---    ---      | warmup
+  2025-01-27 S  600114.SH    17.75   4100 breakout       +1369  +1.9%   5d | 回落30%(高2.9%)
+  2025-01-27 S  688065.SH    44.17   2400 breakout       +1470  +1.4%   4d | 时间4d
+  2025-01-27 S  002674.SZ    10.36   7400 breakout       +1817  +2.4%   3d | 回落30%(高3.7%)
+  2025-02-06 B  300418.SZ    42.30   3100 breakout         ---    ---      | warmup
+  2025-02-06 B  300559.SZ    12.45   7000 breakout         ---    ---      | warmup
+  2025-02-06 B  600055.SH    15.20   3800 breakout         ---    ---      | warmup
+  2025-02-05 S  300687.SZ    20.90   2800 ignition       +2702  +4.8%   9d | 回落20%(高6.2%)
+  2025-02-05 S  300418.SZ    43.15   3100 breakout       +2452  +1.9%  -1d | 回落30%(高2.9%)
+  2025-02-05 S  300559.SZ    12.69   7000 breakout       +1599  +1.8%  -1d | 回落30%(高2.8%)
+  2025-02-07 S  000830.SZ    11.73   5800 breakout        -842  -1.2%   2d | 弱2d
+  2025-02-07 S  600055.SH    16.28   3800 breakout       +4024  +7.0%   1d | 回落20%(高8.9%)
+  2025-02-11 B  000029.SZ    15.67   8200 breakout         ---    ---      | hot
+  2025-02-14 B  000034.SZ    47.08   2800 breakout         ---    ---      | warmup
+  2025-02-14 B  002714.SZ    37.80   2300 breakout         ---    ---      | warmup
+  2025-02-14 B  600081.SH    13.57   4400 breakout         ---    ---      | warmup
+  2025-02-14 B  600199.SH    12.01   3200 breakout         ---    ---      | warmup
+  2025-02-13 S  000029.SZ    15.13   8200 breakout       -4589  -3.6%   2d | 止损-2%
+  2025-02-13 S  000034.SZ    48.94   2800 breakout       +5041  +3.8%  -1d | 回落20%(高4.9%)
+  2025-02-13 S  600081.SH    13.85   4400 breakout       +1153  +1.9%  -1d | 回落30%(高2.9%)
+  2025-02-13 S  600199.SH    12.43   3200 breakout       +1305  +3.4%  -1d | 回落20%(高4.4%)
+  2025-02-17 B  000426.SZ    12.94  10800 breakout         ---    ---      | warmup
+  2025-02-17 B  002541.SZ    16.96   6000 breakout         ---    ---      | warmup
+  2025-02-17 B  300075.SZ    18.90   3500 breakout         ---    ---      | warmup
+  2025-02-17 B  300212.SZ    30.80   1400 breakout         ---    ---      | warmup
+  2025-02-14 S  000426.SZ    13.30  10800 breakout       +3669  +2.6%  -3d | 回落30%(高3.9%)
+  2025-02-14 S  300075.SZ    18.10   3500 breakout       -2882  -4.4%  -3d | 止损-2%
+  2025-02-14 S  300212.SZ    29.53   1400 breakout       -1832  -4.2%  -3d | 止损-2%
+  2025-02-19 B  000065.SZ    11.36  10100 breakout         ---    ---      | warmup
+  2025-02-19 B  002290.SZ    20.50   3600 breakout         ---    ---      | warmup
+  2025-02-19 B  300438.SZ    30.01   1600 breakout         ---    ---      | warmup
+  2025-02-18 S  002714.SZ    37.17   2300 breakout       -1560  -1.8%   4d | 弱4d
+  2025-02-18 S  000065.SZ    10.89  10100 breakout       -4890  -4.3%  -1d | 止损-2%
+  2025-02-18 S  002290.SZ    19.88   3600 breakout       -2325  -3.2%  -1d | 止损-2%
+  2025-02-18 S  300438.SZ    31.59   1600 breakout       +2456  +5.1%  -1d | 回落20%(高6.6%)
+  2025-02-20 B  000065.SZ    11.64  12000 breakout         ---    ---      | warmup
+  2025-02-20 B  000876.SZ    10.44   9100 breakout         ---    ---      | warmup
+  2025-02-20 B  002152.SZ    14.13   4300 breakout         ---    ---      | warmup
+  2025-02-20 B  002290.SZ    24.01   1600 breakout         ---    ---      | warmup
+  2025-02-19 S  002541.SZ    18.43   6000 breakout       +8676  +8.5%   2d | 目标+8%
+  2025-02-19 S  000065.SZ    11.88  12000 breakout       +2671  +1.9%  -1d | 回落30%(高2.9%)
+  2025-02-19 S  002152.SZ    14.44   4300 breakout       +1274  +2.1%  -1d | 回落30%(高3.2%)
+  2025-02-19 S  002290.SZ    21.87   1600 breakout       -3469  -9.0%  -1d | 止损-2%
+  2025-02-21 B  000096.SZ    15.31   9100 breakout         ---    ---      | warmup
+  2025-02-21 B  000551.SZ    12.67   7900 breakout         ---    ---      | warmup
+  2025-02-21 B  300054.SZ    30.56   2100 breakout         ---    ---      | warmup
+  2025-02-21 B  300285.SZ    18.91   2200 breakout         ---    ---      | warmup
+  2025-02-20 S  000096.SZ    16.08   9100 breakout       +6799  +4.9%  -1d | 回落20%(高6.3%)
+  2025-02-20 S  300285.SZ    19.40   2200 breakout       +1023  +2.5%  -1d | 回落30%(高3.7%)
+  2025-02-24 B  000155.SZ    11.59   8100 breakout         ---    ---      | warmup
+  2025-02-24 B  000338.SZ    15.68   3900 breakout         ---    ---      | warmup
+  2025-02-21 S  000876.SZ     9.98   9100 breakout       -4304  -4.5%   1d | 止损-2%
+  2025-02-24 S  000551.SZ    12.60   7900 breakout        -682  -0.7%   3d | 弱3d
+  2025-02-24 S  300054.SZ    32.03   2100 breakout       +3004  +4.7%   3d | 回落20%(高6.0%)
+  2025-02-26 B  002034.SZ    17.62   7400 breakout         ---    ---      | warmup
+  2025-02-26 B  603392.SH    70.80   1100 breakout         ---    ---      | warmup
+  2025-02-26 B  300618.SZ    36.96   1500 breakout         ---    ---      | warmup
+  2025-02-25 S  002034.SZ    17.99   7400 breakout       +2572  +2.0%  -1d | 回落30%(高3.0%)
+  2025-02-25 S  603392.SH    72.34   1100 breakout       +1591  +2.0%  -1d | 回落30%(高3.1%)
+  2025-02-25 S  300618.SZ    39.87   1500 breakout       +4290  +7.7%  -1d | 回落20%(高9.8%)
+  2025-02-27 B  002048.SZ    14.20   9400 breakout         ---    ---      | warmup
+  2025-02-27 B  300037.SZ    36.66   2300 breakout         ---    ---      | warmup
+  2025-02-27 B  600416.SH    11.00   5200 breakout         ---    ---      | warmup
+  2025-02-26 S  000155.SZ    11.56   8100 breakout        -365  -0.4%   2d | 弱2d
+  2025-02-26 S  002048.SZ    13.75   9400 breakout       -4398  -3.3%  -1d | 止损-2%
+  2025-02-28 B  000026.SZ    11.00  10400 breakout         ---    ---      | warmup
+  2025-02-28 B  000568.SZ   127.00    500 breakout         ---    ---      | warmup
+  2025-02-27 S  000338.SZ    15.96   3900 breakout       +1011  +1.7%   3d | 回落30%(高2.6%)
+  2025-02-28 S  300037.SZ    38.57   2300 breakout       +4282  +5.1%   1d | 回落20%(高6.5%)
+  2025-02-28 S  600416.SH    10.57   5200 breakout       -2307  -4.0%   1d | 止损-2%
+  2025-03-04 B  002140.SZ    10.30  12100 breakout         ---    ---      | warmup
+  2025-03-04 B  002460.SZ    38.00   2100 breakout         ---    ---      | warmup
+  2025-03-04 B  002466.SZ    33.75   1500 breakout         ---    ---      | warmup
+  2025-03-03 S  000026.SZ    10.86  10400 breakout       -1603  -1.4%   3d | 弱3d
+  2025-03-03 S  000568.SZ   129.24    500 breakout       +1036  +1.6%   3d | 回落30%(高2.5%)
+  2025-03-03 S  002140.SZ    10.92  12100 breakout       +7379  +5.9%  -1d | 回落20%(高7.6%)
+  2025-03-05 B  600391.SH    20.20   6700 breakout         ---    ---      | cooldown
+  2025-03-04 S  600391.SH    21.17   6700 breakout       +6301  +4.7%  -1d | 回落20%(高6.0%)
+  2025-03-06 B  000409.SZ    14.25   9800 breakout         ---    ---      | warmup
+  2025-03-06 B  601717.SH    14.34   6700 breakout         ---    ---      | warmup
+  2025-03-06 B  600859.SH    13.81   4500 breakout         ---    ---      | warmup
+  2025-03-05 S  002460.SZ    36.94   2100 breakout       -2327  -2.9%   1d | 止损-2%
+  2025-03-05 S  002466.SZ    32.82   1500 breakout       -1459  -2.9%   1d | 止损-2%
+  2025-03-05 S  000409.SZ    12.95   9800 breakout      -12905  -9.2%  -1d | 止损-2%
+  2025-03-07 S  601717.SH    15.08   6700 breakout       +4800  +5.0%   1d | 回落20%(高6.4%)
+  2025-03-07 S  600859.SH    14.13   4500 breakout       +1366  +2.2%   1d | 回落30%(高3.3%)
+  2025-03-11 B  600416.SH    11.50  11600 breakout         ---    ---      | hot
+  2025-03-10 S  600416.SH    11.75  11600 breakout       +2665  +2.0%  -1d | 回落30%(高3.0%)
+  2025-03-12 B  000014.SZ    11.00  12200 breakout         ---    ---      | hot
+  2025-03-13 B  000045.SZ    11.20  12500 breakout         ---    ---      | warmup
+  2025-03-13 B  002785.SZ    32.00   2900 breakout         ---    ---      | warmup
+  2025-03-13 B  601633.SH    26.51   2200 breakout         ---    ---      | warmup
+  2025-03-13 B  603267.SH    54.87    700 breakout         ---    ---      | warmup
+  2025-03-12 S  000045.SZ    11.41  12500 breakout       +2440  +1.7%  -1d | 回落30%(高2.7%)
+  2025-03-14 B  600456.SH    36.14   2100 breakout         ---    ---      | warmup
+  2025-03-13 S  000014.SZ    11.54  12200 breakout       +6356  +4.7%   1d | 回落20%(高6.1%)
+  2025-03-13 S  600456.SH    32.86   2100 breakout       -6978  -9.2%  -1d | 止损-2%
+  2025-03-14 S  002785.SZ    30.80   2900 breakout       -3596  -3.9%   1d | 止损-2%
+  2025-03-14 S  603267.SH    58.09    700 breakout       +2204  +5.7%   1d | 回落20%(高7.3%)
+  2025-03-17 S  601633.SH    26.39   2200 breakout        -339  -0.6%   4d | 弱4d
+  2025-03-19 B  000062.SZ    25.60   5200 breakout         ---    ---      | hot
+  2025-03-18 S  000062.SZ    26.30   5200 breakout       +3462  +2.6%  -1d | 回落30%(高3.9%)
+  2025-03-20 B  002603.SZ    14.70   9200 breakout         ---    ---      | hot
+  2025-03-19 S  002603.SZ    15.02   9200 breakout       +2718  +2.0%  -1d | 回落30%(高3.1%)
+  2025-03-21 B  002278.SZ    10.73  13000 breakout         ---    ---      | warmup
+  2025-03-21 B  600081.SH    13.45  10400 breakout         ---    ---      | warmup
+  2025-03-21 B  601799.SH   136.52    600 breakout         ---    ---      | warmup
+  2025-03-21 B  300775.SZ    26.50   2400 breakout         ---    ---      | warmup
+  2025-03-20 S  002278.SZ    10.26  13000 breakout       -6283  -4.5%  -1d | 止损-2%
+  2025-03-20 S  600081.SH    13.95  10400 breakout       +5053  +3.6%  -1d | 回落20%(高4.7%)
+  2025-03-20 S  300775.SZ    27.63   2400 breakout       +2621  +4.1%  -1d | 回落20%(高5.3%)
+  2025-03-24 B  002278.SZ    11.18  12500 breakout         ---    ---      | cooldown
+  2025-03-25 B  000039.SZ     9.99  10700 breakout         ---    ---      | cooldown
+  2025-03-25 S  601799.SH   138.96    600 breakout       +1353  +1.7%   4d | 回落30%(高2.5%)
+  2025-03-25 S  002278.SZ    11.40  12500 breakout       +2527  +1.8%   1d | 回落30%(高2.8%)
+  2025-03-27 B  300363.SZ    18.76   7400 breakout         ---    ---      | warmup
+  2025-03-27 B  000155.SZ    11.49   9200 breakout         ---    ---      | warmup
+  2025-03-27 B  000048.SZ    17.15   4000 breakout         ---    ---      | warmup
+  2025-03-26 S  000039.SZ     9.24  10700 breakout       -8154  -7.6%   1d | 止损-2%
+  2025-03-28 B  000963.SZ    36.61   2100 breakout         ---    ---      | warmup
+  2025-03-28 B  002001.SZ    22.50   2300 breakout         ---    ---      | warmup
+  2025-03-28 S  300363.SZ    19.66   7400 breakout       +6441  +4.6%   1d | 回落20%(高6.0%)
+  2025-03-28 S  000155.SZ    11.87   9200 breakout       +3317  +3.1%   1d | 回落20%(高4.1%)
+  2025-04-01 B  000025.SZ    18.04   6800 breakout         ---    ---      | warmup
+  2025-04-01 B  001289.SZ    16.45   4900 breakout         ---    ---      | warmup
+  2025-03-31 S  000048.SZ    17.37   4000 breakout        +790  +1.2%   4d | 时间4d
+  2025-03-31 S  000963.SZ    37.43   2100 breakout       +1618  +2.1%   3d | 回落30%(高3.2%)
+  2025-03-31 S  002001.SZ    22.38   2300 breakout        -343  -0.7%   3d | 弱3d
+  2025-03-31 S  001289.SZ    17.03   4900 breakout       +2753  +3.4%  -1d | 回落20%(高4.4%)
+  2025-04-02 B  000045.SZ    11.74  11900 breakout         ---    ---      | warmup
+  2025-04-02 B  001289.SZ    16.93   6000 breakout         ---    ---      | warmup
+  2025-04-02 B  600196.SH    25.78   2600 breakout         ---    ---      | warmup
+  2025-04-02 B  000963.SZ    38.69   1100 breakout         ---    ---      | warmup
+  2025-04-02 S  000025.SZ    18.74   6800 breakout       +4622  +3.8%   1d | 回落20%(高4.9%)
+  2025-04-07 B  002791.SZ    24.00   3000 breakout         ---    ---      | warmup
+  2025-04-03 S  000045.SZ    11.22  11900 breakout       -6362  -4.6%   1d | 止损-2%
+  2025-04-03 S  001289.SZ    17.39   6000 breakout       +2636  +2.6%   1d | 回落30%(高3.9%)
+  2025-04-03 S  002791.SZ    25.13   3000 breakout       +3286  +4.6%  -4d | 回落20%(高5.9%)
+  2025-04-07 S  600196.SH    23.20   2600 breakout       -6786 -10.1%   5d | 止损-2%
+  2025-04-07 S  000963.SZ    36.89   1100 breakout       -2033  -4.8%   5d | 止损-2%
+  2025-04-09 B  000876.SZ    11.06   9900 breakout         ---    ---      | ice
+  2025-04-09 B  000998.SZ    12.02   7300 breakout         ---    ---      | ice
+  2025-04-10 S  000876.SZ    11.72   9900 breakout       +6344  +5.8%   1d | 回落20%(高7.4%)
+  2025-04-10 S  000998.SZ    12.80   7300 breakout       +5543  +6.3%   1d | 回落20%(高8.1%)
+  2025-04-14 B  300661.SZ   117.20   1100 breakout         ---    ---      | warmup
+  2025-04-14 B  600697.SH    12.80  10900 breakout         ---    ---      | warmup
+  2025-04-14 B  688536.SH   154.10    600 breakout         ---    ---      | warmup
+  2025-04-14 B  300054.SZ    29.98   2300 breakout         ---    ---      | warmup
+  2025-04-11 S  600697.SH    14.11  10900 breakout      +14079 +10.1%  -3d | 目标+8%
+  2025-04-11 S  688536.SH   146.06    600 breakout       -4938  -5.3%  -3d | 止损-2%
+  2025-04-15 B  603136.SH    12.69  10300 breakout         ---    ---      | warmup
+  2025-04-15 B  600171.SH    36.47   2300 breakout         ---    ---      | warmup
+  2025-04-15 B  600827.SH    10.00   5600 breakout         ---    ---      | warmup
+  2025-04-14 S  600171.SH    37.69   2300 breakout       +2702  +3.2%  -1d | 回落20%(高4.2%)
+  2025-04-14 S  600827.SH    10.47   5600 breakout       +2567  +4.6%  -1d | 回落20%(高5.9%)
+  2025-04-16 B  600373.SH    11.70   7400 breakout         ---    ---      | warmup
+  2025-04-16 B  603317.SH    14.52   3900 breakout         ---    ---      | warmup
+  2025-04-15 S  300661.SZ   113.80   1100 breakout       -3903  -3.0%   1d | 止损-2%
+  2025-04-15 S  603317.SH    14.81   3900 breakout       +1044  +1.8%  -1d | 回落30%(高2.8%)
+  2025-04-17 B  300829.SZ    18.34   5500 breakout         ---    ---      | warmup
+  2025-04-17 B  600054.SH    12.55   5200 breakout         ---    ---      | warmup
+  2025-04-16 S  300054.SZ    29.53   2300 breakout       -1123  -1.6%   2d | 弱2d
+  2025-04-16 S  603136.SH    13.31  10300 breakout       +6249  +4.8%   1d | 回落20%(高6.1%)
+  2025-04-16 S  300829.SZ    19.09   5500 breakout       +3999  +4.0%  -1d | 回落20%(高5.1%)
+  2025-04-18 B  000025.SZ    20.18   6900 breakout         ---    ---      | warmup
+  2025-04-18 B  002186.SZ    11.87   8600 breakout         ---    ---      | warmup
+  2025-04-18 B  002410.SZ    16.03   4100 breakout         ---    ---      | warmup
+  2025-04-17 S  600373.SH    11.31   7400 breakout       -2995  -3.5%   1d | 止损-2%
+  2025-04-17 S  000025.SZ    19.26   6900 breakout       -6521  -4.7%  -1d | 止损-2%
+  2025-04-17 S  002186.SZ    12.35   8600 breakout       +3990  +3.9%  -1d | 回落20%(高5.1%)
+  2025-04-21 B  000025.SZ    20.34   6800 breakout         ---    ---      | warmup
+  2025-04-21 B  601086.SH    12.05   8900 breakout         ---    ---      | warmup
+  2025-04-18 S  600054.SH    12.04   5200 breakout       -2733  -4.2%   1d | 止损-2%
+  2025-04-18 S  000025.SZ    21.02   6800 breakout       +4438  +3.2%  -3d | 回落20%(高4.2%)
+  2025-04-18 S  601086.SH    11.61   8900 breakout       -4050  -3.8%  -3d | 止损-2%
+  2025-04-22 B  603136.SH    12.86  10800 breakout         ---    ---      | warmup
+  2025-04-22 B  300773.SZ    23.30   5500 breakout         ---    ---      | warmup
+  2025-04-22 B  300696.SZ    17.80   4700 breakout         ---    ---      | warmup
+  2025-04-21 S  002410.SZ    15.78   4100 breakout       -1109  -1.7%   3d | 弱3d
+  2025-04-21 S  603136.SH    13.36  10800 breakout       +5169  +3.7%  -1d | 回落20%(高4.8%)
+  2025-04-21 S  300773.SZ    21.29   5500 breakout      -11207  -8.7%  -1d | 止损-2%
+  2025-04-21 S  300696.SZ    19.24   4700 breakout       +6650  +7.9%  -1d | 回落20%(高10.1%)
+  2025-04-23 B  300696.SZ    18.50   7500 breakout         ---    ---      | warmup
+  2025-04-23 B  300773.SZ    27.65   5000 breakout         ---    ---      | warmup
+  2025-04-23 B  600848.SH    10.03  10400 breakout         ---    ---      | warmup
+  2025-04-23 B  300674.SZ    24.03   2800 breakout         ---    ---      | warmup
+  2025-04-22 S  300696.SZ    19.29   7500 breakout       +5752  +4.1%  -1d | 回落20%(高5.4%)
+  2025-04-22 S  300773.SZ    25.55   5000 breakout      -10666  -7.7%  -1d | 止损-2%
+  2025-04-22 S  300674.SZ    24.60   2800 breakout       +1518  +2.3%  -1d | 回落30%(高3.4%)
+  2025-04-24 B  603708.SH    11.73  11900 breakout         ---    ---      | warmup
+  2025-04-24 B  002555.SZ    16.20   7000 breakout         ---    ---      | warmup
+  2025-04-24 B  002736.SZ    10.60   7000 breakout         ---    ---      | warmup
+  2025-04-23 S  603708.SH    12.43  11900 breakout       +8090  +5.8%  -1d | 回落20%(高7.4%)
+  2025-04-25 B  601086.SH    12.53   8000 breakout         ---    ---      | warmup
+  2025-04-24 S  601086.SH    13.92   8000 breakout      +10975 +10.9%  -1d | 目标+8%
+  2025-04-28 B  600053.SH    13.55   7700 breakout         ---    ---      | warmup
+  2025-04-25 S  600848.SH     9.85  10400 breakout       -2005  -1.9%   2d | 弱2d
+  2025-04-25 S  600053.SH    14.36   7700 breakout       +6078  +5.8%  -3d | 回落20%(高7.5%)
+  2025-04-29 B  600298.SH    35.52   3900 breakout         ---    ---      | warmup
+  2025-04-29 B  002517.SZ    16.80   5600 breakout         ---    ---      | warmup
+  2025-04-28 S  002555.SZ    15.88   7000 breakout       -2385  -2.1%   4d | 弱4d
+  2025-04-28 S  002736.SZ    10.77   7000 breakout       +1092  +1.5%   4d | 时间4d
+  2025-04-28 S  002517.SZ    17.13   5600 breakout       +1718  +1.8%  -1d | 回落30%(高2.8%)
+  2025-04-30 B  002345.SZ    10.21  13700 breakout         ---    ---      | warmup
+  2025-04-30 B  002048.SZ    16.07   6900 breakout         ---    ---      | warmup
+  2025-04-30 B  603986.SH   126.88    500 breakout         ---    ---      | warmup
+  2025-04-30 B  000815.SZ    13.55   3600 breakout         ---    ---      | warmup
+  2025-05-06 S  600298.SH    36.18   3900 breakout       +2391  +1.7%   7d | 时间7d
+  2025-05-06 S  002345.SZ    10.45  13700 breakout       +3075  +2.2%   6d | 回落30%(高3.3%)
+  2025-05-06 S  002048.SZ    16.84   6900 breakout       +5148  +4.6%   6d | 回落20%(高6.0%)
+  2025-05-06 S  603986.SH   133.41    500 breakout       +3177  +5.0%   6d | 回落20%(高6.4%)
+  2025-05-06 S  000815.SZ    14.14   3600 breakout       +2065  +4.2%   6d | 回落20%(高5.5%)
+  2025-05-08 B  600562.SH    22.95   6100 breakout         ---    ---      | hot
+  2025-05-09 S  600562.SH    25.31   6100 breakout      +14195 +10.1%   1d | 回落20%(高12.9%)
+  2025-05-13 B  000768.SZ    25.70   5400 breakout         ---    ---      | hot
+  2025-05-14 B  600438.SH    18.00   7700 breakout         ---    ---      | warmup
+  2025-05-14 B  000661.SZ    97.50   1200 breakout         ---    ---      | warmup
+  2025-05-14 B  002831.SZ    22.81   3500 breakout         ---    ---      | warmup
+  2025-05-13 S  600438.SH    18.62   7700 breakout       +4557  +3.3%  -1d | 回落20%(高4.3%)
+  2025-05-14 S  000768.SZ    24.81   5400 breakout       -4980  -3.6%   1d | 止损-2%
+  2025-05-19 B  600535.SH    16.05   8700 breakout         ---    ---      | warmup
+  2025-05-19 B  002603.SZ    15.23   6600 breakout         ---    ---      | warmup
+  2025-05-19 B  600549.SH    20.59   3100 breakout         ---    ---      | warmup
+  2025-05-16 S  000661.SZ    99.87   1200 breakout       +2683  +2.3%   2d | 回落30%(高3.5%)
+  2025-05-16 S  002831.SZ    22.71   3500 breakout        -453  -0.6%   2d | 弱2d
+  2025-05-16 S  002603.SZ    15.55   6600 breakout       +1946  +1.9%  -3d | 回落30%(高3.0%)
+  2025-05-20 B  000014.SZ    12.00  11600 breakout         ---    ---      | warmup
+  2025-05-20 B  000935.SZ    18.54   5400 breakout         ---    ---      | warmup
+  2025-05-20 B  002778.SZ    18.09   3500 breakout         ---    ---      | warmup
+  2025-05-19 S  000935.SZ    17.50   5400 breakout       -5739  -5.7%  -1d | 止损-2%
+  2025-05-19 S  002778.SZ    18.50   3500 breakout       +1361  +2.2%  -1d | 回落30%(高3.3%)
+  2025-05-21 B  002352.SZ    46.16   2100 breakout         ---    ---      | warmup
+  2025-05-21 B  300672.SZ    80.90    700 breakout         ---    ---      | warmup
+  2025-05-20 S  600549.SH    19.91   3100 breakout       -2188  -3.4%   1d | 止损-2%
+  2025-05-22 B  000550.SZ    21.50   3000 breakout         ---    ---      | warmup
+  2025-05-21 S  000014.SZ    11.68  11600 breakout       -3888  -2.8%   1d | 止损-2%
+  2025-05-23 B  002023.SZ    10.77   8400 breakout         ---    ---      | warmup
+  2025-05-23 S  600535.SH    16.04   8700 breakout        -268  -0.2%   4d | 弱4d
+  2025-05-23 S  002352.SZ    45.63   2100 breakout       -1238  -1.3%   2d | 弱2d
+  2025-05-23 S  000550.SZ    21.92   3000 breakout       +1175  +1.8%   1d | 回落30%(高2.8%)
+  2025-05-27 B  002785.SZ    31.33   4400 breakout         ---    ---      | warmup
+  2025-05-27 B  603960.SH    22.30   5200 breakout         ---    ---      | warmup
+  2025-05-27 B  603056.SH    15.47   4900 breakout         ---    ---      | warmup
+  2025-05-26 S  002023.SZ    10.27   8400 breakout       -4312  -4.8%   3d | 止损-2%
+  2025-05-26 S  002785.SZ    32.58   4400 breakout       +5305  +3.8%  -1d | 回落20%(高5.0%)
+  2025-05-26 S  603960.SH    21.16   5200 breakout       -6071  -5.2%  -1d | 止损-2%
+  2025-05-26 S  603056.SH    14.21   4900 breakout       -6265  -8.3%  -1d | 止损-2%
+  2025-05-28 B  000066.SZ    15.16   9200 breakout         ---    ---      | warmup
+  2025-05-28 B  300438.SZ    25.66   5400 breakout         ---    ---      | warmup
+  2025-05-28 B  600059.SH    11.20   8400 breakout         ---    ---      | warmup
+  2025-05-28 B  600990.SH    25.59   2400 breakout         ---    ---      | warmup
+  2025-05-27 S  000066.SZ    15.82   9200 breakout       +5920  +4.2%  -1d | 回落20%(高5.5%)
+  2025-05-27 S  300438.SZ    27.61   5400 breakout      +10347  +7.5%  -1d | 回落20%(高9.5%)
+  2025-05-27 S  600059.SH    11.63   8400 breakout       +3502  +3.7%  -1d | 回落20%(高4.8%)
+  2025-05-29 B  002468.SZ    11.22  12400 breakout         ---    ---      | warmup
+  2025-05-29 B  688321.SH    18.48   6900 breakout         ---    ---      | warmup
+  2025-05-29 B  600233.SH    13.29   6300 ignition         ---    ---      | warmup
+  2025-05-29 S  600990.SH    29.10   2400 breakout       +8333 +13.6%   1d | 目标+8%
+  2025-06-03 B  600196.SH    24.80   3200 breakout         ---    ---      | warmup
+  2025-05-30 S  002468.SZ    11.80  12400 breakout       +6952  +5.0%   1d | 回落20%(高6.4%)
+  2025-05-30 S  688321.SH    19.86   6900 breakout       +9316  +7.3%   1d | 回落20%(高9.3%)
+  2025-05-30 S  600196.SH    25.25   3200 breakout       +1351  +1.7%  -4d | 回落30%(高2.6%)
+  2025-06-04 B  603056.SH    23.00   6000 breakout         ---    ---      | warmup
+  2025-06-04 B  603136.SH    11.84  11000 breakout         ---    ---      | warmup
+  2025-06-04 B  603258.SH    21.42   3900 breakout         ---    ---      | warmup
+  2025-06-03 S  600233.SH    12.85   6300 ignition       -2877  -3.4%   5d | 止损-2%
+  2025-06-03 S  603258.SH    22.44   3900 breakout       +3849  +4.6%  -1d | 回落20%(高5.9%)
+  2025-06-06 B  000625.SZ    13.20   8600 breakout         ---    ---      | warmup
+  2025-06-06 B  002463.SZ    34.98   2100 breakout         ---    ---      | warmup
+  2025-06-05 S  603056.SH    20.21   6000 breakout      -16898 -12.2%   1d | 止损-2%
+  2025-06-05 S  603136.SH    12.76  11000 breakout       +9938  +7.6%   1d | 回落20%(高9.7%)
+  2025-06-06 S  300672.SZ    94.00    700 breakout       +9082 +16.0%  16d | 回落20%(高20.2%)
+  2025-06-09 S  000625.SZ    13.04   8600 breakout       -1522  -1.3%   3d | 弱3d
+  2025-06-09 S  002463.SZ    36.69   2100 breakout       +3495  +4.8%   3d | 回落20%(高6.1%)
+  2025-06-11 B  000028.SZ    26.00   5300 breakout         ---    ---      | warmup
+  2025-06-11 B  688180.SH    36.99   3700 breakout         ---    ---      | warmup
+  2025-06-11 B  000610.SZ    13.30  10000 breakout         ---    ---      | warmup
+  2025-06-11 B  300003.SZ    13.34   6500 breakout         ---    ---      | warmup
+  2025-06-11 B  300741.SZ    20.70   2700 breakout         ---    ---      | warmup
+  2025-06-10 S  300003.SZ    13.78   6500 breakout       +2744  +3.2%  -1d | 回落20%(高4.1%)
+  2025-06-10 S  300741.SZ    22.19   2700 breakout       +3940  +7.0%  -1d | 回落20%(高9.0%)
+  2025-06-12 B  000014.SZ    12.20   7300 breakout         ---    ---      | warmup
+  2025-06-12 B  300037.SZ    34.68   1600 breakout         ---    ---      | warmup
+  2025-06-12 S  688180.SH    38.62   3700 breakout       +5853  +4.3%   1d | 回落20%(高5.5%)
+  2025-06-12 S  000610.SZ    12.91  10000 breakout       -4068  -3.1%   1d | 止损-2%
+  2025-06-16 B  002555.SZ    15.55   8600 breakout         ---    ---      | warmup
+  2025-06-16 B  300450.SZ    22.05   3900 breakout         ---    ---      | warmup
+  2025-06-13 S  000028.SZ    25.48   5300 breakout       -2932  -2.1%   2d | 弱2d
+  2025-06-13 S  000014.SZ    12.42   7300 breakout       +1517  +1.7%   1d | 回落30%(高2.6%)
+  2025-06-17 B  002117.SZ    11.68  11600 breakout         ---    ---      | warmup
+  2025-06-17 B  300251.SZ    22.98   3800 breakout         ---    ---      | warmup
+  2025-06-16 S  300037.SZ    34.55   1600 breakout        -280  -0.5%   4d | 弱4d
+  2025-06-16 S  300251.SZ    22.10   3800 breakout       -3453  -4.0%  -1d | 止损-2%
+  2025-06-18 B  000020.SZ    13.90   7600 breakout         ---    ---      | warmup
+  2025-06-18 B  300171.SZ    12.94   5300 breakout         ---    ---      | warmup
+  2025-06-17 S  002555.SZ    15.83   8600 breakout       +2231  +1.7%   1d | 回落30%(高2.6%)
+  2025-06-17 S  300450.SZ    22.99   3900 breakout       +3534  +4.1%   1d | 回落20%(高5.3%)
+  2025-06-17 S  300171.SZ    13.57   5300 breakout       +3256  +4.7%  -1d | 回落20%(高6.1%)
+  2025-06-19 B  600184.SH    14.50   9600 breakout         ---    ---      | warmup
+  2025-06-19 B  002916.SZ   103.85    900 ignition         ---    ---      | warmup
+  2025-06-18 S  002117.SZ    11.16  11600 breakout       -6200  -4.6%   1d | 止损-2%
+  2025-06-20 B  300624.SZ    62.82   1800 breakout         ---    ---      | warmup
+  2025-06-20 B  002207.SZ    10.80   6800 breakout         ---    ---      | warmup
+  2025-06-19 S  000020.SZ    16.12   7600 breakout      +16743 +15.8%   1d | 回落20%(高20.0%)
+  2025-06-19 S  300624.SZ    66.24   1800 breakout       +6008  +5.3%  -1d | 回落20%(高6.8%)
+  2025-06-19 S  002207.SZ    10.05   6800 breakout       -5189  -7.1%  -1d | 止损-2%
+  2025-06-23 B  300554.SZ    20.86   6700 breakout         ---    ---      | warmup
+  2025-06-23 B  600199.SH    10.72  10000 breakout         ---    ---      | warmup
+  2025-06-23 B  603198.SH    39.20   1700 ignition         ---    ---      | warmup
+  2025-06-20 S  600184.SH    13.81   9600 breakout       -6796  -4.9%   1d | 止损-2%
+  2025-06-20 S  002916.SZ    99.23    900 ignition       -4274  -4.6%   1d | 止损-2%
+  2025-06-20 S  300554.SZ    21.31   6700 breakout       +2816  +2.0%  -3d | 回落30%(高3.1%)
+  2025-06-20 S  600199.SH    11.18  10000 breakout       +4415  +4.1%  -3d | 回落20%(高5.3%)
+  2025-06-20 S  603198.SH    40.91   1700 ignition       +2820  +4.2%  -3d | 回落20%(高5.5%)
+  2025-06-24 B  002152.SZ    13.25  10500 breakout         ---    ---      | warmup
+  2025-06-24 B  002182.SZ    11.93  11700 breakout         ---    ---      | warmup
+  2025-06-24 B  300618.SZ    35.40   3900 breakout         ---    ---      | warmup
+  2025-06-24 B  002074.SZ    27.48   3300 breakout         ---    ---      | warmup
+  2025-06-24 B  002207.SZ     9.52   6200 breakout         ---    ---      | warmup
+  2025-06-23 S  300618.SZ    37.07   3900 breakout       +6333  +4.6%  -1d | 回落20%(高5.9%)
+  2025-06-23 S  002207.SZ    10.58   6200 breakout       +6487 +11.0%  -1d | 目标+8%
+  2025-06-25 B  000065.SZ    10.88  10300 breakout         ---    ---      | warmup
+  2025-06-25 B  002281.SZ    48.05   1500 breakout         ---    ---      | warmup
+  2025-06-25 S  002152.SZ    13.61  10500 breakout       +3563  +2.6%   1d | 回落30%(高3.8%)
+  2025-06-25 S  002182.SZ    12.45  11700 breakout       +5895  +4.2%   1d | 回落20%(高5.4%)
+  2025-06-25 S  002074.SZ    33.02   3300 breakout      +18140 +20.0%   1d | 目标+8%
+  2025-06-27 S  000065.SZ    11.56  10300 breakout       +6849  +6.1%   2d | 回落20%(高7.8%)
+  2025-06-27 S  002281.SZ    49.06   1500 breakout       +1416  +2.0%   2d | 回落30%(高3.0%)
+  2025-07-01 B  000799.SZ    43.86   3100 breakout         ---    ---      | warmup
+  2025-07-01 B  002428.SZ    19.88   7000 breakout         ---    ---      | warmup
+  2025-07-01 B  300576.SZ    37.28   3700 breakout         ---    ---      | warmup
+  2025-07-01 B  600416.SH    13.17   8300 breakout         ---    ---      | warmup
+  2025-07-01 B  600438.SH    16.47   4300 breakout         ---    ---      | warmup
+  2025-06-30 S  000799.SZ    44.85   3100 breakout       +2901  +2.1%  -1d | 回落30%(高3.2%)
+  2025-06-30 S  600438.SH    16.84   4300 breakout       +1501  +2.1%  -1d | 回落30%(高3.2%)
+  2025-07-02 B  002416.SZ    13.00   9200 breakout         ---    ---      | warmup
+  2025-07-02 B  300054.SZ    29.80   2600 breakout         ---    ---      | warmup
+  2025-07-02 S  002428.SZ    20.31   7000 breakout       +2804  +2.0%   1d | 回落30%(高3.1%)
+  2025-07-02 S  300576.SZ    38.13   3700 breakout       +2951  +2.1%   1d | 回落30%(高3.2%)
+  2025-07-02 S  600416.SH    14.46   8300 breakout      +10534  +9.6%   1d | 回落20%(高12.2%)
+  2025-07-03 S  300054.SZ    28.60   2600 breakout       -3217  -4.2%   1d | 止损-2%
+  2025-07-07 B  002623.SZ    20.37   6800 breakout         ---    ---      | warmup
+  2025-07-07 B  300529.SZ    23.49   5900 breakout         ---    ---      | warmup
+  2025-07-07 B  601208.SH    11.08  10900 breakout         ---    ---      | warmup
+  2025-07-07 B  600104.SH    17.06   4600 breakout         ---    ---      | warmup
+  2025-07-04 S  002416.SZ    12.37   9200 breakout       -5944  -5.0%   2d | 止损-2%
+  2025-07-04 S  601208.SH    10.66  10900 breakout       -4729  -3.9%  -3d | 止损-2%
+  2025-07-08 B  000037.SZ    10.57  12500 breakout         ---    ---      | warmup
+  2025-07-08 B  300351.SZ    16.42   5200 breakout         ---    ---      | warmup
+  2025-07-07 S  300351.SZ    17.03   5200 breakout       +3046  +3.6%  -1d | 回落20%(高4.6%)
+  2025-07-08 S  002623.SZ    24.62   6800 breakout      +28682 +20.7%   1d | 目标+8%
+  2025-07-08 S  300529.SZ    22.80   5900 breakout       -4246  -3.1%   1d | 止损-2%
+  2025-07-08 S  600104.SH    17.40   4600 breakout       +1442  +1.8%   1d | 回落30%(高2.8%)
+  2025-07-10 B  603256.SH    23.66   5900 breakout         ---    ---      | warmup
+  2025-07-10 B  300624.SZ    66.50   2100 breakout         ---    ---      | warmup
+  2025-07-10 B  000151.SZ    13.02   9400 breakout         ---    ---      | warmup
+  2025-07-09 S  000037.SZ    11.24  12500 breakout       +8217  +6.2%   1d | 回落20%(高7.9%)
+  2025-07-09 S  603256.SH    24.25   5900 breakout       +3324  +2.4%  -1d | 回落30%(高3.6%)
+  2025-07-09 S  300624.SZ    68.99   2100 breakout       +5036  +3.6%  -1d | 回落20%(高4.7%)
+  2025-07-09 S  000151.SZ    13.67   9400 breakout       +5924  +4.8%  -1d | 回落20%(高6.2%)
+  2025-07-11 B  000935.SZ    20.08   6900 breakout         ---    ---      | hot
+  2025-07-15 B  002403.SZ    14.50   9600 breakout         ---    ---      | warmup
+  2025-07-15 B  600489.SH    14.99   9300 breakout         ---    ---      | warmup
+  2025-07-15 B  601208.SH    12.65  10100 breakout         ---    ---      | warmup
+  2025-07-15 B  600737.SH     9.95   8400 breakout         ---    ---      | warmup
+  2025-07-14 S  000935.SZ    20.49   6900 breakout       +2666  +1.9%   3d | 回落30%(高2.9%)
+  2025-07-14 S  600737.SH    10.17   8400 breakout       +1712  +2.0%  -1d | 回落30%(高3.1%)
+  2025-07-16 B  000034.SZ    38.88   3400 breakout         ---    ---      | warmup
+  2025-07-16 B  000409.SZ    12.98   6700 breakout         ---    ---      | warmup
+  2025-07-15 S  000409.SZ    12.34   6700 breakout       -4395  -5.1%  -1d | 止损-2%
+  2025-07-17 B  002117.SZ    12.49   6800 breakout         ---    ---      | warmup
+  2025-07-16 S  601208.SH    12.99  10100 breakout       +3223  +2.5%   1d | 回落30%(高3.8%)
+  2025-07-18 B  000158.SZ    24.00   4200 breakout         ---    ---      | warmup
+  2025-07-17 S  002403.SZ    14.40   9600 breakout       -1140  -0.8%   2d | 弱2d
+  2025-07-21 B  000422.SZ    13.13   8700 breakout         ---    ---      | warmup
+  2025-07-21 S  600489.SH    15.28   9300 breakout       +2484  +1.8%   6d | 回落30%(高2.7%)
+  2025-07-21 S  000034.SZ    38.81   3400 breakout        -410  -0.3%   5d | 弱5d
+  2025-07-21 S  002117.SZ    12.31   6800 breakout       -1333  -1.6%   4d | 弱4d
+  2025-07-21 S  000158.SZ    25.20   4200 breakout       +4902  +4.9%   3d | 回落20%(高6.2%)
+  2025-07-22 S  000422.SZ    13.71   8700 breakout       +4926  +4.3%   1d | 回落20%(高5.6%)
+  2025-07-24 B  600137.SH    20.09   6900 breakout         ---    ---      | hot
+  2025-07-28 B  600895.SH    30.59   4500 breakout         ---    ---      | warmup
+  2025-07-28 B  688220.SH    83.00   1600 breakout         ---    ---      | warmup
+  2025-07-28 B  002230.SZ    50.18   2700 breakout         ---    ---      | warmup
+  2025-07-28 B  600835.SH    26.90   3200 breakout         ---    ---      | warmup
+  2025-07-25 S  600137.SH    21.38   6900 breakout       +8695  +6.3%   1d | 回落20%(高8.0%)
+  2025-07-29 B  000625.SZ    13.40   8100 breakout         ---    ---      | warmup
+  2025-07-29 S  600895.SH    32.81   4500 breakout       +9780  +7.1%   1d | 回落20%(高9.1%)
+  2025-07-29 S  688220.SH    88.55   1600 breakout       +8699  +6.6%   1d | 回落20%(高8.4%)
+  2025-07-29 S  600835.SH    28.58   3200 breakout       +5257  +6.1%   1d | 回落20%(高7.8%)
+  2025-07-31 B  000423.SZ    52.00   2600 breakout         ---    ---      | warmup
+  2025-07-31 B  000538.SZ    57.24   2400 breakout         ---    ---      | warmup
+  2025-07-31 B  002041.SZ    10.11  10800 breakout         ---    ---      | warmup
+  2025-07-30 S  002230.SZ    48.41   2700 breakout       -4949  -3.7%   2d | 止损-2%
+  2025-08-01 B  000034.SZ    41.08   2800 breakout         ---    ---      | warmup
+  2025-07-31 S  000625.SZ    12.86   8100 breakout       -4509  -4.2%   2d | 止损-2%
+  2025-07-31 S  000034.SZ    42.05   2800 breakout       +2552  +2.2%  -1d | 回落30%(高3.4%)
+  2025-08-04 B  000032.SZ    24.77   5600 breakout         ---    ---      | warmup
+  2025-08-04 B  300559.SZ    12.65   8300 breakout         ---    ---      | warmup
+  2025-08-04 S  000423.SZ    51.53   2600 breakout       -1396  -1.0%   4d | 弱4d
+  2025-08-04 S  000538.SZ    56.11   2400 breakout       -2887  -2.1%   4d | 弱4d
+  2025-08-04 S  002041.SZ    10.00  10800 breakout       -1328  -1.2%   4d | 弱4d
+  2025-08-06 B  000901.SZ    14.92   9300 breakout         ---    ---      | warmup
+  2025-08-06 B  002403.SZ    16.00   8700 breakout         ---    ---      | warmup
+  2025-08-06 B  600879.SH    10.98   9400 breakout         ---    ---      | warmup
+  2025-08-05 S  000032.SZ    26.03   5600 breakout       +6889  +5.0%   1d | 回落20%(高6.4%)
+  2025-08-05 S  300559.SZ    12.89   8300 breakout       +1836  +1.7%   1d | 回落30%(高2.7%)
+  2025-08-05 S  600879.SH    11.27   9400 breakout       +2626  +2.5%  -1d | 回落30%(高3.8%)
+  2025-08-07 S  000901.SZ    16.11   9300 breakout      +10891  +7.8%   1d | 回落20%(高10.0%)
+  2025-08-07 S  002403.SZ    16.80   8700 breakout       +6770  +4.9%   1d | 回落20%(高6.2%)
+  2025-08-11 B  002543.SZ    13.44  10400 breakout         ---    ---      | hot
+  2025-08-08 S  002543.SZ    14.04  10400 breakout       +6050  +4.3%  -3d | 回落20%(高5.6%)
+  2025-08-12 B  000045.SZ    11.67  11900 breakout         ---    ---      | warmup
+  2025-08-12 B  000596.SZ   145.76    900 breakout         ---    ---      | warmup
+  2025-08-12 B  002460.SZ    40.00   3500 breakout         ---    ---      | warmup
+  2025-08-12 B  002709.SZ    20.06   6900 breakout         ---    ---      | warmup
+  2025-08-12 B  300033.SZ   306.18    300 breakout         ---    ---      | warmup
+  2025-08-11 S  300033.SZ   311.88    300 breakout       +1590  +1.7%  -1d | 回落30%(高2.7%)
+  2025-08-13 B  000011.SZ    11.04   9600 breakout         ---    ---      | warmup
+  2025-08-12 S  000011.SZ    10.52   9600 breakout       -5123  -4.8%  -1d | 止损-2%
+  2025-08-13 S  000045.SZ    12.16  11900 breakout       +5619  +4.0%   1d | 回落20%(高5.2%)
+  2025-08-13 S  002460.SZ    40.73   3500 breakout       +2363  +1.7%   1d | 回落30%(高2.6%)
+  2025-08-15 B  002241.SZ    25.41   5500 breakout         ---    ---      | warmup
+  2025-08-15 B  300188.SZ    18.01   7700 breakout         ---    ---      | warmup
+  2025-08-15 B  603727.SH    14.68   7300 breakout         ---    ---      | warmup
+  2025-08-14 S  002709.SZ    19.45   6900 breakout       -4383  -3.2%   2d | 止损-2%
+  2025-08-14 S  300188.SZ    19.55   7700 breakout      +11693  +8.4%  -1d | 回落20%(高10.7%)
+  2025-08-18 S  000596.SZ   148.96    900 breakout       +2705  +2.1%   6d | 回落30%(高3.1%)
+  2025-08-18 S  002241.SZ    28.31   5500 breakout      +15748 +11.3%   3d | 目标+8%
+  2025-08-18 S  603727.SH    14.58   7300 breakout        -868  -0.8%   3d | 弱3d
+  2025-08-20 B  002304.SZ    72.99   1900 breakout         ---    ---      | hot
+  2025-08-22 S  002304.SZ    72.16   1900 breakout       -1755  -1.3%   2d | 弱2d
+  2025-08-26 B  000833.SZ    12.92  10800 breakout         ---    ---      | euphoria
+  2025-08-26 B  002202.SZ    11.73  11900 breakout         ---    ---      | euphoria
+  2025-08-28 B  002778.SZ    20.68   6700 breakout         ---    ---      | warmup
+  2025-08-28 B  300604.SZ    60.01   2300 breakout         ---    ---      | warmup
+  2025-08-27 S  000833.SZ    12.51  10800 breakout       -4604  -3.3%   1d | 止损-2%
+  2025-08-27 S  002202.SZ    12.02  11900 breakout       +3313  +2.4%   1d | 回落30%(高3.6%)
+  2025-08-29 B  000004.SZ    11.80  11800 breakout         ---    ---      | warmup
+  2025-08-29 B  000831.SZ    55.69   2500 breakout         ---    ---      | warmup
+  2025-08-29 B  300576.SZ    40.60   2700 breakout         ---    ---      | warmup
+  2025-08-28 S  000831.SZ    53.02   2500 breakout       -6847  -4.9%  -1d | 止损-2%
+  2025-09-01 B  000833.SZ    13.34   9000 breakout         ---    ---      | warmup
+  2025-08-29 S  002778.SZ    21.25   6700 breakout       +3661  +2.6%   1d | 回落30%(高4.0%)
+  2025-08-29 S  300604.SZ    62.00   2300 breakout       +4396  +3.2%   1d | 回落20%(高4.1%)
+  2025-09-02 B  000411.SZ    12.21  11400 breakout         ---    ---      | warmup
+  2025-09-02 B  000661.SZ   120.19   1000 breakout         ---    ---      | warmup
+  2025-09-01 S  000004.SZ    11.08  11800 breakout       -8666  -6.2%   3d | 止损-2%
+  2025-09-01 S  300576.SZ    39.89   2700 breakout       -2057  -1.9%   3d | 弱3d
+  2025-09-01 S  000661.SZ   113.37   1000 breakout       -6967  -5.8%  -1d | 止损-2%
+  2025-09-02 S  000833.SZ    14.67   9000 breakout      +11798  +9.8%   1d | 目标+8%
+  2025-09-04 B  600079.SH    22.40   6200 breakout         ---    ---      | warmup
+  2025-09-04 B  600697.SH    14.09   9900 breakout         ---    ---      | warmup
+  2025-09-04 B  300363.SZ    26.70   5200 breakout         ---    ---      | warmup
+  2025-09-04 B  300763.SZ    74.00   1400 breakout         ---    ---      | warmup
+  2025-09-03 S  000411.SZ    11.48  11400 breakout       -8492  -6.1%   1d | 止损-2%
+  2025-09-03 S  300363.SZ    27.74   5200 breakout       +5220  +3.8%  -1d | 回落20%(高4.9%)
+  2025-09-03 S  300763.SZ    76.48   1400 breakout       +3333  +3.2%  -1d | 回落20%(高4.2%)
+  2025-09-05 B  002459.SZ    13.25  10500 breakout         ---    ---      | cooldown
+  2025-09-04 S  002459.SZ    13.60  10500 breakout       +3489  +2.5%  -1d | 回落30%(高3.8%)
+  2025-09-08 B  000049.SZ    26.29   5300 breakout         ---    ---      | cooldown
+  2025-09-05 S  600697.SH    16.07   9900 breakout      +19395 +13.9%   1d | 目标+8%
+  2025-09-09 B  000009.SZ    11.19  12500 breakout         ---    ---      | warmup
+  2025-09-09 B  002403.SZ    17.00   8200 breakout         ---    ---      | warmup
+  2025-09-09 B  002407.SZ    16.74   7000 breakout         ---    ---      | warmup
+  2025-09-08 S  600079.SH    22.96   6200 breakout       +3287  +2.4%   4d | 回落30%(高3.6%)
+  2025-09-08 S  002403.SZ    17.70   8200 breakout       +5519  +4.0%  -1d | 回落20%(高5.1%)
+  2025-09-10 B  002244.SZ    11.18  12500 breakout         ---    ---      | warmup
+  2025-09-10 B  002759.SZ    16.00   8000 breakout         ---    ---      | warmup
+  2025-09-09 S  000049.SZ    26.91   5300 breakout       +3079  +2.2%   1d | 回落30%(高3.3%)
+  2025-09-09 S  002759.SZ    16.65   8000 breakout       +5011  +3.9%  -1d | 回落20%(高5.1%)
+  2025-09-10 S  002407.SZ    17.99   7000 breakout       +8572  +7.3%   1d | 回落20%(高9.3%)
+  2025-09-11 S  000009.SZ    10.97  12500 breakout       -2928  -2.1%   2d | 弱2d
+  2025-09-12 S  002244.SZ    11.43  12500 breakout       +2964  +2.1%   2d | 回落30%(高3.2%)
+  2025-09-16 B  002601.SZ    19.60   7100 breakout         ---    ---      | hot
+  2025-09-18 B  000045.SZ    12.44  11200 breakout         ---    ---      | warmup
+  2025-09-18 B  600089.SH    16.04   8700 breakout         ---    ---      | warmup
+  2025-09-18 B  600742.SH    10.86  12800 breakout         ---    ---      | warmup
+  2025-09-18 B  601136.SH    23.77   5300 breakout         ---    ---      | warmup
+  2025-09-17 S  601136.SH    24.60   5300 breakout       +4240  +3.4%  -1d | 回落20%(高4.4%)
+  2025-09-19 B  000028.SZ    26.85   4700 breakout         ---    ---      | warmup
+  2025-09-18 S  002601.SZ    19.21   7100 breakout       -2946  -2.1%   2d | 弱2d
+  2025-09-22 B  000425.SZ    10.57  12500 breakout         ---    ---      | warmup
+  2025-09-19 S  600089.SH    16.45   8700 breakout       +3346  +2.4%   1d | 回落30%(高3.6%)
+  2025-09-19 S  600742.SH    10.09  12800 breakout      -10024  -7.2%   1d | 止损-2%
+  2025-09-23 B  000685.SZ    10.50  13300 breakout         ---    ---      | warmup
+  2025-09-23 B  600071.SH    24.58   5300 breakout         ---    ---      | warmup
+  2025-09-22 S  000045.SZ    12.08  11200 breakout       -4208  -3.0%   4d | 止损-2%
+  2025-09-22 S  000028.SZ    25.50   4700 breakout       -6501  -5.2%   3d | 止损-2%
+  2025-09-22 S  600071.SH    25.44   5300 breakout       +4404  +3.4%  -1d | 回落20%(高4.4%)
+  2025-09-24 B  688126.SH    23.78   5800 breakout         ---    ---      | warmup
+  2025-09-24 B  000400.SZ    24.15   5700 breakout         ---    ---      | warmup
+  2025-09-24 B  002674.SZ    17.30   7300 breakout         ---    ---      | warmup
+  2025-09-23 S  688126.SH    24.28   5800 breakout       +2740  +2.0%  -1d | 回落30%(高3.0%)
+  2025-09-25 B  000921.SZ    27.30   4800 breakout         ---    ---      | warmup
+  2025-09-24 S  000425.SZ    10.54  12500 breakout        -546  -0.4%   2d | 弱2d
+  2025-09-24 S  000685.SZ    11.94  13300 breakout      +18946 +13.6%   1d | 目标+8%
+  2025-09-26 B  000020.SZ    16.90   8200 breakout         ---    ---      | warmup
+  2025-09-26 B  601799.SH   138.54   1000 breakout         ---    ---      | warmup
+  2025-09-25 S  000400.SZ    24.73   5700 breakout       +3128  +2.3%   1d | 回落30%(高3.4%)
+  2025-09-25 S  002674.SZ    18.34   7300 breakout       +7418  +5.9%   1d | 回落20%(高7.5%)
+  2025-09-25 S  000020.SZ    15.36   8200 breakout      -12792  -9.2%  -1d | 止损-2%
+  2025-09-25 S  601799.SH   133.22   1000 breakout       -5493  -4.0%  -1d | 止损-2%
+  2025-09-29 B  000020.SZ    15.22   9100 breakout         ---    ---      | warmup
+  2025-09-29 B  002140.SZ    12.88  10800 breakout         ---    ---      | warmup
+  2025-09-29 B  600416.SH    16.42   8500 ignition         ---    ---      | warmup
+  2025-09-29 B  600095.SH    12.55  10400 breakout         ---    ---      | warmup
+  2025-09-26 S  000020.SZ    16.90   9100 breakout      +15088 +10.9%  -3d | 目标+8%
+  2025-09-26 S  002140.SZ    12.27  10800 breakout       -6760  -4.9%  -3d | 止损-2%
+  2025-09-26 S  600095.SH    13.03  10400 breakout       +4816  +3.7%  -3d | 回落20%(高4.8%)
+  2025-09-29 S  000921.SZ    26.55   4800 breakout       -3766  -2.9%   4d | 止损-2%
+  2025-10-09 B  000762.SZ    25.00   5600 breakout         ---    ---      | warmup
+  2025-10-09 B  688029.SH   100.30   1300 breakout         ---    ---      | warmup
+  2025-10-09 B  300624.SZ    79.45   1700 breakout         ---    ---      | warmup
+  2025-10-09 B  600711.SH    10.84  12400 breakout         ---    ---      | warmup
+  2025-09-30 S  600711.SH    10.32  12400 breakout       -6614  -4.9%  -9d | 止损-2%
+  2025-10-09 S  600416.SH    16.28   8500 ignition       -1370  -1.0%  10d | 弱10d
+  2025-10-10 S  000762.SZ    25.69   5600 breakout       +3655  +2.6%   1d | 回落30%(高3.9%)
+  2025-10-10 S  688029.SH    97.78   1300 breakout       -3441  -2.6%   1d | 止损-2%
+  2025-10-10 S  300624.SZ    84.86   1700 breakout       +9006  +6.7%   1d | 回落20%(高8.5%)
+  2025-10-14 B  002428.SZ    30.70   4500 breakout         ---    ---      | warmup
+  2025-10-14 B  600259.SH    64.88   2100 breakout         ---    ---      | warmup
+  2025-10-14 B  688111.SH   314.00    400 breakout         ---    ---      | warmup
+  2025-10-14 B  000058.SZ    11.44  12200 breakout         ---    ---      | warmup
+  2025-10-14 B  300666.SZ   112.89   1200 breakout         ---    ---      | warmup
+  2025-10-13 S  688111.SH   343.60    400 breakout      +11661  +9.3%  -1d | 回落20%(高11.8%)
+  2025-10-15 B  000045.SZ    15.36   8900 breakout         ---    ---      | warmup
+  2025-10-14 S  000045.SZ    16.14   8900 breakout       +6791  +5.0%  -1d | 回落20%(高6.4%)
+  2025-10-16 B  000528.SZ    11.82  11800 breakout         ---    ---      | warmup
+  2025-10-15 S  002428.SZ    28.33   4500 breakout      -10831  -7.8%   1d | 止损-2%
+  2025-10-15 S  600259.SH    67.36   2100 breakout       +5024  +3.7%   1d | 回落20%(高4.8%)
+  2025-10-15 S  000058.SZ    10.90  12200 breakout       -6761  -4.8%   1d | 止损-2%
+  2025-10-15 S  300666.SZ   101.28   1200 breakout      -14090 -10.4%   1d | 止损-2%
+  2025-10-17 B  600885.SH    28.60   4800 breakout         ---    ---      | warmup
+  2025-10-17 B  601628.SH    42.52   3200 breakout         ---    ---      | warmup
+  2025-10-17 B  000011.SZ    10.05  13900 breakout         ---    ---      | warmup
+  2025-10-17 B  601898.SH    13.25   9700 breakout         ---    ---      | warmup
+  2025-10-16 S  000011.SZ    10.27  13900 breakout       +2831  +2.0%  -1d | 回落30%(高3.1%)
+  2025-10-20 B  600897.SH    15.09   8900 breakout         ---    ---      | warmup
+  2025-10-20 S  000528.SZ    11.75  11800 breakout       -1006  -0.7%   4d | 弱4d
+  2025-10-20 S  600885.SH    26.94   4800 breakout       -8136  -5.9%   3d | 止损-2%
+  2025-10-20 S  601628.SH    42.50   3200 breakout        -241  -0.2%   3d | 弱3d
+  2025-10-20 S  601898.SH    13.56   9700 breakout       +2817  +2.2%   3d | 回落30%(高3.3%)
+  2025-10-22 B  000026.SZ    17.62   7900 breakout         ---    ---      | warmup
+  2025-10-22 B  002831.SZ    28.00   5000 breakout         ---    ---      | warmup
+  2025-10-22 B  000065.SZ    12.74  10900 breakout         ---    ---      | warmup
+  2025-10-22 B  600137.SH    19.49   6500 breakout         ---    ---      | warmup
+  2025-10-21 S  600897.SH    15.38   8900 breakout       +2376  +1.8%   1d | 回落30%(高2.7%)
+  2025-10-21 S  000026.SZ    17.96   7900 breakout       +2525  +1.8%  -1d | 回落30%(高2.8%)
+  2025-10-21 S  000065.SZ    11.58  10900 breakout      -12808  -9.2%  -1d | 止损-2%
+  2025-10-23 B  603355.SH    24.78   5600 breakout         ---    ---      | warmup
+  2025-10-23 B  000065.SZ    11.81  11800 breakout         ---    ---      | warmup
+  2025-10-22 S  000065.SZ    12.55  11800 breakout       +8587  +6.2%  -1d | 回落20%(高7.9%)
+  2025-10-23 S  002831.SZ    26.35   5000 breakout       -8421  -6.0%   1d | 止损-2%
+  2025-10-23 S  600137.SH    21.49   6500 breakout      +12818 +10.1%   1d | 回落20%(高12.8%)
+  2025-10-24 S  603355.SH    25.64   5600 breakout       +4607  +3.3%   1d | 回落20%(高4.3%)
+  2025-10-28 B  002278.SZ    14.76   9400 breakout         ---    ---      | hot
+  2025-10-27 S  002278.SZ    15.66   9400 breakout       +8231  +5.9%  -1d | 回落20%(高7.6%)
+  2025-10-29 B  300171.SZ    16.44   8500 breakout         ---    ---      | hot
+  2025-10-31 B  000762.SZ    26.35   5300 breakout         ---    ---      | warmup
+  2025-10-31 B  002430.SZ    29.40   4700 breakout         ---    ---      | warmup
+  2025-10-31 B  002466.SZ    55.63   2500 breakout         ---    ---      | warmup
+  2025-10-31 B  002756.SZ    46.00   2800 breakout         ---    ---      | warmup
+  2025-10-30 S  300171.SZ    17.45   8500 breakout       +8375  +6.0%   1d | 回落20%(高7.7%)
+  2025-11-03 B  000596.SZ   160.66    800 breakout         ---    ---      | warmup
+  2025-11-03 S  000762.SZ    26.99   5300 breakout       +3190  +2.3%   3d | 回落30%(高3.5%)
+  2025-11-03 S  002430.SZ    27.32   4700 breakout       -9943  -7.2%   3d | 止损-2%
+  2025-11-03 S  002466.SZ    53.83   2500 breakout       -4675  -3.4%   3d | 止损-2%
+  2025-11-03 S  002756.SZ    49.52   2800 breakout       +9676  +7.5%   3d | 回落20%(高9.6%)
+  2025-11-05 B  600449.SH    13.83  10100 breakout         ---    ---      | warmup
+  2025-11-05 B  600897.SH    17.53   7900 breakout         ---    ---      | warmup
+  2025-11-05 B  002555.SZ    22.99   6000 breakout         ---    ---      | warmup
+  2025-11-04 S  600897.SH    18.12   7900 breakout       +4491  +3.2%  -1d | 回落20%(高4.2%)
+  2025-11-04 S  002555.SZ    24.08   6000 breakout       +6340  +4.6%  -1d | 回落20%(高5.9%)
+  2025-11-06 B  000400.SZ    28.50   4900 breakout         ---    ---      | warmup
+  2025-11-06 B  600977.SH    18.12   7700 breakout         ---    ---      | warmup
+  2025-11-06 B  688599.SH    22.95   6100 breakout         ---    ---      | warmup
+  2025-11-05 S  000596.SZ   155.21    800 breakout       -4521  -3.5%   2d | 止损-2%
+  2025-11-05 S  600977.SH    17.26   7700 breakout       -6795  -4.9%  -1d | 止损-2%
+  2025-11-05 S  688599.SH    24.00   6100 breakout       +6202  +4.4%  -1d | 回落20%(高5.7%)
+  2025-11-10 B  000999.SZ    30.10   4600 breakout         ---    ---      | warmup
+  2025-11-10 B  600678.SH    12.00  11600 breakout         ---    ---      | warmup
+  2025-11-10 B  601877.SH    35.17   3900 breakout         ---    ---      | warmup
+  2025-11-07 S  000400.SZ    30.12   4900 breakout       +7766  +5.6%   1d | 回落20%(高7.1%)
+  2025-11-07 S  600678.SH    10.91  11600 breakout      -12809  -9.2%  -3d | 止损-2%
+  2025-11-10 S  600449.SH    13.87  10100 breakout        +222  +0.2%   5d | 时间5d
+  2025-11-12 B  600754.SH    26.28   5300 breakout         ---    ---      | warmup
+  2025-11-12 B  603355.SH    27.98   5000 breakout         ---    ---      | warmup
+  2025-11-12 B  600702.SH    67.80   2000 breakout         ---    ---      | warmup
+  2025-11-11 S  601877.SH    33.27   3900 breakout       -7579  -5.5%   1d | 止损-2%
+  2025-11-11 S  603355.SH    28.68   5000 breakout       +3314  +2.4%  -1d | 回落30%(高3.6%)
+  2025-11-13 B  000061.SZ    10.19  13700 breakout         ---    ---      | warmup
+  2025-11-13 B  603233.SH    19.20   7000 breakout         ---    ---      | warmup
+  2025-11-12 S  603233.SH    19.73   7000 breakout       +3544  +2.6%  -1d | 回落30%(高4.0%)
+  2025-11-14 B  000049.SZ    29.30   4600 breakout         ---    ---      | warmup
+  2025-11-13 S  000999.SZ    30.06   4600 breakout        -364  -0.3%   3d | 弱3d
+  2025-11-13 S  600754.SH    26.83   5300 breakout       +2709  +1.9%   1d | 回落30%(高3.0%)
+  2025-11-17 B  601566.SH    13.84  10100 breakout         ---    ---      | warmup
+  2025-11-17 B  688408.SH    52.80   2600 breakout         ---    ---      | warmup
+  2025-11-14 S  600702.SH    65.47   2000 breakout       -4830  -3.6%   2d | 止损-2%
+  2025-11-14 S  000061.SZ    10.58  13700 breakout       +5182  +3.7%   1d | 回落20%(高4.8%)
+  2025-11-14 S  601566.SH    12.58  10100 breakout      -12891  -9.2%  -3d | 止损-2%
+  2025-11-14 S  688408.SH    55.02   2600 breakout       +5596  +4.1%  -3d | 回落20%(高5.3%)
+  2025-11-18 B  688005.SH    38.00   3600 breakout         ---    ---      | warmup
+  2025-11-18 B  002466.SZ    62.00   2200 breakout         ---    ---      | warmup
+  2025-11-18 B  300672.SZ   111.03   1200 breakout         ---    ---      | warmup
+  2025-11-17 S  000049.SZ    28.62   4600 breakout       -3299  -2.4%   3d | 弱3d
+  2025-11-17 S  688005.SH    35.40   3600 breakout       -9526  -7.0%  -1d | 止损-2%
+  2025-11-17 S  300672.SZ   113.41   1200 breakout       +2679  +2.0%  -1d | 回落30%(高3.1%)
+  2025-11-19 B  603877.SH    17.00   8200 breakout         ---    ---      | cooldown
+  2025-11-19 B  300166.SZ    11.39  12200 breakout         ---    ---      | cooldown
+  2025-11-18 S  603877.SH    16.37   8200 breakout       -5341  -3.8%  -1d | 止损-2%
+  2025-11-20 B  600685.SH    28.66   4800 breakout         ---    ---      | cooldown
+  2025-11-19 S  002466.SZ    64.17   2200 breakout       +4586  +3.4%   1d | 回落20%(高4.4%)
+  2025-11-21 B  601155.SH    15.42   9000 breakout         ---    ---      | warmup
+  2025-11-21 B  601566.SH    16.57   8400 breakout         ---    ---      | warmup
+  2025-11-20 S  300166.SZ    11.88  12200 breakout       +5765  +4.1%   1d | 回落20%(高5.4%)
+  2025-11-20 S  601566.SH    18.41   8400 breakout      +15255 +11.0%  -1d | 目标+8%
+  2025-11-21 S  600685.SH    30.58   4800 breakout       +9025  +6.6%   1d | 回落20%(高8.4%)
+  2025-11-25 B  000065.SZ    12.40  11200 breakout         ---    ---      | cooldown
+  2025-11-25 B  000070.SZ    12.10  11500 breakout         ---    ---      | cooldown
+  2025-11-24 S  601155.SH    15.20   9000 breakout       -2158  -1.6%   3d | 弱3d
+  2025-11-24 S  000065.SZ    13.09  11200 breakout       +7515  +5.4%  -1d | 回落20%(高6.9%)
+  2025-11-24 S  000070.SZ    11.50  11500 breakout       -7072  -5.1%  -1d | 止损-2%
+  2025-11-26 B  000935.SZ    23.62   5900 breakout         ---    ---      | cooldown
+  2025-11-26 B  300188.SZ    15.00   9300 breakout         ---    ---      | cooldown
+  2025-11-25 S  000935.SZ    24.12   5900 breakout       +2789  +2.0%  -1d | 回落30%(高3.0%)
+  2025-11-25 S  300188.SZ    15.50   9300 breakout       +4425  +3.2%  -1d | 回落20%(高4.1%)
+  2025-11-27 B  000070.SZ    13.58  10300 breakout         ---    ---      | cooldown
+  2025-11-27 B  000528.SZ    11.87  11700 breakout         ---    ---      | cooldown
+  2025-11-27 B  600835.SH    33.00   4200 breakout         ---    ---      | cooldown
+  2025-11-26 S  000070.SZ    13.82  10300 breakout       +2266  +1.6%  -1d | 回落30%(高2.5%)
+  2025-11-26 S  000528.SZ    12.14  11700 breakout       +2928  +2.1%  -1d | 回落30%(高3.2%)
+  2025-11-28 B  000685.SZ    12.58  11100 breakout         ---    ---      | warmup
+  2025-11-28 B  300188.SZ    15.45   9000 breakout         ---    ---      | warmup
+  2025-11-28 B  601100.SH   101.00   1300 breakout         ---    ---      | warmup
+  2025-11-28 B  300170.SZ    19.00   7300 breakout         ---    ---      | warmup
+  2025-11-28 S  600835.SH    30.88   4200 breakout       -9073  -6.5%   1d | 止损-2%
+  2025-12-02 B  000049.SZ    30.10   4600 breakout         ---    ---      | warmup
+  2025-12-01 S  000685.SZ    12.25  11100 breakout       -3840  -2.7%   3d | 止损-2%
+  2025-12-01 S  300188.SZ    16.49   9000 breakout       +9167  +6.6%   3d | 回落20%(高8.4%)
+  2025-12-01 S  601100.SH   105.73   1300 breakout       +5968  +4.5%   3d | 回落20%(高5.9%)
+  2025-12-01 S  300170.SZ    19.96   7300 breakout       +6819  +4.9%   3d | 回落20%(高6.3%)
+  2025-12-03 B  688036.SH    73.50   1900 breakout         ---    ---      | warmup
+  2025-12-03 B  300638.SZ    33.88   4100 breakout         ---    ---      | warmup
+  2025-12-03 B  688568.SH    44.75   3100 breakout         ---    ---      | warmup
+  2025-12-02 S  688036.SH    75.39   1900 breakout       +3405  +2.4%  -1d | 回落30%(高3.7%)
+  2025-12-02 S  300638.SZ    34.57   4100 breakout       +2628  +1.9%  -1d | 回落30%(高2.9%)
+  2025-12-02 S  688568.SH    45.59   3100 breakout       +2420  +1.7%  -1d | 回落30%(高2.7%)
+  2025-12-04 B  000411.SZ    12.88  10800 breakout         ---    ---      | warmup
+  2025-12-04 B  002565.SZ    10.60  13200 breakout         ---    ---      | warmup
+  2025-12-04 B  300576.SZ    40.76   3400 breakout         ---    ---      | warmup
+  2025-12-04 B  300596.SZ    42.04   3300 breakout         ---    ---      | warmup
+  2025-12-03 S  000049.SZ    28.46   4600 breakout       -7714  -5.6%   1d | 止损-2%
+  2025-12-03 S  000411.SZ    13.33  10800 breakout       +4651  +3.3%  -1d | 回落20%(高4.3%)
+  2025-12-03 S  300576.SZ    42.13   3400 breakout       +4465  +3.2%  -1d | 回落20%(高4.2%)
+  2025-12-03 S  300596.SZ    44.31   3300 breakout       +7308  +5.3%  -1d | 回落20%(高6.8%)
+  2025-12-05 B  600879.SH    12.01  11600 breakout         ---    ---      | warmup
+  2025-12-05 B  300604.SZ    86.00   1600 breakout         ---    ---      | warmup
+  2025-12-05 B  002025.SZ    43.69   3200 breakout         ---    ---      | warmup
+  2025-12-04 S  600879.SH    12.33  11600 breakout       +3549  +2.5%  -1d | 回落30%(高3.8%)
+  2025-12-04 S  300604.SZ    87.97   1600 breakout       +2964  +2.2%  -1d | 回落30%(高3.3%)
+  2025-12-08 B  002023.SZ    13.53  10300 breakout         ---    ---      | warmup
+  2025-12-08 B  600118.SH    49.60   2800 breakout         ---    ---      | warmup
+  2025-12-08 B  600879.SH    12.96  10800 breakout         ---    ---      | warmup
+  2025-12-05 S  002565.SZ    11.90  13200 breakout      +16956 +12.1%   1d | 目标+8%
+  2025-12-05 S  600118.SH    48.31   2800 breakout       -3788  -2.7%  -3d | 止损-2%
+  2025-12-09 B  300751.SZ   146.72    900 breakout         ---    ---      | warmup
+  2025-12-09 B  600498.SH    24.80   5600 breakout         ---    ---      | warmup
+  2025-12-08 S  002025.SZ    45.96   3200 breakout       +7079  +5.1%   3d | 回落20%(高6.5%)
+  2025-12-10 B  600673.SH    24.00   5800 breakout         ---    ---      | warmup
+  2025-12-09 S  002023.SZ    13.85  10300 breakout       +3059  +2.2%   1d | 回落30%(高3.3%)
+  2025-12-09 S  600879.SH    13.76  10800 breakout       +8447  +6.0%   1d | 回落20%(高7.7%)
+  2025-12-11 B  600184.SH    22.72   6100 breakout         ---    ---      | warmup
+  2025-12-11 B  002403.SZ    13.13  10600 breakout         ---    ---      | warmup
+  2025-12-10 S  300751.SZ   160.52    900 breakout      +12232  +9.3%   1d | 目标+8%
+  2025-12-10 S  600184.SH    21.14   6100 breakout       -9806  -7.1%  -1d | 止损-2%
+  2025-12-10 S  002403.SZ    13.74  10600 breakout       +6255  +4.5%  -1d | 回落20%(高5.8%)
+  2025-12-12 B  002202.SZ    16.82   8300 breakout         ---    ---      | warmup
+  2025-12-12 B  688122.SH    70.28   1900 breakout         ---    ---      | warmup
+  2025-12-12 B  002565.SZ    15.00   9300 breakout         ---    ---      | warmup
+  2025-12-11 S  600498.SH    25.62   5600 breakout       +4383  +3.2%   2d | 回落20%(高4.1%)
+  2025-12-11 S  600673.SH    22.80   5800 breakout       -7132  -5.1%   1d | 止损-2%
+  2025-12-11 S  002565.SZ    14.50   9300 breakout       -4825  -3.5%  -1d | 止损-2%
+  2025-12-15 B  002920.SZ   112.49   1200 breakout         ---    ---      | warmup
+  2025-12-15 B  300034.SZ    18.19   7600 breakout         ---    ---      | warmup
+  2025-12-15 B  300285.SZ    28.85   4800 breakout         ---    ---      | warmup
+  2025-12-12 S  300285.SZ    28.00   4800 breakout       -4255  -3.1%  -3d | 止损-2%
+  2025-12-16 B  000007.SZ    11.79  11800 breakout         ---    ---      | warmup
+  2025-12-15 S  002202.SZ    17.72   8300 breakout       +7312  +5.2%   3d | 回落20%(高6.7%)
+  2025-12-15 S  688122.SH    75.66   1900 breakout      +10028  +7.5%   3d | 回落20%(高9.6%)
+  2025-12-16 S  002920.SZ   117.68   1200 breakout       +6047  +4.5%   1d | 回落20%(高5.8%)
+  2025-12-16 S  300034.SZ    20.19   7600 breakout      +15001 +10.9%   1d | 回落20%(高13.7%)
+  2025-12-18 B  002281.SZ    68.60   2000 breakout         ---    ---      | warmup
+  2025-12-18 B  300782.SZ    77.65   1800 breakout         ---    ---      | warmup
+  2025-12-18 B  603123.SH    14.00  10000 breakout         ---    ---      | warmup
+  2025-12-18 B  603444.SH   465.00    300 breakout         ---    ---      | warmup
+  2025-12-17 S  000007.SZ    12.20  11800 breakout       +4627  +3.3%   1d | 回落20%(高4.3%)
+  2025-12-17 S  300782.SZ    79.78   1800 breakout       +3656  +2.6%  -1d | 回落30%(高3.9%)
+  2025-12-19 B  300559.SZ    12.12  11500 breakout         ---    ---      | warmup
+  2025-12-19 B  600009.SH    33.03   4200 breakout         ---    ---      | warmup
+  2025-12-19 S  002281.SZ    70.12   2000 breakout       +2856  +2.1%   1d | 回落30%(高3.2%)
+  2025-12-19 S  603123.SH    14.74  10000 breakout       +7168  +5.1%   1d | 回落20%(高6.6%)
+  2025-12-19 S  603444.SH   484.42    300 breakout       +5638  +4.0%   1d | 回落20%(高5.2%)
+  2025-12-22 S  300559.SZ    11.99  11500 breakout       -1674  -1.2%   3d | 弱3d
+  2025-12-22 S  600009.SH    33.69   4200 breakout       +2609  +1.9%   3d | 回落30%(高2.9%)
+  2025-12-24 B  000551.SZ    15.16   9200 breakout         ---    ---      | hot
+  2025-12-23 S  000551.SZ    13.78   9200 breakout      -12861  -9.2%  -1d | 止损-2%
+  2025-12-25 B  002008.SZ    41.32   3300 breakout         ---    ---      | hot
+  2025-12-26 S  002008.SZ    42.45   3300 breakout       +3537  +2.6%   1d | 回落30%(高3.9%)
+  2025-12-30 B  002117.SZ    14.12   9900 breakout         ---    ---      | hot
+  2025-12-31 B  300024.SZ    18.50   7500 breakout         ---    ---      | warmup
+  2025-12-31 B  300124.SZ    76.49   1800 breakout         ---    ---      | warmup
+  2025-12-31 B  603786.SH    80.67   1700 breakout         ---    ---      | warmup
+  2025-12-31 B  688593.SH    20.88   6700 breakout         ---    ---      | warmup
+  2025-12-30 S  688593.SH    21.29   6700 breakout       +2582  +1.8%  -1d | 回落30%(高2.8%)
+  2026-01-05 B  000026.SZ    16.57   8400 breakout         ---    ---      | warmup
+  2026-01-05 S  002117.SZ    12.43   9900 breakout      -16891 -12.1%   6d | 止损-2%
+  2026-01-05 S  300024.SZ    18.61   7500 breakout        +644  +0.5%   5d | 时间5d
+  2026-01-05 S  300124.SZ    78.46   1800 breakout       +3357  +2.4%   5d | 回落30%(高3.7%)
+  2026-01-05 S  603786.SH    78.17   1700 breakout       -4423  -3.2%   5d | 止损-2%
+  2026-01-08 B  002541.SZ    18.84   7400 breakout         ---    ---      | euphoria
+  2026-01-07 S  000026.SZ    17.14   8400 breakout       +4584  +3.3%   2d | 回落20%(高4.3%)
+  2026-01-09 S  002541.SZ    20.69   7400 breakout      +13491  +9.7%   1d | 目标+8%
+  2026-01-13 B  000158.SZ    22.48   6200 breakout         ---    ---      | hot
+  2026-01-14 S  000158.SZ    21.83   6200 breakout       -4206  -3.0%   1d | 止损-2%
+  2026-01-16 B  600054.SH    11.72  11900 breakout         ---    ---      | warmup
+  2026-01-16 B  600763.SH    46.01   3000 breakout         ---    ---      | warmup
+  2026-01-16 B  603208.SH    15.68   8900 breakout         ---    ---      | warmup
+  2026-01-16 B  688819.SH    34.88   4000 breakout         ---    ---      | warmup
+  2026-01-16 B  000576.SZ    10.98  12700 breakout         ---    ---      | warmup
+  2026-01-15 S  600763.SH    47.22   3000 breakout       +3449  +2.5%  -1d | 回落30%(高3.8%)
+  2026-01-20 B  002785.SZ    39.29   3500 breakout         ---    ---      | warmup
+  2026-01-19 S  603208.SH    16.04   8900 breakout       +3054  +2.2%   3d | 回落30%(高3.3%)
+  2026-01-19 S  000576.SZ    11.79  12700 breakout      +10067  +7.2%   3d | 回落20%(高9.2%)
+  2026-01-21 B  000786.SZ    26.83   5200 breakout         ---    ---      | warmup
+  2026-01-21 B  001914.SZ    11.97  11600 breakout         ---    ---      | warmup
+  2026-01-20 S  600054.SH    12.04  11900 breakout       +3646  +2.6%   4d | 回落30%(高3.9%)
+  2026-01-20 S  688819.SH    34.74   4000 breakout        -741  -0.5%   4d | 弱4d
+  2026-01-22 B  000045.SZ    13.82  10100 breakout         ---    ---      | warmup
+  2026-01-22 B  002415.SZ    32.70   4200 breakout         ---    ---      | warmup
+  2026-01-22 S  002785.SZ    43.05   3500 breakout      +12964  +9.4%   2d | 目标+8%
+  2026-01-22 S  000786.SZ    28.01   5200 breakout       +5926  +4.2%   1d | 回落20%(高5.5%)
+  2026-01-26 B  002623.SZ    20.98   6600 breakout         ---    ---      | warmup
+  2026-01-26 B  300457.SZ    31.32   4400 breakout         ---    ---      | warmup
+  2026-01-23 S  001914.SZ    11.75  11600 breakout       -2729  -2.0%   2d | 弱2d
+  2026-01-27 B  000815.SZ    12.88  10800 breakout         ---    ---      | warmup
+  2026-01-26 S  000045.SZ    13.42  10100 breakout       -4216  -3.0%   4d | 止损-2%
+  2026-01-26 S  002415.SZ    32.31   4200 breakout       -1814  -1.3%   4d | 弱4d
+  2026-01-28 B  002185.SZ    15.10   9200 breakout         ---    ---      | warmup
+  2026-01-28 B  300775.SZ    39.26   3500 breakout         ---    ---      | warmup
+  2026-01-27 S  002623.SZ    23.50   6600 breakout      +16430 +11.9%   1d | 目标+8%
+  2026-01-27 S  300457.SZ    28.97   4400 breakout      -10506  -7.6%   1d | 止损-2%
+  2026-01-27 S  002185.SZ    14.66   9200 breakout       -4223  -3.0%  -1d | 止损-2%
+  2026-01-29 B  002041.SZ    10.12  13800 breakout         ---    ---      | warmup
+  2026-01-29 B  300741.SZ    19.30   7200 breakout         ---    ---      | warmup
+  2026-01-29 B  600188.SH    14.60   9500 breakout         ---    ---      | warmup
+  2026-01-28 S  000815.SZ    14.28  10800 breakout      +14920 +10.7%   1d | 目标+8%
+  2026-01-30 B  000568.SZ   123.17   1100 breakout         ---    ---      | warmup
+  2026-01-29 S  300775.SZ    40.60   3500 breakout       +4491  +3.3%   1d | 回落20%(高4.3%)
+  2026-02-02 B  000815.SZ    14.20   9800 breakout         ---    ---      | warmup
+  2026-01-30 S  002041.SZ    11.29  13800 breakout      +15943 +11.4%   1d | 目标+8%
+  2026-01-30 S  600188.SH    14.98   9500 breakout       +3472  +2.5%   1d | 回落30%(高3.8%)
+  2026-02-02 S  300741.SZ    18.54   7200 breakout       -5646  -4.1%   4d | 止损-2%
+  2026-02-02 S  000568.SZ   125.40   1100 breakout       +2277  +1.7%   3d | 回落30%(高2.6%)
+  2026-02-04 B  000039.SZ    10.55  13200 breakout         ---    ---      | cooldown
+  2026-02-04 B  601799.SH   143.87    900 breakout         ---    ---      | cooldown
+  2026-02-03 S  000815.SZ    15.00   9800 breakout       +7649  +5.5%   1d | 回落20%(高7.0%)
+  2026-02-05 B  002129.SZ    10.47  13300 breakout         ---    ---      | warmup
+  2026-02-05 B  002459.SZ    12.67  11000 breakout         ---    ---      | warmup
+  2026-02-05 B  600072.SH    12.80  10900 breakout         ---    ---      | warmup
+  2026-02-04 S  002459.SZ    12.96  11000 breakout       +2972  +2.1%  -1d | 回落30%(高3.2%)
+  2026-02-04 S  600072.SH    13.22  10900 breakout       +4434  +3.2%  -1d | 回落20%(高4.1%)
+  2026-02-06 B  603317.SH    14.45   9600 breakout         ---    ---      | warmup
+  2026-02-06 B  000070.SZ    13.63  10200 breakout         ---    ---      | warmup
+  2026-02-05 S  000039.SZ    11.51  13200 breakout      +12474  +9.0%   1d | 回落20%(高11.4%)
+  2026-02-05 S  601799.SH   151.83    900 breakout       +6986  +5.4%   1d | 回落20%(高6.9%)
+  2026-02-05 S  603317.SH    14.74   9600 breakout       +2638  +1.9%  -1d | 回落30%(高2.9%)
+  2026-02-05 S  000070.SZ    14.62  10200 breakout       +9925  +7.1%  -1d | 回落20%(高9.1%)
+  2026-02-09 B  600814.SH    10.68  13100 breakout         ---    ---      | warmup
+  2026-02-09 B  002624.SZ    21.39   6500 breakout         ---    ---      | warmup
+  2026-02-09 B  002739.SZ    12.69  11000 breakout         ---    ---      | warmup
+  2026-02-06 S  002129.SZ    11.05  13300 breakout       +7470  +5.4%   1d | 回落20%(高6.9%)
+  2026-02-06 S  002624.SZ    19.57   6500 breakout      -11995  -8.6%  -3d | 止损-2%
+  2026-02-11 B  002159.SZ    18.03   7700 breakout         ---    ---      | warmup
+  2026-02-11 B  002595.SZ    94.25   1400 breakout         ---    ---      | warmup
+  2026-02-11 B  600373.SH    10.19  13700 breakout         ---    ---      | warmup
+  2026-02-10 S  600814.SH    11.08  13100 breakout       +5051  +3.6%   1d | 回落20%(高4.7%)
+  2026-02-10 S  002739.SZ    13.87  11000 breakout      +12782  +9.2%   1d | 目标+8%
+  2026-02-10 S  600373.SH    10.39  13700 breakout       +2596  +1.9%  -1d | 回落30%(高2.8%)
+  2026-02-12 S  002159.SZ    19.20   7700 breakout       +8801  +6.3%   1d | 回落20%(高8.1%)
+  2026-02-12 S  002595.SZ    98.45   1400 breakout       +5701  +4.3%   1d | 回落20%(高5.6%)
+  2026-02-24 B  603960.SH    27.78   5000 breakout         ---    ---      | warmup
+  2026-02-24 B  000833.SZ    24.25   5700 breakout         ---    ---      | warmup
+  2026-02-24 B  600893.SH    57.00   2400 breakout         ---    ---      | warmup
+  2026-02-24 B  002912.SZ    34.20   4000 breakout         ---    ---      | warmup
+  2026-02-13 S  002912.SZ    33.21   4000 breakout       -4133  -3.0% -11d | 止损-2%
+  2026-02-25 B  002008.SZ    58.60   2300 breakout         ---    ---      | warmup
+  2026-02-25 B  600742.SH    10.68  13100 breakout         ---    ---      | warmup
+  2026-02-25 S  603960.SH    28.84   5000 breakout       +5093  +3.7%   1d | 回落20%(高4.8%)
+  2026-02-25 S  600893.SH    59.38   2400 breakout       +5517  +4.0%   1d | 回落20%(高5.2%)
+  2026-02-27 B  000708.SZ    17.30   8000 breakout         ---    ---      | warmup
+  2026-02-27 B  002541.SZ    24.62   5600 breakout         ---    ---      | warmup
+  2026-02-26 S  000833.SZ    23.66   5700 breakout       -3538  -2.6%   2d | 弱2d
+  2026-02-26 S  002008.SZ    69.72   2300 breakout      +25368 +18.8%   1d | 目标+8%
+  2026-02-26 S  600742.SH    11.08  13100 breakout       +5051  +3.6%   1d | 回落20%(高4.7%)
+  2026-03-02 S  000708.SZ    18.13   8000 breakout       +6467  +4.7%   3d | 回落20%(高6.0%)
+  2026-03-02 S  002541.SZ    25.06   5600 breakout       +2287  +1.7%   3d | 回落30%(高2.6%)
+  2026-03-04 B  000096.SZ    13.20  10600 breakout         ---    ---      | warmup
+  2026-03-04 B  000301.SZ    14.58   9600 breakout         ---    ---      | warmup
+  2026-03-04 B  002221.SZ     9.59  14500 breakout         ---    ---      | warmup
+  2026-03-04 B  300829.SZ    19.12   7300 breakout         ---    ---      | warmup
+  2026-03-04 B  600938.SH    44.50   3100 breakout         ---    ---      | warmup
+  2026-03-03 S  002221.SZ    10.03  14500 breakout       +6191  +4.5%  -1d | 回落20%(高5.7%)
+  2026-03-03 S  300829.SZ    19.74   7300 breakout       +4368  +3.1%  -1d | 回落20%(高4.1%)
+  2026-03-06 B  000400.SZ    33.29   4200 breakout         ---    ---      | warmup
+  2026-03-06 B  300829.SZ    20.39   6800 breakout         ---    ---      | warmup
+  2026-03-05 S  000096.SZ    11.84  10600 breakout      -14579 -10.4%   1d | 止损-2%
+  2026-03-05 S  000301.SZ    13.43   9600 breakout      -11208  -8.0%   1d | 止损-2%
+  2026-03-05 S  600938.SH    41.60   3100 breakout       -9158  -6.6%   1d | 止损-2%
+  2026-03-05 S  300829.SZ    20.96   6800 breakout       +3670  +2.6%  -1d | 回落30%(高4.0%)
+  2026-03-09 B  600703.SH    16.32   8500 breakout         ---    ---      | warmup
+  2026-03-09 B  600873.SH    11.91  11700 breakout         ---    ---      | warmup
+  2026-03-09 B  002085.SZ    16.40   8500 breakout         ---    ---      | warmup
+  2026-03-06 S  600703.SH    17.10   8500 breakout       +6475  +4.7%  -3d | 回落20%(高6.0%)
+  2026-03-06 S  002085.SZ    16.75   8500 breakout       +2790  +2.0%  -3d | 回落30%(高3.0%)
+  2026-03-10 B  000815.SZ    19.01   7300 breakout         ---    ---      | warmup
+  2026-03-10 B  000066.SZ    17.45   8000 breakout         ---    ---      | warmup
+  2026-03-10 B  002594.SZ    97.18   1400 breakout         ---    ---      | warmup
+  2026-03-09 S  000400.SZ    34.11   4200 breakout       +3254  +2.3%   3d | 回落30%(高3.5%)
+  2026-03-09 S  000815.SZ    17.94   7300 breakout       -7981  -5.8%  -1d | 止损-2%
+  2026-03-11 B  002335.SZ    69.82   2000 breakout         ---    ---      | warmup
+  2026-03-11 B  300661.SZ    75.10   1800 breakout         ---    ---      | warmup
+  2026-03-10 S  600873.SH    11.47  11700 breakout       -5322  -3.8%   1d | 止损-2%
+  2026-03-10 S  300661.SZ    73.10   1800 breakout       -3771  -2.8%  -1d | 止损-2%
+  2026-03-12 B  000062.SZ    25.80   5400 breakout         ---    ---      | warmup
+  2026-03-12 B  002179.SZ    37.08   3700 breakout         ---    ---      | warmup
+  2026-03-11 S  000066.SZ    17.00   8000 breakout       -3777  -2.7%   1d | 止损-2%
+  2026-03-11 S  002594.SZ    99.39   1400 breakout       +2916  +2.1%   1d | 回落30%(高3.3%)
+  2026-03-13 B  002025.SZ    58.76   2300 breakout         ---    ---      | warmup
+  2026-03-13 B  300443.SZ    32.20   4300 breakout         ---    ---      | warmup
+  2026-03-12 S  002335.SZ    72.22   2000 breakout       +4612  +3.3%   1d | 回落20%(高4.3%)
+  2026-03-12 S  002025.SZ    61.42   2300 breakout       +5925  +4.4%  -1d | 回落20%(高5.7%)
+  2026-03-16 B  600072.SH    13.88  10000 breakout         ---    ---      | warmup
+  2026-03-16 B  688819.SH    34.51   4000 breakout         ---    ---      | warmup
+  2026-03-13 S  000062.SZ    26.91   5400 breakout       +5816  +4.2%   1d | 回落20%(高5.4%)
+  2026-03-13 S  002179.SZ    37.77   3700 breakout       +2357  +1.7%   1d | 回落30%(高2.6%)
+  2026-03-13 S  600072.SH    13.51  10000 breakout       -3876  -2.8%  -3d | 止损-2%
+  2026-03-13 S  688819.SH    35.18   4000 breakout       +2505  +1.8%  -3d | 回落30%(高2.8%)
+  2026-03-17 B  000020.SZ    17.53   7900 breakout         ---    ---      | warmup
+  2026-03-17 B  002294.SZ    54.93   2500 breakout         ---    ---      | warmup
+  2026-03-17 B  002831.SZ    36.00   3800 breakout         ---    ---      | warmup
+  2026-03-17 B  300685.SZ    21.68   6400 breakout         ---    ---      | warmup
+  2026-03-16 S  300443.SZ    33.88   4300 breakout       +7035  +5.1%   3d | 回落20%(高6.5%)
+  2026-03-16 S  000020.SZ    15.94   7900 breakout      -12725  -9.2%  -1d | 止损-2%
+  2026-03-16 S  002831.SZ    37.62   3800 breakout       +5955  +4.4%  -1d | 回落20%(高5.6%)
+  2026-03-18 B  002736.SZ    12.78  10900 breakout         ---    ---      | cooldown
+  2026-03-17 S  002736.SZ    13.20  10900 breakout       +4347  +3.1%  -1d | 回落20%(高4.1%)
+  2026-03-19 B  300672.SZ   191.75    700 breakout         ---    ---      | cooldown
+  2026-03-18 S  002294.SZ    58.97   2500 breakout       +9908  +7.2%   1d | 回落20%(高9.2%)
+  2026-03-18 S  300685.SZ    22.28   6400 breakout       +3667  +2.6%   1d | 回落30%(高4.0%)
+  2026-03-18 S  300672.SZ   199.05    700 breakout       +4932  +3.7%  -1d | 回落20%(高4.8%)
+  2026-03-20 B  002565.SZ    17.00   8200 breakout         ---    ---      | cooldown
+  2026-03-20 B  300559.SZ    13.00  10700 breakout         ---    ---      | cooldown
+  2026-03-19 S  002565.SZ    17.34   8200 breakout       +2570  +1.8%  -1d | 回落30%(高2.8%)
+  2026-03-19 S  300559.SZ    13.23  10700 breakout       +2288  +1.6%  -1d | 回落30%(高2.5%)
+  2026-03-23 B  000049.SZ    27.38   5100 breakout         ---    ---      | ice
+  2026-03-23 B  000423.SZ    56.02   2400 breakout         ---    ---      | ice
+  2026-03-20 S  000049.SZ    27.94   5100 breakout       +2671  +1.9%  -3d | 回落30%(高2.9%)
+  2026-03-24 B  002565.SZ    17.31   8000 breakout         ---    ---      | ice
+  2026-03-26 B  000045.SZ    13.85  10100 breakout         ---    ---      | cooldown
+  2026-03-25 S  000423.SZ    55.70   2400 breakout        -942  -0.7%   2d | 弱2d
+  2026-03-25 S  002565.SZ    16.22   8000 breakout       -8889  -6.4%   1d | 止损-2%
+  2026-03-27 B  000037.SZ    11.99  11600 breakout         ---    ---      | cooldown
+  2026-03-30 B  002460.SZ    81.00   1700 breakout         ---    ---      | warmup
+  2026-03-30 B  002466.SZ    58.02   2400 breakout         ---    ---      | warmup
+  2026-03-30 B  300054.SZ    52.27   2600 breakout         ---    ---      | warmup
+  2026-03-27 S  000045.SZ    14.31  10100 breakout       +4418  +3.2%   1d | 回落20%(高4.1%)
+  2026-03-27 S  300054.SZ    53.68   2600 breakout       +3477  +2.6%  -3d | 回落30%(高3.8%)
+  2026-03-31 B  000048.SZ    23.30   6000 breakout         ---    ---      | warmup
+  2026-03-30 S  000037.SZ    12.95  11600 breakout      +10941  +7.9%   3d | 回落20%(高10.0%)
+  2026-03-30 S  000048.SZ    22.61   6000 breakout       -4316  -3.1%  -1d | 止损-2%
+  2026-04-01 B  000037.SZ    12.60  11100 breakout         ---    ---      | warmup
+  2026-04-01 B  002821.SZ   114.61   1200 breakout         ---    ---      | warmup
+  2026-04-01 B  600741.SH    19.48   7100 breakout         ---    ---      | warmup
+  2026-03-31 S  002460.SZ    78.38   1700 breakout       -4627  -3.4%   1d | 止损-2%
+  2026-03-31 S  002466.SZ    55.48   2400 breakout       -6269  -4.5%   1d | 止损-2%
+  2026-03-31 S  000037.SZ    12.89  11100 breakout       +3077  +2.2%  -1d | 回落30%(高3.3%)
+  2026-03-31 S  002821.SZ   110.77   1200 breakout       -4781  -3.5%  -1d | 止损-2%
+  2026-04-02 B  002821.SZ   124.04   1100 breakout         ---    ---      | warmup
+  2026-04-02 B  300363.SZ    22.25   6200 breakout         ---    ---      | warmup
+  2026-04-02 B  300759.SZ    30.26   4600 breakout         ---    ---      | warmup
+  2026-04-02 B  600754.SH    28.57   4900 breakout         ---    ---      | warmup
+  2026-04-01 S  600754.SH    29.20   4900 breakout       +2901  +2.1%  -1d | 回落30%(高3.2%)
+  2026-04-03 B  000028.SZ    26.70   5200 breakout         ---    ---      | warmup
+  2026-04-02 S  600741.SH    19.89   7100 breakout       +2699  +2.0%   1d | 回落30%(高3.0%)
+  2026-04-07 B  000729.SZ    14.50   9600 breakout         ---    ---      | warmup
+  2026-04-03 S  002821.SZ   128.65   1100 breakout       +4885  +3.6%   1d | 回落20%(高4.6%)
+  2026-04-03 S  300363.SZ    21.54   6200 breakout       -4576  -3.3%   1d | 止损-2%
+  2026-04-03 S  000729.SZ    13.87   9600 breakout       -6221  -4.5%  -4d | 止损-2%
+  2026-04-08 B  002051.SZ    11.53  12100 breakout         ---    ---      | warmup
+  2026-04-08 B  600056.SH    11.10  12600 breakout         ---    ---      | warmup
+  2026-04-07 S  300759.SZ    30.99   4600 breakout       +3163  +2.3%   5d | 回落30%(高3.4%)
+  2026-04-07 S  000028.SZ    26.64   5200 breakout        -492  -0.4%   4d | 弱4d
+  2026-04-07 S  002051.SZ    10.48  12100 breakout      -12870  -9.2%  -1d | 止损-2%
+  2026-04-07 S  600056.SH    11.36  12600 breakout       +3077  +2.2%  -1d | 回落30%(高3.3%)
+  2026-04-09 B  000065.SZ    15.50   9000 breakout         ---    ---      | hot
+  2026-04-08 S  000065.SZ    16.20   9000 breakout       +6075  +4.4%  -1d | 回落20%(高5.6%)
+  2026-04-10 B  002008.SZ    76.36   1800 breakout         ---    ---      | hot
+  2026-04-13 S  002008.SZ    75.78   1800 breakout       -1221  -0.9%   3d | 弱3d
+  2026-04-15 B  002582.SZ    12.26  11400 breakout         ---    ---      | warmup
+  2026-04-15 B  300618.SZ    46.95   2900 breakout         ---    ---      | warmup
+  2026-04-15 B  002407.SZ    30.88   4500 breakout         ---    ---      | warmup
+  2026-04-15 B  300136.SZ    68.96   2000 breakout         ---    ---      | warmup
+  2026-04-15 B  300251.SZ    16.66   8400 breakout         ---    ---      | warmup
+  2026-04-14 S  002582.SZ    12.68  11400 breakout       +4646  +3.3%  -1d | 回落20%(高4.3%)
+  2026-04-14 S  300618.SZ    47.89   2900 breakout       +2540  +1.9%  -1d | 回落30%(高2.9%)
+  2026-04-14 S  300251.SZ    16.96   8400 breakout       +2343  +1.7%  -1d | 回落30%(高2.6%)
+  2026-04-16 S  002407.SZ    30.10   4500 breakout       -3686  -2.7%   1d | 止损-2%
+  2026-04-16 S  300136.SZ    71.26   2000 breakout       +4423  +3.2%   1d | 回落20%(高4.2%)
+  2026-04-20 B  300351.SZ    18.99   7300 breakout         ---    ---      | hot
+  2026-04-21 S  300351.SZ    19.97   7300 breakout       +6994  +5.0%   1d | 回落20%(高6.5%)
+  2026-04-23 B  000063.SZ    37.20   3700 breakout         ---    ---      | hot
+  2026-04-27 B  002407.SZ    33.63   4100 breakout         ---    ---      | warmup
+  2026-04-27 B  300075.SZ    13.29  10500 breakout         ---    ---      | warmup
+  2026-04-27 B  300015.SZ    10.86  12800 breakout         ---    ---      | warmup
+  2026-04-27 B  603599.SH    14.72   9500 breakout         ---    ---      | warmup
+  2026-04-24 S  300015.SZ    11.16  12800 breakout       +3667  +2.6%  -3d | 回落30%(高4.0%)
+  2026-04-24 S  603599.SH    15.03   9500 breakout       +2807  +2.0%  -3d | 回落30%(高3.1%)
+  2026-04-28 B  002290.SZ    84.00   1600 breakout         ---    ---      | warmup
+  2026-04-28 B  601566.SH    10.79  12900 breakout         ---    ---      | warmup
+  2026-04-27 S  000063.SZ    37.26   3700 breakout         +43  +0.0%   4d | 时间4d
+  2026-04-27 S  002290.SZ    88.16   1600 breakout       +6473  +4.8%  -1d | 回落20%(高6.2%)
+  2026-04-29 B  002430.SZ    33.02   4200 breakout         ---    ---      | warmup
+  2026-04-29 B  300298.SZ    16.84   8300 breakout         ---    ---      | warmup
+  2026-04-28 S  002407.SZ    34.51   4100 breakout       +3432  +2.5%   1d | 回落30%(高3.7%)
+  2026-04-30 B  002832.SZ    20.06   6900 breakout         ---    ---      | warmup
+  2026-04-30 S  002430.SZ    31.43   4200 breakout       -6850  -4.9%   1d | 止损-2%
+  2026-05-06 S  300075.SZ    13.54  10500 breakout       +2461  +1.8%   9d | 回落30%(高2.7%)
+  2026-05-06 S  601566.SH    10.85  12900 breakout        +592  +0.4%   8d | 时间8d
+  2026-05-06 S  300298.SZ    16.51   8300 breakout       -2917  -2.1%   7d | 弱7d
+  2026-05-06 S  002832.SZ    20.47   6900 breakout       +2618  +1.9%   6d | 回落30%(高2.9%)
+  2026-05-08 B  300124.SZ    74.67   1800 breakout         ---    ---      | hot
+  2026-05-11 S  300124.SZ    77.53   1800 breakout       +4959  +3.7%   3d | 回落20%(高4.8%)
+  2026-05-13 B  000006.SZ    10.63  13100 breakout         ---    ---      | hot
+  2026-05-15 B  300715.SZ    18.11   7700 breakout         ---    ---      | warmup
+  2026-05-15 B  300782.SZ   140.76    900 breakout         ---    ---      | warmup
+  2026-05-15 B  600449.SH    15.28   9100 breakout         ---    ---      | warmup
+  2026-05-15 B  688301.SH   133.00   1000 breakout         ---    ---      | warmup
+  2026-05-14 S  000006.SZ    10.88  13100 breakout       +3116  +2.2%   1d | 回落30%(高3.4%)
+  2026-05-14 S  300782.SZ   143.66    900 breakout       +2440  +1.9%  -1d | 回落30%(高2.9%)
+  2026-05-14 S  688301.SH   135.76   1000 breakout       +2582  +1.9%  -1d | 回落30%(高3.0%)
+  2026-05-18 B  002747.SZ    25.43   5500 breakout         ---    ---      | cooldown
+  2026-05-15 S  002747.SZ    25.91   5500 breakout       +2433  +1.7%  -3d | 回落30%(高2.7%)
+  2026-05-19 B  000685.SZ    11.94  11700 breakout         ---    ---      | cooldown
+  2026-05-18 S  300715.SZ    16.29   7700 breakout      -14177 -10.2%   3d | 止损-2%
+  2026-05-18 S  600449.SH    14.63   9100 breakout       -6088  -4.4%   3d | 止损-2%
+  2026-05-20 B  000006.SZ    11.21  12400 breakout         ---    ---      | cooldown
+  2026-05-20 B  601198.SH    13.40  10400 breakout         ---    ---      | cooldown
+  2026-05-21 B  300655.SZ    17.32   8000 breakout         ---    ---      | warmup
+  2026-05-21 B  300715.SZ    19.53   7100 breakout         ---    ---      | warmup
+  2026-05-20 S  000685.SZ    12.82  11700 breakout      +10101  +7.2%   1d | 回落20%(高9.2%)
+  2026-05-22 B  002747.SZ    28.35   4900 breakout         ---    ---      | warmup
+  2026-05-21 S  000006.SZ    10.46  12400 breakout       -9469  -6.8%   1d | 止损-2%
+  2026-05-21 S  601198.SH    13.74  10400 breakout       +3309  +2.4%   1d | 回落30%(高3.6%)
+  2026-05-25 B  000417.SZ     9.92  14100 breakout         ---    ---      | warmup
+  2026-05-25 B  000733.SZ    51.36   2700 breakout         ---    ---      | warmup
+  2026-05-22 S  300655.SZ    17.68   8000 breakout       +2728  +2.0%   1d | 回落30%(高3.0%)
+  2026-05-22 S  300715.SZ    21.79   7100 breakout      +15817 +11.4%   1d | 回落20%(高14.4%)
+  2026-05-22 S  000417.SZ    10.14  14100 breakout       +2972  +2.1%  -3d | 回落30%(高3.2%)
+  2026-05-22 S  000733.SZ    49.17   2700 breakout       -6086  -4.4%  -3d | 止损-2%
+  2026-05-26 B  688027.SH   630.00    200 breakout         ---    ---      | warmup
+  2026-05-26 B  002049.SZ    84.46   1600 breakout         ---    ---      | warmup
+  2026-05-26 B  301269.SZ   130.53   1000 breakout         ---    ---      | warmup
+  2026-05-26 B  600171.SH    30.20   4600 breakout         ---    ---      | warmup
+  2026-05-25 S  002747.SZ    30.07   4900 breakout       +8236  +5.9%   3d | 回落20%(高7.6%)
+  2026-05-25 S  301269.SZ   125.04   1000 breakout       -5653  -4.3%  -1d | 止损-2%
+  2026-05-27 B  301269.SZ   130.00   1000 breakout         ---    ---      | warmup
+  2026-05-27 B  600021.SH    20.39   6800 breakout         ---    ---      | warmup
+  2026-05-26 S  301269.SZ   136.05   1000 breakout       +5871  +4.5%  -1d | 回落20%(高5.8%)
+  2026-05-28 B  002185.SZ    20.15   6900 breakout         ---    ---      | warmup
+  2026-05-27 S  688027.SH   584.54    200 breakout       -9244  -7.3%   1d | 止损-2%
+  2026-05-27 S  002049.SZ    88.52   1600 breakout       +6305  +4.7%   1d | 回落20%(高6.0%)
+  2026-05-27 S  600171.SH    31.53   4600 breakout       +5920  +4.3%   1d | 回落20%(高5.5%)
+  2026-05-29 B  000887.SZ    21.30   6500 breakout         ---    ---      | warmup
+  2026-05-29 B  002129.SZ    10.33  13500 breakout         ---    ---      | warmup
+  2026-05-29 B  000733.SZ    54.05   2500 breakout         ---    ---      | warmup
+  2026-05-28 S  600021.SH    21.36   6800 breakout       +6394  +4.6%   1d | 回落20%(高5.9%)
+  2026-05-28 S  002129.SZ    10.53  13500 breakout       +2461  +1.8%  -1d | 回落30%(高2.7%)
+  2026-05-29 S  002185.SZ    21.60   6900 breakout       +9797  +7.0%   1d | 回落20%(高9.0%)
+  2026-06-02 B  000037.SZ    12.65  11000 breakout         ---    ---      | cooldown
+  2026-06-01 S  000887.SZ    21.13   6500 breakout       -1284  -0.9%   3d | 弱3d
+  2026-06-01 S  000733.SZ    50.87   2500 breakout       -8115  -6.0%   3d | 止损-2%
+  2026-06-03 B  000921.SZ    26.30   5300 breakout         ---    ---      | warmup
+  2026-06-03 B  600160.SH    38.16   3600 breakout         ---    ---      | warmup
+  2026-06-03 B  601066.SH    25.51   5400 breakout         ---    ---      | warmup
+  2026-06-03 B  000733.SZ    54.60   2500 breakout         ---    ---      | warmup
+  2026-06-03 S  000037.SZ    11.88  11000 breakout       -8640  -6.2%   1d | 止损-2%
+  2026-06-04 S  000921.SZ    26.82   5300 breakout       +2561  +1.8%   1d | 回落30%(高2.8%)
+  2026-06-04 S  600160.SH    39.63   3600 breakout       +5114  +3.7%   1d | 回落20%(高4.8%)
+  2026-06-04 S  601066.SH    26.22   5400 breakout       +3672  +2.7%   1d | 回落30%(高4.0%)
+  2026-06-04 S  000733.SZ    59.31   2500 breakout      +11582  +8.5%   1d | 目标+8%
+  2026-06-08 B  000887.SZ    21.60   6400 breakout         ---    ---      | warmup
+  2026-06-08 B  688777.SH    99.60   1400 breakout         ---    ---      | warmup
+  2026-06-08 B  300482.SZ    18.03   7700 ignition         ---    ---      | warmup
+  2026-06-05 S  000887.SZ    22.41   6400 breakout       +4985  +3.6%  -3d | 回落20%(高4.7%)
+  2026-06-05 S  300482.SZ    18.65   7700 ignition       +4557  +3.3%  -3d | 回落20%(高4.3%)
+  2026-06-09 B  600749.SH    16.13   8600 breakout         ---    ---      | cooldown
+  2026-06-10 B  300482.SZ    20.19   6900 breakout         ---    ---      | cooldown
+  2026-06-09 S  688777.SH   110.00   1400 breakout      +14360 +10.3%   1d | 目标+8%
+  2026-06-11 B  000048.SZ    18.95   7300 breakout         ---    ---      | cooldown
+  2026-06-10 S  600749.SH    17.15   8600 breakout       +8546  +6.2%   1d | 回落20%(高7.9%)
+  2026-06-10 S  000048.SZ    17.83   7300 breakout       -8345  -6.0%  -1d | 止损-2%
+  2026-06-12 B  002378.SZ    35.00   4000 breakout         ---    ---      | warmup
+  2026-06-12 B  300894.SZ    11.39  12200 breakout         ---    ---      | warmup
+  2026-06-12 B  600498.SH    62.50   2200 breakout         ---    ---      | warmup
+  2026-06-12 B  000048.SZ    19.39   7200 breakout         ---    ---      | warmup
+  2026-06-11 S  300482.SZ    18.95   6900 breakout       -8726  -6.3%   1d | 止损-2%
+  2026-06-11 S  002378.SZ    33.63   4000 breakout       -5655  -4.0%  -1d | 止损-2%
+  2026-06-15 B  601688.SH    20.03   6900 breakout         ---    ---      | warmup
+  2026-06-15 B  000032.SZ    19.20   7200 ignition         ---    ---      | warmup
+  2026-06-15 S  300894.SZ    11.93  12200 breakout       +6350  +4.6%   3d | 回落20%(高5.9%)
+  2026-06-15 S  600498.SH    67.83   2200 breakout      +11532  +8.4%   3d | 目标+8%
+  2026-06-15 S  000048.SZ    20.82   7200 breakout      +10116  +7.2%   3d | 回落20%(高9.2%)
+  2026-06-16 S  601688.SH    20.73   6900 breakout       +4616  +3.3%   1d | 回落20%(高4.3%)
+  2026-06-16 S  000032.SZ    22.89   7200 ignition      +26354 +19.1%   1d | 目标+8%
+  2026-06-18 B  300894.SZ    11.70  11900 breakout         ---    ---      | hot
+  2026-06-22 S  300894.SZ    12.33  11900 breakout       +7330  +5.3%   4d | 回落20%(高6.8%)
+  2026-06-24 B  002008.SZ   136.73   1000 breakout         ---    ---      | warmup
+  2026-06-24 B  600977.SH    14.60   9500 breakout         ---    ---      | warmup
+  2026-06-24 B  601066.SH    28.19   4900 breakout         ---    ---      | warmup
+  2026-06-24 B  603727.SH    19.09   7300 breakout         ---    ---      | warmup
+  2026-06-23 S  002008.SZ   143.44   1000 breakout       +6526  +4.8%  -1d | 回落20%(高6.1%)
+  2026-06-23 S  600977.SH    15.43   9500 breakout       +7713  +5.6%  -1d | 回落20%(高7.1%)
+  2026-06-23 S  601066.SH    29.57   4900 breakout       +6554  +4.7%  -1d | 回落20%(高6.1%)
+  2026-06-25 B  000050.SZ    10.55  13200 breakout         ---    ---      | warmup
+  2026-06-25 B  002415.SZ    33.90   4100 breakout         ---    ---      | warmup
+  2026-06-25 B  600096.SH    34.04   4100 breakout         ---    ---      | warmup
+  2026-06-25 B  600531.SH    15.76   8800 breakout         ---    ---      | warmup
+  2026-06-24 S  000050.SZ    10.90  13200 breakout       +4459  +3.2%  -1d | 回落20%(高4.2%)
+  2026-06-26 B  000066.SZ    19.70   7100 breakout         ---    ---      | warmup
+  2026-06-25 S  603727.SH    19.50   7300 breakout       +2830  +2.0%   1d | 回落30%(高3.1%)
+  2026-06-25 S  000066.SZ    20.58   7100 breakout       +6058  +4.3%  -1d | 回落20%(高5.6%)
+  2026-06-26 S  002415.SZ    35.21   4100 breakout       +5192  +3.7%   1d | 回落20%(高4.8%)
+  2026-06-26 S  600096.SH    32.13   4100 breakout       -8002  -5.7%   1d | 止损-2%
+  2026-06-26 S  600531.SH    17.02   8800 breakout      +10928  +7.9%   1d | 回落20%(高10.0%)
+  2026-06-30 B  002674.SZ    28.53   4900 breakout         ---    ---      | warmup
+  2026-06-30 B  300024.SZ    18.52   7500 breakout         ---    ---      | warmup
+  2026-06-30 B  300725.SZ    35.68   3900 breakout         ---    ---      | warmup
+  2026-06-30 B  000551.SZ    20.58   6800 breakout         ---    ---      | warmup
+  2026-06-30 B  300363.SZ    17.00   8200 breakout         ---    ---      | warmup
+  2026-06-29 S  002674.SZ    31.70   4900 breakout      +15331 +11.0%  -1d | 目标+8%
+  2026-06-29 S  300725.SZ    36.41   3900 breakout       +2655  +1.9%  -1d | 回落30%(高2.9%)
+  2026-06-29 S  300363.SZ    17.41   8200 breakout       +3201  +2.3%  -1d | 回落30%(高3.5%)
+  2026-07-01 B  300687.SZ    30.73   4500 breakout         ---    ---      | warmup
+  2026-07-01 B  688220.SH   123.40   1100 breakout         ---    ---      | warmup
+  2026-07-02 B  002294.SZ    34.48   4000 breakout         ---    ---      | warmup
+  2026-07-01 S  300024.SZ    19.50   7500 breakout       +7190  +5.2%   1d | 回落20%(高6.6%)
+  2026-07-01 S  000551.SZ    21.70   6800 breakout       +7424  +5.3%   1d | 回落20%(高6.8%)
+  2026-07-03 B  300418.SZ    44.30   3100 breakout         ---    ---      | warmup
+  2026-07-02 S  300687.SZ    27.45   4500 breakout      -14921 -10.8%   1d | 止损-2%
+  2026-07-02 S  688220.SH   128.67   1100 breakout       +5615  +4.1%   1d | 回落20%(高5.3%)
+  2026-07-02 S  300418.SZ    46.37   3100 breakout       +6236  +4.5%  -1d | 回落20%(高5.8%)
+  2026-07-06 B  002345.SZ    10.40  13400 breakout         ---    ---      | warmup
+  2026-07-06 B  002050.SZ    47.74   2900 breakout         ---    ---      | warmup
+  2026-07-06 B  603338.SH    52.46   2600 ignition         ---    ---      | warmup
+  2026-07-06 B  688036.SH    60.50   2300 breakout         ---    ---      | warmup
+  2026-07-03 S  002294.SZ    40.08   4000 breakout      +22192 +16.1%   1d | 目标+8%
+  2026-07-03 S  002050.SZ    48.91   2900 breakout       +3206  +2.3%  -3d | 回落30%(高3.5%)
+  2026-07-07 B  000301.SZ    13.89  10000 breakout         ---    ---      | warmup
+  2026-07-07 B  600196.SH    23.82   5800 breakout         ---    ---      | warmup
+  2026-07-07 S  002345.SZ    10.74  13400 breakout       +4315  +3.1%   1d | 回落20%(高4.0%)
+  2026-07-07 S  603338.SH    53.85   2600 ignition       +3440  +2.5%   1d | 回落30%(高3.8%)
+  2026-07-07 S  688036.SH    65.16   2300 breakout      +10514  +7.6%   1d | 回落20%(高9.6%)
+  2026-07-09 B  300251.SZ    12.15  11500 breakout         ---    ---      | warmup
+  2026-07-09 B  300454.SZ   104.49   1300 breakout         ---    ---      | warmup
+  2026-07-09 B  688561.SH    25.01   5500 breakout         ---    ---      | warmup
+  2026-07-08 S  000301.SZ    12.82  10000 breakout      -10867  -7.8%   1d | 止损-2%
+  2026-07-08 S  600196.SH    22.95   5800 breakout       -5219  -3.8%   1d | 止损-2%
+  2026-07-08 S  300251.SZ    12.45  11500 breakout       +3275  +2.3%  -1d | 回落30%(高3.5%)
+  2026-07-08 S  688561.SH    25.55   5500 breakout       +2782  +2.0%  -1d | 回落30%(高3.1%)
+  2026-07-10 B  002152.SZ    10.47  13300 breakout         ---    ---      | warmup
+  2026-07-10 B  000063.SZ    39.80   3500 breakout         ---    ---      | warmup
+  2026-07-10 B  300418.SZ    48.47   2800 breakout         ---    ---      | warmup
+  2026-07-09 S  002152.SZ    10.89  13300 breakout       +5451  +3.9%  -1d | 回落20%(高5.1%)
+  2026-07-09 S  300418.SZ    51.20   2800 breakout       +7452  +5.5%  -1d | 回落20%(高7.0%)
+  2026-07-13 B  600879.SH    23.06   6000 breakout         ---    ---      | warmup
+  2026-07-13 B  300251.SZ    12.64  11000 breakout         ---    ---      | warmup
+  2026-07-13 B  600685.SH    27.50   5000 breakout         ---    ---      | warmup
+  2026-07-10 S  300454.SZ   113.20   1300 breakout      +11134  +8.2%   1d | 回落20%(高10.4%)
+  2026-07-10 S  600685.SH    28.38   5000 breakout       +4216  +3.1%  -3d | 回落20%(高4.0%)
+  2026-07-13 S  000063.SZ    42.36   3500 breakout       +8767  +6.3%   3d | 回落20%(高8.0%)
+  2026-07-15 B  002603.SZ    16.76   8300 breakout         ---    ---      | warmup
+  2026-07-15 B  300725.SZ    40.30   3400 breakout         ---    ---      | warmup
+  2026-07-15 B  603233.SH    18.80   7400 breakout         ---    ---      | warmup
+  2026-07-14 S  600879.SH    19.31   6000 breakout      -22651 -16.4%   1d | 止损-2%
+  2026-07-14 S  300251.SZ    11.51  11000 breakout      -12595  -9.1%   1d | 止损-2%
+  2026-07-14 S  002603.SZ    17.17   8300 breakout       +3243  +2.3%  -1d | 回落30%(高3.5%)
+  2026-07-14 S  603233.SH    19.60   7400 breakout       +5731  +4.1%  -1d | 回落20%(高5.3%)
+  2026-07-16 B  002508.SZ    15.72   8900 breakout         ---    ---      | cooldown
+  2026-07-16 B  300628.SZ    36.60   3800 breakout         ---    ---      | cooldown
+  2026-07-15 S  300628.SZ    37.80   3800 breakout       +4373  +3.1%  -1d | 回落20%(高4.1%)
+  2026-07-17 B  300251.SZ    13.18  10600 breakout         ---    ---      | cooldown
+  2026-07-16 S  300725.SZ    43.41   3400 breakout      +10389  +7.6%   1d | 回落20%(高9.7%)
+  2026-07-16 S  300251.SZ    13.74  10600 breakout       +5747  +4.1%  -1d | 回落20%(高5.3%)
+  2026-07-20 B  300896.SZ    99.10   1400 breakout         ---    ---      | ice
+  2026-07-17 S  002508.SZ    16.15   8900 breakout       +3676  +2.6%   1d | 回落30%(高3.9%)
+  2026-07-21 B  000596.SZ    93.58   1400 breakout         ---    ---      | ice
+  2026-07-22 B  002396.SZ    30.16   4600 breakout         ---    ---      | cooldown
+  2026-07-21 S  300896.SZ   103.43   1400 breakout       +5871  +4.2%   1d | 回落20%(高5.5%)
+  2026-07-21 S  002396.SZ    31.32   4600 breakout       +5149  +3.7%  -1d | 回落20%(高4.8%)
+  2026-07-23 B  000037.SZ     9.82  14200 breakout         ---    ---      | warmup
+  2026-07-23 B  002439.SZ    14.00  10000 breakout         ---    ---      | warmup
+  2026-07-23 B  300896.SZ   106.51   1300 breakout         ---    ---      | warmup
+  2026-07-23 B  600547.SH    27.26   5100 breakout         ---    ---      | warmup
+  2026-07-22 S  000596.SZ    97.60   1400 breakout       +5456  +4.2%   1d | 回落20%(高5.4%)
+  2026-07-22 S  000037.SZ    10.28  14200 breakout       +6399  +4.6%  -1d | 回落20%(高5.9%)
+  2026-07-22 S  300896.SZ   108.56   1300 breakout       +2483  +1.8%  -1d | 回落30%(高2.8%)
+  2026-07-24 B  000815.SZ    17.37   8000 breakout         ---    ---      | warmup
+  2026-07-24 B  000400.SZ    22.53   6200 breakout         ---    ---      | warmup
+  2026-07-23 S  000400.SZ    22.99   6200 breakout       +2679  +1.9%  -1d | 回落30%(高2.9%)
+  2026-07-24 S  002439.SZ    13.33  10000 breakout       -6873  -4.9%   1d | 止损-2%
+  2026-07-24 S  600547.SH    27.84   5100 breakout       +2779  +2.0%   1d | 回落30%(高3.0%)
+  2026-07-28 B  002415.SZ    36.56   3800 breakout         ---    ---      | warmup
+  2026-07-28 B  002832.SZ    23.70   5900 breakout         ---    ---      | warmup
+  2026-07-28 B  000429.SZ    14.98   9300 breakout         ---    ---      | warmup
+  2026-07-27 S  000815.SZ    16.60   8000 breakout       -6333  -4.6%   3d | 止损-2%
+  2026-07-27 S  002415.SZ    37.78   3800 breakout       +4465  +3.2%  -1d | 回落20%(高4.2%)
+  2026-07-29 B  002847.SZ    51.70   2700 breakout         ---    ---      | warmup
+  2026-07-29 B  603877.SH    13.25  10500 breakout         ---    ---      | warmup
+  2026-07-30 B  002582.SZ    10.03  13900 breakout         ---    ---      | warmup
+  2026-07-29 S  002832.SZ    26.26   5900 breakout      +14903 +10.7%   1d | 回落20%(高13.5%)
+  2026-07-29 S  002582.SZ    10.24  13900 breakout       +2734  +2.0%  -1d | 回落30%(高3.0%)
+  2026-07-31 B  600779.SH    27.83   5000 breakout         ---    ---      | warmup
+  2026-07-31 B  000025.SZ    15.31   9100 breakout         ---    ---      | warmup
+  2026-07-30 S  000429.SZ    14.26   9300 breakout       -6868  -4.9%   2d | 止损-2%
+  2026-07-30 S  002847.SZ    53.41   2700 breakout       +4435  +3.2%   1d | 回落20%(高4.1%)
+  2026-07-30 S  603877.SH    13.77  10500 breakout       +5272  +3.8%   1d | 回落20%(高4.9%)
+  2026-07-30 S  600779.SH    29.25   5000 breakout       +6890  +5.0%  -1d | 回落20%(高6.4%)
+  2026-08-03 B  300559.SZ    11.86  11800 breakout         ---    ---      | warmup
+  2026-08-03 B  300788.SZ    26.08   5300 breakout         ---    ---      | warmup
+  2026-08-03 B  603258.SH    13.33  10500 breakout         ---    ---      | warmup
+  2026-08-03 B  600702.SH    38.00   3600 breakout         ---    ---      | warmup
+  2026-07-31 S  300559.SZ    12.17  11800 breakout       +3448  +2.5%  -3d | 回落30%(高3.7%)
+  2026-07-31 S  300788.SZ    26.57   5300 breakout       +2414  +1.7%  -3d | 回落30%(高2.7%)
+  2026-07-31 S  600702.SH    38.67   3600 breakout       +2213  +1.6%  -3d | 回落30%(高2.5%)
+  2026-08-04 B  600438.SH    12.97  10700 breakout         ---    ---      | warmup
+  2026-08-04 B  002623.SZ    15.84   8800 ignition         ---    ---      | warmup
+  2026-08-03 S  000025.SZ    15.85   9100 breakout       +4690  +3.4%   3d | 回落20%(高4.4%)
+  2026-08-03 S  002623.SZ    16.20   8800 ignition       +2956  +2.1%  -1d | 回落30%(高3.2%)
+  2026-08-05 B  002912.SZ    21.80   6400 breakout         ---    ---      | warmup
+  2026-08-05 B  300058.SZ    15.24   9100 breakout         ---    ---      | warmup
+  2026-08-04 S  002912.SZ    21.03   6400 breakout       -5103  -3.7%  -1d | 止损-2%
+  2026-08-04 S  300058.SZ    15.93   9100 breakout       +6072  +4.4%  -1d | 回落20%(高5.6%)
+  2026-08-05 S  603258.SH    13.59  10500 breakout       +2534  +1.8%   2d | 回落30%(高2.8%)
+  2026-08-06 S  600438.SH    12.31  10700 breakout       -7233  -5.2%   2d | 止损-2%
+  2026-08-10 B  300601.SZ    12.82  10900 breakout         ---    ---      | hot
+  2026-08-12 S  300601.SZ    12.66  10900 breakout       -1923  -1.4%   2d | 弱2d
+  2026-08-14 B  000887.SZ    23.00   6000 breakout         ---    ---      | warmup
+  2026-08-14 B  688050.SH    44.86   3100 breakout         ---    ---      | warmup
+  2026-08-14 B  300685.SZ    19.75   7000 breakout         ---    ---      | warmup
+  2026-08-14 B  688180.SH    40.03   3400 breakout         ---    ---      | warmup
+  2026-08-13 S  000887.SZ    23.48   6000 breakout       +2715  +2.0%  -1d | 回落30%(高3.0%)
+  2026-08-13 S  688050.SH    43.45   3100 breakout       -4546  -3.3%  -1d | 止损-2%
+  2026-08-13 S  688180.SH    41.69   3400 breakout       +5473  +4.0%  -1d | 回落20%(高5.2%)
+  2026-08-17 B  000831.SZ    60.03   2300 breakout         ---    ---      | warmup
+  2026-08-17 B  000768.SZ    21.44   6500 breakout         ---    ---      | warmup
+  2026-08-17 B  603083.SH   190.00    700 breakout         ---    ---      | warmup
+  2026-08-14 S  000768.SZ    21.83   6500 breakout       +2364  +1.7%  -3d | 回落30%(高2.6%)
+  2026-08-17 S  300685.SZ    18.95   7000 breakout       -5772  -4.2%   3d | 止损-2%
+  2026-08-18 S  000831.SZ    62.57   2300 breakout       +5646  +4.1%   1d | 回落20%(高5.3%)
+  2026-08-20 B  000020.SZ    12.50  11200 breakout         ---    ---      | warmup
+  2026-08-20 B  002508.SZ    16.43   8500 breakout         ---    ---      | warmup
+  2026-08-20 B  603290.SH    98.01   1400 breakout         ---    ---      | warmup
+  2026-08-19 S  603083.SH   167.45    700 breakout      -15937 -12.0%   2d | 止损-2%
+  2026-08-19 S  000020.SZ    13.74  11200 breakout      +13688  +9.8%  -1d | 目标+8%
+  2026-08-21 B  300122.SZ    13.40  10400 breakout         ---    ---      | warmup
+  2026-08-21 B  300601.SZ    13.20  10600 breakout         ---    ---      | warmup
+  2026-08-21 B  600547.SH    35.85   3900 breakout         ---    ---      | warmup
+  2026-08-20 S  300122.SZ    14.48  10400 breakout      +11036  +7.9%  -1d | 目标+8%
+  2026-08-20 S  300601.SZ    14.47  10600 breakout      +13263  +9.5%  -1d | 目标+8%
+  2026-08-24 S  002508.SZ    16.57   8500 breakout       +1007  +0.7%   4d | 时间4d
+  2026-08-24 S  603290.SH    92.99   1400 breakout       -7197  -5.2%   4d | 止损-2%
+  2026-08-24 S  600547.SH    37.68   3900 breakout       +6954  +5.0%   3d | 回落20%(高6.4%)
+  2026-08-26 B  002041.SZ    10.88  12800 breakout         ---    ---      | warmup
+  2026-08-26 B  600508.SH    10.35  13500 breakout         ---    ---      | warmup
+  2026-08-26 B  600745.SH    19.44   7200 breakout         ---    ---      | warmup
+  2026-08-26 B  688169.SH   137.00   1000 breakout         ---    ---      | warmup
+  2026-08-26 B  300677.SZ    52.10   2600 breakout         ---    ---      | warmup
+  2026-08-25 S  002041.SZ    11.11  12800 breakout       +2772  +2.0%  -1d | 回落30%(高3.0%)
+  2026-08-25 S  600508.SH    10.77  13500 breakout       +5427  +3.9%  -1d | 回落20%(高5.0%)
+  2026-08-25 S  600745.SH    18.92   7200 breakout       -3921  -2.8%  -1d | 止损-2%
+  2026-08-27 B  002078.SZ    15.50   9000 breakout         ---    ---      | warmup
+  2026-08-27 B  300122.SZ    14.20   9800 breakout         ---    ---      | warmup
+  2026-08-26 S  002078.SZ    15.10   9000 breakout       -3777  -2.7%  -1d | 止损-2%
+  2026-08-26 S  300122.SZ    14.99   9800 breakout       +7571  +5.4%  -1d | 回落20%(高7.0%)
+  2026-08-27 S  688169.SH   130.60   1000 breakout       -6570  -4.8%   1d | 止损-2%
+  2026-08-27 S  300677.SZ    55.44   2600 breakout       +8507  +6.3%   1d | 回落20%(高8.0%)
+  2026-08-31 B  000017.SZ    11.47  12200 breakout         ---    ---      | hot
+  2026-09-01 S  000017.SZ    11.73  12200 breakout       +2974  +2.1%   1d | 回落30%(高3.2%)
+  2026-09-03 B  002785.SZ    36.68   3800 breakout         ---    ---      | warmup
+  2026-09-03 B  601566.SH    10.35  13500 breakout         ---    ---      | warmup
+  2026-09-03 B  600054.SH    11.73  11900 breakout         ---    ---      | warmup
+  2026-09-03 B  000768.SZ    23.29   6000 breakout         ---    ---      | warmup
+  2026-09-04 B  601086.SH    11.78  11800 breakout         ---    ---      | warmup
+  2026-09-03 S  601086.SH    12.08  11800 breakout       +3366  +2.4%  -1d | 回落30%(高3.7%)
+  2026-09-07 B  002602.SZ    15.66   8900 breakout         ---    ---      | warmup
+  2026-09-04 S  002785.SZ    37.96   3800 breakout       +4676  +3.4%   1d | 回落20%(高4.4%)
+  2026-09-04 S  601566.SH    11.19  13500 breakout      +11144  +8.0%   1d | 回落20%(高10.1%)
+  2026-09-08 B  002403.SZ    13.65  10200 breakout         ---    ---      | warmup
+  2026-09-08 B  300559.SZ    12.89  10800 breakout         ---    ---      | warmup
+  2026-09-07 S  600054.SH    11.70  11900 breakout        -538  -0.4%   4d | 弱4d
+  2026-09-07 S  000768.SZ    23.28   6000 breakout        -242  -0.2%   4d | 弱4d
+  2026-09-07 S  002403.SZ    12.41  10200 breakout      -12813  -9.2%  -1d | 止损-2%
+  2026-09-09 B  002403.SZ    13.65  10200 breakout         ---    ---      | warmup
+  2026-09-09 B  300788.SZ    31.40   4400 breakout         ---    ---      | warmup
+  2026-09-09 B  601086.SH    14.80   9400 breakout         ---    ---      | warmup
+  2026-09-08 S  002602.SZ    16.40   8900 breakout       +6361  +4.6%   1d | 回落20%(高5.9%)
+  2026-09-10 B  600737.SH    19.48   7100 breakout         ---    ---      | warmup
+  2026-09-09 S  300559.SZ    12.49  10800 breakout       -4495  -3.2%   1d | 止损-2%
+  2026-09-11 B  002912.SZ    23.51   5900 breakout         ---    ---      | warmup
+  2026-09-10 S  002403.SZ    11.70  10200 breakout      -20045 -14.4%   1d | 止损-2%
+  2026-09-10 S  300788.SZ    32.09   4400 breakout       +2866  +2.1%   1d | 回落30%(高3.2%)
+  2026-09-10 S  002912.SZ    21.37   5900 breakout      -12790  -9.2%  -1d | 止损-2%
+  2026-09-14 B  600088.SH    14.47   9600 breakout         ---    ---      | warmup
+  2026-09-14 B  600184.SH    20.19   6900 breakout         ---    ---      | warmup
+  2026-09-14 B  603136.SH    10.49  13300 breakout         ---    ---      | warmup
+  2026-09-11 S  601086.SH    16.35   9400 breakout      +14370 +10.3%   2d | 目标+8%
+  2026-09-11 S  600737.SH    16.21   7100 breakout      -23367 -16.9%   1d | 止损-2%
+  2026-09-11 S  600088.SH    13.40   9600 breakout      -10439  -7.5%  -3d | 止损-2%
+  2026-09-15 B  000978.SZ    11.56  12100 breakout         ---    ---      | warmup
+  2026-09-15 B  600088.SH    16.20   8600 breakout         ---    ---      | warmup
+  2026-09-15 B  600697.SH    13.38  10400 breakout         ---    ---      | warmup
+  2026-09-14 S  000978.SZ    10.86  12100 breakout       -8641  -6.2%  -1d | 止损-2%
+  2026-09-14 S  600088.SH    14.74   8600 breakout      -12721  -9.1%  -1d | 止损-2%
+  2026-09-14 S  600697.SH    12.16  10400 breakout      -12852  -9.2%  -1d | 止损-2%
+  2026-09-16 B  002912.SZ    25.61   5400 breakout         ---    ---      | cooldown
+  2026-09-15 S  600184.SH    22.13   6900 breakout      +13187  +9.5%   1d | 目标+8%
+  2026-09-15 S  603136.SH    11.41  13300 breakout      +12039  +8.6%   1d | 回落20%(高11.0%)
+  2026-09-15 S  002912.SZ    28.45   5400 breakout      +15136 +10.9%  -1d | 目标+8%
+  2026-09-17 B  002623.SZ    16.65   8400 breakout         ---    ---      | warmup
+  2026-09-17 B  300207.SZ    19.76   7000 breakout         ---    ---      | warmup
+  2026-09-17 B  002174.SZ    14.45   9600 breakout         ---    ---      | warmup
+  2026-09-17 B  600088.SH    14.75   9400 breakout         ---    ---      | warmup
+  2026-09-16 S  300207.SZ    20.66   7000 breakout       +6084  +4.4%  -1d | 回落20%(高5.7%)
+  2026-09-16 S  600088.SH    15.52   9400 breakout       +7030  +5.1%  -1d | 回落20%(高6.5%)
+  2026-09-18 B  300234.SZ    11.35  12300 breakout         ---    ---      | warmup
+  2026-09-18 B  300829.SZ    21.16   6600 breakout         ---    ---      | warmup
+  2026-09-18 B  600088.SH    15.20   9200 breakout         ---    ---      | warmup
+  2026-09-17 S  600088.SH    16.29   9200 breakout       +9815  +7.0%  -1d | 回落20%(高8.9%)
+  2026-09-21 B  002631.SZ    13.29  10500 breakout         ---    ---      | warmup
+  2026-09-18 S  002623.SZ    18.52   8400 breakout      +15506 +11.1%   1d | 目标+8%
+  2026-09-18 S  002174.SZ    14.73   9600 breakout       +2504  +1.8%   1d | 回落30%(高2.8%)
+  2026-09-21 S  300234.SZ    12.18  12300 breakout      +10039  +7.2%   3d | 回落20%(高9.2%)
+  2026-09-21 S  300829.SZ    25.72   6600 breakout      +29875 +21.4%   3d | 目标+8%
+  2026-09-22 S  002631.SZ    14.46  10500 breakout      +12067  +8.6%   1d | 回落20%(高11.0%)
+  2026-09-24 B  002335.SZ    32.23   4300 breakout         ---    ---      | hot
+  2026-09-23 S  002335.SZ    32.97   4300 breakout       +3006  +2.2%  -1d | 回落30%(高3.3%)
+  2026-09-28 B  000411.SZ    10.36  13500 breakout         ---    ---      | warmup
+  2026-09-28 B  600897.SH    15.01   9300 breakout         ---    ---      | warmup
+  2026-09-28 B  000034.SZ    24.14   5700 breakout         ---    ---      | warmup
+  2026-09-28 B  002568.SZ    19.45   7100 breakout         ---    ---      | warmup
+  2026-09-24 S  000411.SZ    10.56  13500 breakout       +2555  +1.8%  -4d | 回落30%(高2.8%)
+  2026-09-24 S  600897.SH    16.25   9300 breakout      +11336  +8.1%  -4d | 目标+8%
+  2026-09-29 S  002568.SZ    18.91   7100 breakout       -4009  -2.9%   1d | 止损-2%
+  2026-09-30 S  000034.SZ    23.21   5700 breakout       -5473  -4.0%   2d | 止损-2%
+  --------------------------------------------------------------------------------
+  买入: 751  卖出: 751  |  总交易: 751
+
+  ================================================================================
+  策略维度分析
+  ================================================================================
+  策略               交易     胜率        总盈亏
+  ----------------------------------------
+  breakout        735    67% +1,318,865
+  ignition         16    62%    +39,106
+
+  ================================================================================
+  行业维度分析
+  ================================================================================
+  行业                   交易     胜率        总盈亏
+  ---------------------------------------------
+  综合                  187    64%   +280,202
+  纺织服装                 17    88%   +126,927
+  医药                   56    62%   +111,370
+  电子                   44    73%    +94,292
+  国防军工                 39    67%    +94,236
+  计算机                  37    68%    +67,492
+  非银行金融                15    93%    +61,751
+  基础化工                 17    71%    +55,534
+  商贸零售                 10    90%    +51,877
+  传媒                   31    77%    +50,898
+  汽车                   27    63%    +42,080
+  餐饮旅游                 14    71%    +40,912
+  电力设备                 22    68%    +40,301
+  电力及公用事业               7    71%    +35,930
+  机械                   27    56%    +32,498
+  家电                   28    64%    +31,937
+  通信                   27    70%    +30,448
+  有色金属                 29    62%    +24,406
+  建材                    7    86%    +23,014
+  农林牧渔                 15    67%    +17,130
+  食品饮料                 27    67%    +16,370
+  钢铁                    2   100%    +16,143
+  建筑                    7    71%    +14,586
+  煤炭                    6    83%    +12,655
+  房地产                   5    40%     +5,852
+  轻工制造                 22    59%     +5,828
+  交通运输                 13    62%     -1,284
+  石油石化                 13    46%    -25,415
+
+  ================================================================================
+  权益曲线 (每 20 天采样)
+  ================================================================================
+  日期                   权益   仓位 市况            DD%
+  --------------------------------------------------
+  2024-10-08      405,846    1 euphoria    76.7%
+  2024-11-05      443,508    3 euphoria    74.5%
+  2024-12-03      455,565    1 hot         73.8%
+  2024-12-31      475,662    2 warmup      72.7%
+  2025-02-06      515,359    2 hot         70.4%
+  2025-03-06      533,780    2 hot         69.3%
+  2025-04-03      560,289    2 warmup      67.8%
+  2025-05-07      611,909    1 hot         64.8%
+  2025-06-05      644,237    3 warmup      63.0%
+  2025-07-03      741,669    1 hot         57.4%
+  2025-07-31      817,040    3 warmup      53.0%
+  2025-08-28      871,246    4 warmup      49.9%
+  2025-09-25      919,977    1 warmup      47.1%
+  2025-10-31      940,380    5 warmup      45.9%
+  2025-11-28      966,288    4 warmup      44.4%
+  2025-12-26    1,081,299    0 hot         37.8%
+  2026-01-27    1,111,900    2 warmup      36.1%
+  2026-03-04    1,250,517    3 cooldown    28.1%
+  2026-04-01    1,281,786    4 warmup      26.3%
+  2026-04-30    1,300,578    4 warmup      25.2%
+  2026-06-02    1,332,461    5 warmup      23.4%
+  2026-07-01    1,496,132    3 warmup      14.0%
+  2026-07-29    1,610,916    3 warmup       7.4%
+  2026-08-26    1,657,918    2 warmup       4.7%
+  2026-09-23    1,726,875    0 hot          0.7%
+  2026-09-30    1,731,117    0 cooldown     0.5%
+
+====================================================================================================
+
+结果已保存至: /home/wade/workspace/ai/Astock/results/backtest_2yr_results.txt
