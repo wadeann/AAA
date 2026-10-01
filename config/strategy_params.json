@@ -189,11 +189,12 @@
     }
   },
   "global_guards": {
-    "max_position_count": 3,
+    "max_position_count": 5,
     "max_single_position_pct": 0.35,
-    "sector_max_concentration": 0.5,
+    "sector_max_concentration": 0.4,
     "sell_only_mode": false,
-    "tighten_stops": false
+    "tighten_stops": false,
+    "total_exposure_limit": 0.8
   },
   "sentiment": {
     "phase": "diverging",
@@ -206,7 +207,7 @@
     "technical_breakout"
   ],
   "position_limits": {
-    "max_total_pct": 0.9,
+    "max_total_pct": 0.8,
     "max_single_pct": 0.35,
     "max_sector_pct": 0.5
   },

@@ -241,9 +241,9 @@ def normalize_intent(
         cid = f"no-cid-{dt.datetime.now(dt.timezone.utc).strftime('%H%M%S')}"
     intent_id = f"it-{cid}"
 
-    price = float(candidate["price"])
-    original_qty = int(candidate["quantity"])
-    direction = candidate["direction"]
+    price = float(candidate.get("price", 0) or 0)
+    original_qty = int(candidate.get("quantity", 0) or 0)
+    direction = candidate.get("direction", "buy")
 
     if direction == "buy" and total_assets > 0 and adjusted_pct > 0 and price > 0:
         target_value = total_assets * adjusted_pct

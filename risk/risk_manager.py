@@ -72,6 +72,24 @@ class RiskManager:
         self._client = get_mcp_client()
         self._dm = get_data_manager()
 
+    def _load_config(self) -> tuple[float, float, int]:
+        """Load risk limits from strategy_params.json with fallback to defaults."""
+        import json
+        from config import STATE_DIR
+        try:
+            p = STATE_DIR / "strategy_params.json"
+            if p.exists():
+                cfg = json.loads(p.read_text(encoding="utf-8"))
+                guards = cfg.get("global_guards", {})
+                sec_lim = float(guards.get("sector_max_concentration", 0.40))
+                exp_lim = float(guards.get("total_exposure_limit", 0.80))
+                max_pos = int(guards.get("max_position_count", 5))
+            else:
+                sec_lim, exp_lim, max_pos = 0.40, 0.80, 5
+        except Exception:
+            sec_lim, exp_lim, max_pos = 0.40, 0.80, 5
+        return sec_lim, exp_lim, max_pos
+
     # ──────────────────────────────────────────────
     # 工具方法
     # ──────────────────────────────────────────────
@@ -203,8 +221,9 @@ class RiskManager:
     def _check_sector_concentration(
         self, symbol: str, quantity: int, price: float,
     ) -> tuple[bool, str]:
-        """Layer 7: 板块集中度 <= 40%."""
+        """Layer 7: 板块集中度 (从 config 读取上限)."""
         try:
+            sec_lim, _, _ = self._load_config()
             positions = self._client.get_positions()
             # 尝试获取标的板块信息
             try:
@@ -240,8 +259,8 @@ class RiskManager:
                         pass
 
             sector_ratio = (sector_value + new_value) / total_assets
-            if sector_ratio > 0.40:
-                return False, f"板块 {sector} 集中度 {sector_ratio:.1%} > 40% 上限"
+            if sector_ratio > sec_lim:
+                return False, f"板块 {sector} 集中度 {sector_ratio:.1%} > {sec_lim:.0%} 上限"
         except Exception:
             pass
         return True, ""
@@ -249,10 +268,11 @@ class RiskManager:
     def _check_total_exposure(
         self, direction: str, quantity: int, price: float,
     ) -> tuple[bool, str]:
-        """Layer 8: 总敞口 <= 80%."""
+        """Layer 8: 总敞口 (从 config 读取上限)."""
         if direction != "buy":
             return True, ""
         try:
+            _, exp_lim, _ = self._load_config()
             balance = self._client.get_balance()
             total_assets = float(balance.get("total_assets", balance.get("total_asset", 0)) or 0)
             if total_assets <= 0:
@@ -267,8 +287,8 @@ class RiskManager:
                     current_exposure += mv
             new_exposure = current_exposure + quantity * price
             ratio = new_exposure / total_assets
-            if ratio > 0.80:
-                return False, f"总敞口 {ratio:.1%} > 80% 上限"
+            if ratio > exp_lim:
+                return False, f"总敞口 {ratio:.1%} > {exp_lim:.0%} 上限"
         except Exception:
             pass
         return True, ""

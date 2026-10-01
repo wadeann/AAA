@@ -26,11 +26,10 @@ class DataManager:
     # ── JSONL 账本 ──
 
     def append_jsonl(self, record: dict[str, Any], date: str | None = None) -> None:
-        """线程安全的 JSONL 追加（fcntl.flock 原子写入 + tmp 重命名）。"""
+        """线程安全的 JSONL 追加（fcntl.flock 直接追加到目标文件，避免 tmp 覆盖丢失数据）。"""
         date = date or dt.date.today().isoformat()
         path = self.ledger_dir / f"candidates_{date}.jsonl"
-        tmp = path.with_suffix(".jsonl.tmp")
-        with open(tmp, "a", encoding="utf-8") as f:
+        with open(path, "a", encoding="utf-8") as f:
             fcntl.flock(f, fcntl.LOCK_EX)
             try:
                 f.write(json.dumps(record, ensure_ascii=False) + "\n")
@@ -38,7 +37,6 @@ class DataManager:
                 os.fsync(f.fileno())
             finally:
                 fcntl.flock(f, fcntl.LOCK_UN)
-        os.replace(tmp, path)
 
     def read_jsonl(self, date: str | None = None) -> list[dict[str, Any]]:
         date = date or dt.date.today().isoformat()

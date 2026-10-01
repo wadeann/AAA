@@ -77,12 +77,13 @@ def in_close_window(now: dt.datetime | None = None) -> bool:
 
 
 def get_positions(client: Any) -> list[dict[str, Any]]:
+    """Get positions via MCPClient (which already normalizes list/dict/value)."""
     try:
         result = client.get_positions()
         if isinstance(result, list):
             return result
         if isinstance(result, dict):
-            return result.get("positions", [])
+            return result.get("positions", result.get("value", []))
         return []
     except Exception:
         return []

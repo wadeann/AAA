@@ -210,8 +210,6 @@ def evaluate_chip_condition(
 ) -> ConditionResult:
     """核验筹码分布安全性."""
     condition = condition or {}
-    if ("direction" in quote or "condition_triggers" in quote) and ("price" in condition or "close" in condition):
-        quote, condition = condition, quote
 
     direction = condition.get("direction", quote.get("direction", "buy"))
     if direction != "buy":
@@ -259,8 +257,6 @@ def evaluate_fund_flow_condition(
 ) -> ConditionResult:
     """核验主力资金真实流向."""
     condition = condition or {}
-    if ("direction" in quote or "condition_triggers" in quote) and ("price" in condition or "close" in condition):
-        quote, condition = condition, quote
 
     direction = condition.get("direction", quote.get("direction", "buy"))
     if direction != "buy":

@@ -177,12 +177,8 @@ def check_call_auction_unmatched_cancel(
                 ot = dt.datetime.fromisoformat(ts_str)
                 if (ot.hour == 9 and ot.minute <= 28) or (ot.hour == 1 and ot.minute <= 28):
                     is_call_auction_order = True
-                else:
-                    is_call_auction_order = True
             except Exception:
-                is_call_auction_order = True
-        else:
-            is_call_auction_order = True
+                pass
 
         if not is_call_auction_order or not oid:
             continue
