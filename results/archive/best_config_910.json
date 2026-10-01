@@ -1,0 +1,116 @@
+{
+  "params": {
+    "score_weights": {
+      "pullback_bonus": 5,
+      "new_high_bonus": 8,
+      "vol_bonus": 3,
+      "stop_pct": -2.5,
+      "volume": 35,
+      "hold_days": 2
+    },
+    "sell_rules": {
+      "trail_trigger": 2.5,
+      "trail_high_thresh": 4.0,
+      "trail_low_rate": 0.3,
+      "trail_high_rate": 0.2,
+      "weak_thresh": 0.0,
+      "breakeven_peak": 4.0,
+      "breakeven_thresh": 0.3,
+      "max_hold": 4
+    },
+    "hard_filters": {
+      "min_vr": 0.7,
+      "ma_pct": 0.98,
+      "min_rs": 20
+    },
+    "regime_map": {
+      "cooldown": [
+        60,
+        3,
+        0.28
+      ],
+      "euphoria": [
+        65,
+        2,
+        0.35
+      ],
+      "hot": [
+        70,
+        1,
+        0.2
+      ],
+      "warmup": [
+        60,
+        5,
+        0.3
+      ],
+      "ice": [
+        70,
+        2,
+        0.15
+      ]
+    }
+  },
+  "config": {
+    "score_weights": {
+      "pullback_bonus": 5,
+      "new_high_bonus": 8,
+      "vol_bonus": 3,
+      "stop_pct": -2.5,
+      "volume": 35,
+      "hold_days": 2
+    },
+    "sell_rules": {
+      "trail_trigger": 2.5,
+      "trail_high_thresh": 4.0,
+      "trail_low_rate": 0.3,
+      "trail_high_rate": 0.2,
+      "weak_thresh": 0.0,
+      "breakeven_peak": 4.0,
+      "breakeven_thresh": 0.3,
+      "max_hold": 4
+    },
+    "hard_filters": {
+      "min_vr": 0.7,
+      "ma_pct": 0.98,
+      "min_rs": 20
+    },
+    "regime_map": {
+      "cooldown": [
+        60,
+        3,
+        0.28
+      ],
+      "euphoria": [
+        65,
+        2,
+        0.35
+      ],
+      "hot": [
+        70,
+        1,
+        0.2
+      ],
+      "warmup": [
+        60,
+        5,
+        0.3
+      ],
+      "ice": [
+        70,
+        2,
+        0.15
+      ]
+    }
+  },
+  "results": {
+    "ret": 332.77931,
+    "sharpe": 6.612653733744081,
+    "wr": 67.11051930758988,
+    "pf": 1.9865991715511626,
+    "mdd": 6.218833379253789,
+    "monthly_ret_mean": 6.343475533680013,
+    "trades": 751,
+    "composite": 30.83
+  }
+}

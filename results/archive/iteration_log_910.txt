@@ -1,0 +1,166 @@
+========================================================================================================================
+  Astock 自动迭代报告
+  时间: 2026-10-02 01:44:34
+  总轮数: 150
+  最佳 composite: 30.83
+========================================================================================================================
+
+最佳参数:
+    hard_filters = {'min_vr': 0.7, 'ma_pct': 0.98, 'min_rs': 20}
+    regime_map = {'cooldown': (60, 3, 0.28), 'euphoria': (65, 2, 0.35), 'hot': (70, 1, 0.2), 'warmup': (60, 5, 0.3), 'ice': (70, 2, 0.15)}
+    score_weights = {'pullback_bonus': 5, 'new_high_bonus': 8, 'vol_bonus': 3, 'stop_pct': -2.5, 'volume': 35, 'hold_days': 2}
+    sell_rules = {'trail_trigger': 2.5, 'trail_high_thresh': 4.0, 'trail_low_rate': 0.3, 'trail_high_rate': 0.2, 'weak_thresh': 0.0, 'breakeven_peak': 4.0, 'breakeven_thresh': 0.3, 'max_hold': 4}
+
+Round Param                          Change           Composite    Ret% Sharpe   WR%   MDD% Trades Verdict
+------------------------------------------------------------------------------------------------------------------------
+    0 -                              -                    15.4 +160.6%   3.1   62%  12.6%   682 
+    1 score_weights.pullback_bonus   10→5                 15.4 +160.6%   3.1   62%  12.6%   682 ACCEPT (new best)
+    2 score_weights.volume           25→20                 9.7  +98.0%   1.9   61%  14.6%   679 REJECT
+    3 sell_rules.trail_trigger       3.0→2.5              20.9 +212.4%   4.4   67%  10.7%   719 ACCEPT (new best)
+    4 sell_rules.trail_high_rate     0.3→0.4              17.1 +163.0%   3.5   67%  12.8%   719 REJECT
+    5 score_weights.rsi              15→20                13.4 +142.7%   2.5   65%   9.7%   686 REJECT
+    6 score_weights.target_pct       8→12                 19.9 +200.5%   4.1   67%  11.4%   716 REJECT
+    7 score_weights.new_high_bonus   5→8                  21.6 +208.4%   4.6   67%  10.8%   721 ACCEPT (new best)
+    8 regime_map.ice.1               1→2                  21.0 +213.2%   4.4   67%  10.7%   727 REJECT
+    9 hard_filters.min_vr            0.8→0.7              21.6 +208.4%   4.6   67%  10.8%   721 ACCEPT (new best)
+   10 regime_map.cooldown.0          60→55                21.6 +208.4%   4.6   67%  10.8%   721 ACCEPT (new best)
+   11 sell_rules.breakeven_peak      3.0→2.0              20.4 +196.1%   4.2   65%   7.1%   743 REJECT
+   12 hard_filters.min_vr            0.7→1.0              21.6 +208.4%   4.6   67%  10.8%   721 ACCEPT (new best)
+   13 regime_map.ice.1               1→2                  21.0 +213.2%   4.4   67%  10.7%   727 REJECT
+   14 regime_map.cooldown.0          60→65                21.6 +208.4%   4.6   67%  10.8%   721 ACCEPT (new best)
+   15 sell_rules.trail_high_thresh   5.0→4.0              22.5 +219.5%   4.8   67%  10.4%   721 ACCEPT (new best)
+   16 score_weights.vol_bonus        5→3                  22.9 +228.7%   4.8   67%   8.2%   722 ACCEPT (new best)
+   17 score_weights.stop_pct         -2.8→-2.5            23.0 +227.9%   4.8   66%   7.2%   736 ACCEPT (new best)
+   18 regime_map.ice.2               0.15→0.1             23.0 +226.9%   4.8   66%   7.2%   736 ACCEPT (new best)
+   19 score_weights.rsi              15→20                12.4 +122.1%   2.4   63%  11.2%   704 REJECT
+   20 score_weights.vol_bonus        3→8                  17.7 +194.1%   3.4   66%   9.6%   754 REJECT
+   21 regime_map.ice.2               0.15→0.1             23.0 +226.9%   4.8   66%   7.2%   736 ACCEPT (new best)
+   22 regime_map.ice.2               0.15→0.2             23.0 +228.1%   4.8   66%   7.2%   736 ACCEPT (new best)
+   23 regime_map.euphoria.0          65→55                23.0 +227.9%   4.8   66%   7.2%   736 ACCEPT (new best)
+   24 regime_map.hot.1               1→2                  24.4 +238.5%   5.1   66%   6.8%   764 ACCEPT (new best)
+   25 regime_map.warmup.2            0.3→0.25             22.7 +216.2%   4.8   66%   7.5%   736 REJECT
+   26 regime_map.warmup.0            60→65                23.0 +227.9%   4.8   66%   7.2%   736 REJECT
+   27 regime_map.cooldown.1          3→4                  20.5 +207.1%   4.1   66%   7.6%   764 REJECT
+   28 sell_rules.weak_thresh         -0.5→-1.0            22.3 +221.1%   4.6   66%   7.4%   731 REJECT
+   29 sell_rules.max_hold            5→7                  22.4 +223.2%   4.6   66%   7.5%   727 REJECT
+   30 min_close                      10.0→8.0             15.6 +184.9%   2.8   66%  10.7%   745 REJECT
+   31 sell_rules.breakeven_thresh    0.5→1.0              23.0 +227.9%   4.8   66%   7.2%   736 REJECT
+   32 sell_rules.breakeven_peak      3.0→4.0              23.0 +227.9%   4.8   66%   7.2%   736 REJECT
+   33 regime_map.warmup.0            60→65                23.0 +227.9%   4.8   66%   7.2%   736 REJECT
+   34 regime_map.warmup.1            5→4                  19.8 +205.0%   3.9   67%   7.6%   610 REJECT
+   35 sell_rules.trail_trigger       2.5→4.0               7.3  +84.1%   1.5   52%  17.4%   649 REJECT
+   36 score_weights.chg              15→20                16.9 +187.8%   3.2   65%   9.7%   758 REJECT
+   37 score_weights.rsi              15→10                16.2 +196.0%   3.0   65%   9.5%   755 REJECT
+   38 regime_map.cooldown.0          60→55                23.0 +227.9%   4.8   66%   7.2%   736 REJECT
+   39 sell_rules.trail_low_rate      0.4→0.3              24.6 +247.1%   5.1   66%   6.5%   736 ACCEPT (new best)
+   40 sell_rules.trail_high_rate     0.3→0.25             26.2 +276.0%   5.4   66%   6.0%   736 ACCEPT (new best)
+   41 regime_map.cooldown.1          3→2                  26.0 +262.3%   5.4   66%   6.2%   714 REJECT
+   42 regime_map.warmup.1            5→4                  22.2 +247.3%   4.3   67%   6.6%   610 REJECT
+   43 regime_map.cooldown.2          0.28→0.25            26.2 +275.5%   5.4   66%   6.0%   736 ACCEPT (new best)
+   44 hard_filters.ma_pct            0.95→0.93            26.2 +276.0%   5.4   66%   6.0%   736 ACCEPT (new best)
+   45 regime_map.ice.0               70→60                26.2 +276.0%   5.4   66%   6.0%   736 ACCEPT (new best)
+   46 min_vr                         1.5→1.2              24.6 +263.6%   4.9   66%   6.1%   728 REJECT
+   47 score_weights.volume           25→35                26.8 +272.4%   5.5   66%   6.3%   738 ACCEPT (new best)
+   48 sell_rules.weak_thresh         -0.5→-1.0            28.2 +275.5%   6.0   67%   6.3%   736 ACCEPT (new best)
+   49 hard_filters.ma_pct            0.93→0.98            28.2 +275.5%   6.0   67%   6.3%   736 ACCEPT (new best)
+   50 sell_rules.weak_hold           2→1                  25.8 +269.0%   5.3   65%   6.3%   753 REJECT
+   51 score_weights.rsi              15→10                25.3 +275.1%   5.1   67%   7.5%   750 REJECT
+   52 sell_rules.breakeven_peak      3.0→2.0              25.6 +291.5%   5.1   66%   7.9%   764 REJECT
+   53 max_pos_pct                    0.35→0.25            26.5 +207.8%   5.9   67%   5.1%   736 REJECT
+   54 sell_rules.trail_low_rate      0.3→0.5              24.6 +236.7%   5.1   67%   6.5%   736 REJECT
+   55 sell_rules.trail_high_thresh   4.0→8.0              26.9 +256.4%   5.7   67%   6.3%   736 REJECT
+   56 sell_rules.breakeven_peak      3.0→4.0              28.2 +275.5%   6.0   67%   6.3%   736 ACCEPT (new best)
+   57 regime_map.cooldown.1          3→2                  27.6 +284.8%   5.7   67%   6.3%   718 REJECT
+   58 score_weights.new_high_bonus   8→10                 26.2 +285.7%   5.3   67%   6.8%   741 REJECT
+   59 regime_map.euphoria.2          0.35→0.25            28.2 +275.3%   6.0   67%   6.2%   736 ACCEPT (new best)
+   60 regime_map.euphoria.2          0.35→0.3             28.2 +275.5%   6.0   67%   6.3%   736 ACCEPT (new best)
+   61 hard_filters.min_rs            25→35                28.2 +275.5%   6.0   67%   6.3%   736 ACCEPT (new best)
+   62 hard_filters.min_rs            35→25                28.2 +275.5%   6.0   67%   6.3%   736 ACCEPT (new best)
+   63 regime_map.warmup.2            0.3→0.35             28.2 +275.5%   6.0   67%   6.3%   736 ACCEPT (new best)
+   64 score_weights.dh               20→15                27.4 +332.5%   5.4   70%   5.1%   760 REJECT
+   65 score_weights.new_high_bonus   8→3                  27.1 +295.3%   5.4   68%   5.7%   745 REJECT
+   66 sell_rules.trail_high_rate     0.25→0.2             29.7 +304.8%   6.3   67%   6.2%   736 ACCEPT (new best)
+   67 sell_rules.trail_high_thresh   4.0→6.0              28.5 +281.9%   6.0   67%   6.3%   736 REJECT
+   68 sell_rules.trail_high_thresh   4.0→8.0              27.5 +266.3%   5.8   67%   6.3%   736 REJECT
+   69 score_weights.ma               20→15                25.1 +307.1%   4.9   68%   6.5%   743 REJECT
+   70 regime_map.euphoria.1          2→1                  29.2 +304.4%   6.1   67%   5.4%   733 REJECT
+   71 score_weights.rsi              15→10                26.7 +304.2%   5.3   67%   6.9%   750 REJECT
+   72 sell_rules.weak_thresh         -1.0→-0.5            28.5 +301.7%   5.9   66%   6.2%   738 REJECT
+   73 regime_map.warmup.0            60→50                29.7 +304.8%   6.3   67%   6.2%   736 ACCEPT (new best)
+   74 regime_map.warmup.0            60→65                29.7 +304.8%   6.3   67%   6.2%   736 ACCEPT (new best)
+   75 score_weights.hold_days        3→5                  29.7 +304.8%   6.3   67%   6.2%   736 ACCEPT (new best)
+   76 regime_map.euphoria.0          65→55                29.7 +304.8%   6.3   67%   6.2%   736 ACCEPT (new best)
+   77 sell_rules.trail_low_rate      0.3→0.5              26.6 +266.0%   5.5   67%   6.2%   736 REJECT
+   78 sell_rules.breakeven_thresh    0.5→0.3              29.7 +304.8%   6.3   67%   6.2%   736 ACCEPT (new best)
+   79 score_weights.volume           35→20                21.1 +234.2%   4.2   65%   7.9%   718 REJECT
+   80 score_weights.stop_pct         -2.5→-3.5            27.8 +338.2%   5.5   70%   6.2%   710 REJECT
+   81 score_weights.chg              15→20                21.7 +294.8%   3.8   66%   6.2%   759 REJECT
+   82 score_weights.stop_pct         -2.5→-3.5            27.8 +338.2%   5.5   70%   6.2%   710 REJECT
+   83 score_weights.hold_days        5→2                  29.7 +304.8%   6.3   67%   6.2%   736 ACCEPT (new best)
+   84 regime_map.euphoria.2          0.35→0.4             29.7 +304.8%   6.3   67%   6.2%   736 ACCEPT (new best)
+   85 max_pos_pct                    0.35→0.25            27.9 +229.1%   6.2   67%   5.0%   736 REJECT
+   86 score_weights.chg              15→10                26.9 +304.3%   5.3   68%   6.2%   727 REJECT
+   87 regime_map.warmup.1            5→6                  28.3 +338.6%   5.8   66%   6.1%   855 REJECT
+   88 hard_filters.min_rs            25→30                29.7 +304.8%   6.3   67%   6.2%   736 ACCEPT (new best)
+   89 max_pos_pct                    0.35→0.25            27.9 +229.1%   6.2   67%   5.0%   736 REJECT
+   90 min_close                      10.0→8.0             24.9 +283.0%   4.9   66%   8.0%   743 REJECT
+   91 regime_map.cooldown.1          3→2                  29.0 +313.1%   6.0   67%   6.3%   718 REJECT
+   92 sell_rules.weak_hold           2→1                  27.6 +298.0%   5.7   65%   6.2%   753 REJECT
+   93 regime_map.warmup.2            0.3→0.25             29.8 +298.4%   6.3   67%   5.9%   736 ACCEPT (new best)
+   94 sell_rules.trail_low_rate      0.3→0.5              26.6 +266.0%   5.5   67%   6.2%   736 REJECT
+   95 sell_rules.trail_low_rate      0.3→0.35             29.1 +295.1%   6.1   67%   6.2%   736 REJECT
+   96 sell_rules.weak_thresh         -1.0→-0.5            28.5 +301.7%   5.9   66%   6.2%   738 REJECT
+   97 regime_map.euphoria.1          2→1                  29.2 +304.4%   6.1   67%   5.4%   733 REJECT
+   98 sell_rules.max_hold            5→4                  30.1 +323.0%   6.4   67%   6.2%   741 ACCEPT (new best)
+   99 regime_map.warmup.1            5→4                  27.1 +272.6%   5.7   67%   6.3%   620 REJECT
+  100 sell_rules.weak_thresh         -1.0→0.0             30.4 +328.8%   6.5   67%   6.2%   746 ACCEPT (new best)
+  101 hard_filters.min_rs            30→20                30.4 +328.8%   6.5   67%   6.2%   746 ACCEPT (new best)
+  102 sell_rules.trail_high_rate     0.2→0.25             29.1 +298.0%   6.1   67%   6.3%   746 REJECT
+  103 regime_map.cooldown.0          60→55                30.4 +328.8%   6.5   67%   6.2%   746 ACCEPT (new best)
+  104 min_vr                         1.5→1.2              29.7 +321.0%   6.3   67%   6.2%   745 REJECT
+  105 sell_rules.max_hold            4→6                  28.9 +312.5%   6.0   66%   6.2%   745 REJECT
+  106 score_weights.rsi              15→10                27.0 +300.1%   5.4   66%   7.7%   763 REJECT
+  107 max_pos_pct                    0.35→0.3             30.0 +288.2%   6.4   67%   5.6%   746 REJECT
+  108 hard_filters.min_vr            1.0→0.7              30.4 +328.8%   6.5   67%   6.2%   746 ACCEPT (new best)
+  109 regime_map.euphoria.1          2→3                  30.7 +333.4%   6.6   67%   6.0%   751 ACCEPT (new best)
+  110 sell_rules.weak_hold           2→1                  25.5 +286.5%   5.1   63%   6.2%   770 REJECT
+  111 regime_map.cooldown.1          3→2                  28.6 +327.6%   5.9   67%   6.3%   728 REJECT
+  112 regime_map.hot.1               1→2                  30.3 +332.4%   6.4   67%   5.6%   777 REJECT
+  113 score_weights.pullback_bonus   5→10                 30.4 +328.8%   6.5   67%   6.2%   746 REJECT
+  114 hard_filters.min_vr            0.7→0.8              30.4 +328.8%   6.5   67%   6.2%   746 REJECT
+  115 hard_filters.min_vr            0.7→0.8              30.4 +328.8%   6.5   67%   6.2%   746 REJECT
+  116 regime_map.cooldown.1          3→4                  29.1 +322.6%   6.1   67%   6.7%   776 REJECT
+  117 sell_rules.trail_high_thresh   4.0→8.0              28.2 +288.4%   5.9   67%   6.3%   746 REJECT
+  118 regime_map.warmup.1            5→4                  26.8 +265.7%   5.6   66%   6.3%   628 REJECT
+  119 score_weights.rsi              15→10                27.0 +300.1%   5.4   66%   7.7%   763 REJECT
+  120 score_weights.volume           35→30                28.2 +294.9%   5.9   66%   6.4%   749 REJECT
+  121 sell_rules.trail_low_rate      0.3→0.5              27.6 +287.9%   5.7   67%   6.2%   746 REJECT
+  122 sell_rules.breakeven_thresh    0.3→1.0              30.4 +328.8%   6.5   67%   6.2%   746 REJECT
+  123 sell_rules.weak_thresh         0.0→-0.5             29.6 +324.5%   6.2   67%   6.2%   741 REJECT
+  124 regime_map.cooldown.2          0.28→0.2             29.8 +324.6%   6.3   67%   6.2%   746 REJECT
+  125 score_weights.pullback_bonus   5→15                 30.4 +328.8%   6.5   67%   6.2%   746 REJECT
+  126 regime_map.euphoria.2          0.35→0.4             30.4 +328.8%   6.5   67%   6.2%   746 REJECT
+  127 sell_rules.breakeven_peak      4.0→2.0              27.1 +311.3%   5.5   65%   7.6%   767 REJECT
+  128 sell_rules.trail_high_rate     0.2→0.3              27.0 +267.0%   5.6   67%   6.4%   746 REJECT
+  129 score_weights.volume           35→25                25.1 +290.5%   4.9   65%   6.0%   743 REJECT
+  130 min_close                      10.0→15.0            25.0 +302.2%   4.7   68%   6.3%   718 REJECT
+  131 score_weights.pullback_bonus   5→10                 30.4 +328.8%   6.5   67%   6.2%   746 REJECT
+  132 regime_map.hot.0               70→60                30.4 +328.8%   6.5   67%   6.2%   746 REJECT
+  133 regime_map.warmup.0            60→65                30.4 +328.8%   6.5   67%   6.2%   746 REJECT
+  134 score_weights.stop_pct         -2.5→-3.0            29.0 +325.1%   6.0   67%   6.2%   734 REJECT
+  135 sell_rules.trail_trigger       2.5→4.0              15.8 +189.2%   3.0   53%   8.4%   658 REJECT
+  136 hard_filters.ma_pct            0.98→0.95            30.4 +328.8%   6.5   67%   6.2%   746 REJECT
+  137 score_weights.hold_days        2→3                  30.4 +328.8%   6.5   67%   6.2%   746 REJECT
+  138 regime_map.euphoria.2          0.35→0.25            30.4 +328.3%   6.5   67%   6.1%   746 REJECT
+  139 hard_filters.ma_pct            0.98→0.95            30.4 +328.8%   6.5   67%   6.2%   746 REJECT
+  140 regime_map.ice.1               1→2                  30.8 +332.8%   6.6   67%   6.2%   751 ACCEPT (new best)
+  141 hard_filters.min_vr            0.7→0.5              30.4 +328.8%   6.5   67%   6.2%   746 REJECT
+  142 hard_filters.ma_pct            0.98→0.93            30.4 +328.8%   6.5   67%   6.2%   746 REJECT
+  143 sell_rules.weak_thresh         0.0→-1.0             30.1 +323.0%   6.4   67%   6.2%   741 REJECT
+  144 regime_map.hot.1               1→2                  30.3 +332.4%   6.4   67%   5.6%   777 REJECT
+  145 min_close                      10.0→15.0            25.0 +302.2%   4.7   68%   6.3%   718 REJECT
+  146 regime_map.cooldown.2          0.28→0.25            30.2 +326.4%   6.4   67%   6.2%   746 REJECT
+  147 sell_rules.trail_high_thresh   4.0→8.0              28.2 +288.4%   5.9   67%   6.3%   746 REJECT
+  148 max_pos_pct                    0.35→0.3             30.0 +288.2%   6.4   67%   5.6%   746 REJECT
+  149 sell_rules.weak_thresh         0.0→-1.0             30.1 +323.0%   6.4   67%   6.2%   741 REJECT
+  150 sell_rules.trail_low_rate      0.3→0.4              29.1 +308.6%   6.1   67%   6.2%   746 REJECT
