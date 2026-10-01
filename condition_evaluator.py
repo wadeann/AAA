@@ -8,7 +8,7 @@ from __future__ import annotations
 import datetime as dt
 from typing import Any, Optional
 
-from utils_broken_guard import check_broken_and_fake_healing
+from utils.broken_guard import check_broken_and_fake_healing
 
 
 class ConditionResult(dict):
@@ -237,7 +237,7 @@ def evaluate_chip_condition(
             chip_data = direct_chip
 
     try:
-        from utils_chip import evaluate_chip_safety
+        from utils.chip import evaluate_chip_safety
         chip_res = evaluate_chip_safety(symbol=sym, current_price=price, streak=streak,
                                         is_sub_new=is_sub_new, chip_data=chip_data)
         if not chip_res.is_safe:
@@ -278,7 +278,7 @@ def evaluate_fund_flow_condition(
             fund_data = direct_fund
 
     try:
-        from utils_fund_flow import evaluate_fund_flow_safety
+        from utils.fund_flow import evaluate_fund_flow_safety
         fund_res = evaluate_fund_flow_safety(symbol=sym, current_price=price,
                                              turnover_amount=turnover_amt, fund_data=fund_data)
         if not fund_res.is_safe:
@@ -324,7 +324,7 @@ def evaluate_trailing_profit_condition(
     # 触板破位铁律
     if pre_close > 0.0 and high_p > 0.0:
         try:
-            from utils_broken_guard import compute_limit_pct
+            from utils.broken_guard import compute_limit_pct
             limit_pct = compute_limit_pct(sym, pre_close)
         except Exception:
             limit_pct = 9.9

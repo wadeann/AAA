@@ -311,7 +311,7 @@ def main() -> None:
     # sell_only_mode check (BUG-05 / P0)
     sell_only = False
     try:
-        from market_regime_check import intraday_dynamic_check  # type: ignore
+        from core.market_regime_check import intraday_dynamic_check  # type: ignore
         is_circuit_breaker, dyn_info = intraday_dynamic_check()
         if is_circuit_breaker:
             print(f"Dynamic circuit breaker tripped: {dyn_info.get('reason', '')}", flush=True)

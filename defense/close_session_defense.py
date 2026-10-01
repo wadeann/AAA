@@ -431,7 +431,7 @@ def main() -> int:
 
         # 四维共振保护
         try:
-            from market_resonance_engine import analyze_sector_resonance  # type: ignore
+            from core.market_resonance_engine import analyze_sector_resonance  # type: ignore
             sec_diag = analyze_sector_resonance(symbol)
             if sec_diag.get("role") == "primary_attack" and not (sell30 == "一卖" and sell60 == "一卖"):
                 sec_name = sec_diag.get("sector", "主攻板块")

@@ -11,8 +11,8 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-import market_regime_check as mrc
-from market_regime_check import intraday_dynamic_check, iron_rule_gate
+from core import market_regime_check as mrc
+from core.market_regime_check import intraday_dynamic_check, iron_rule_gate
 
 
 # ── Helpers ──
@@ -89,11 +89,11 @@ def mock_env():
             return cfg
         return regime
 
-    with patch("market_regime_check.get_mcp_client") as mock_get, \
-         patch("market_regime_check._read_json_safe", side_effect=_side_effect) as mock_read, \
-         patch("market_regime_check._write_json_safe") as mock_write, \
-         patch("market_regime_check.check_strategy", return_value=(False, "PASS")) as mock_cb, \
-         patch("market_regime_check.get_leader_universe", return_value=[]):
+    with patch("core.market_regime_check.get_mcp_client") as mock_get, \
+         patch("core.market_regime_check._read_json_safe", side_effect=_side_effect) as mock_read, \
+         patch("core.market_regime_check._write_json_safe") as mock_write, \
+         patch("core.market_regime_check.check_strategy", return_value=(False, "PASS")) as mock_cb, \
+         patch("core.market_regime_check.get_leader_universe", return_value=[]):
         client = MagicMock()
         mock_get.return_value = client
 

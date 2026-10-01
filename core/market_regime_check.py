@@ -13,16 +13,16 @@ from typing import Any, Optional
 
 from config import STATE_DIR
 from mcp_client import get_mcp_client
-from utils_market import get_stock_market_type
+from utils.market import get_stock_market_type
 
 # 门禁依赖（熔断时 fallback 为宽松的默认实现）
 try:
-    from strategy_circuit_breaker import check_strategy
+    from utils.strategy_circuit_breaker import check_strategy
 except ImportError:
     def check_strategy(catalyst_type: str) -> tuple[bool, str]:
         return False, "PASS"
 try:
-    from leader_universe_filter import get_leader_universe
+    from utils.leader_universe_filter import get_leader_universe
 except ImportError:
     def get_leader_universe(force_refresh: bool = False, output_only: bool = True, verbose: bool = False) -> list:
         return []

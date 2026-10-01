@@ -15,11 +15,11 @@ import pytest
 # Patch get_mcp_client() and get_data_manager() on the utility modules that
 # import them.  condition_evaluator.py itself does not import these directly,
 # but evaluate_chip_condition / evaluate_fund_flow_condition /
-# evaluate_trailing_profit_condition lazy-import from utils_chip,
-# utils_fund_flow, and utils_broken_guard at runtime.
-_p_broken = patch("utils_broken_guard.get_mcp_client", return_value=MagicMock())
-_p_chip = patch("utils_chip.get_mcp_client", return_value=MagicMock())
-_p_fund = patch("utils_fund_flow.get_mcp_client", return_value=MagicMock())
+# evaluate_trailing_profit_condition lazy-import from utils.chip,
+# utils.fund_flow, and utils.broken_guard at runtime.
+_p_broken = patch("utils.broken_guard.get_mcp_client", return_value=MagicMock())
+_p_chip = patch("utils.chip.get_mcp_client", return_value=MagicMock())
+_p_fund = patch("utils.fund_flow.get_mcp_client", return_value=MagicMock())
 _p_broken.start()
 _p_chip.start()
 _p_fund.start()
@@ -468,27 +468,27 @@ class TestEvaluateDependency:
 # evaluate_chip_condition
 # ============================================================
 
-# The function body does: from utils_chip import evaluate_chip_safety
-# So the patch must target utils_chip (not condition_evaluator.utils_chip).
+# The function body does: from utils.chip import evaluate_chip_safety
+# So the patch must target utils.chip (not condition_evaluator.utils.chip).
 
 
 class TestEvaluateChipCondition:
     """Chip distribution safety."""
 
-    @patch("utils_chip.evaluate_chip_safety")
+    @patch("utils.chip.evaluate_chip_safety")
     def test_sell_bypass(self, mock_chip) -> None:
         ok, msg = evaluate_chip_condition({}, {"direction": "sell"})
         assert ok is True
         assert "sell_no_chip_check" in msg
         mock_chip.assert_not_called()
 
-    @patch("utils_chip.evaluate_chip_safety")
+    @patch("utils.chip.evaluate_chip_safety")
     def test_safe_chip_passes(self, mock_chip) -> None:
         mock_chip.return_value = _chip_safe_mock()
         ok, _ = evaluate_chip_condition(_make_quote(price=10.0), _make_cand())
         assert ok is True
 
-    @patch("utils_chip.evaluate_chip_safety")
+    @patch("utils.chip.evaluate_chip_safety")
     def test_unsafe_chip_fails(self, mock_chip) -> None:
         mock_chip.return_value = _chip_safe_mock(is_safe=False, reason="chip_unsafe")
         ok, msg = evaluate_chip_condition(
@@ -497,7 +497,7 @@ class TestEvaluateChipCondition:
         assert ok is False
         assert "chip_unsafe" in msg
 
-    @patch("utils_chip.evaluate_chip_safety")
+    @patch("utils.chip.evaluate_chip_safety")
     def test_min_chip_profit_rate_fails(self, mock_chip) -> None:
         mock_chip.return_value = _chip_safe_mock(chip_profit_rate=10.0)
         cond = _make_cand(min_chip_profit_rate=20.0)
@@ -505,7 +505,7 @@ class TestEvaluateChipCondition:
         assert ok is False
         assert "获利盘" in msg
 
-    @patch("utils_chip.evaluate_chip_safety")
+    @patch("utils.chip.evaluate_chip_safety")
     def test_min_chip_profit_rate_from_triggers(self, mock_chip) -> None:
         mock_chip.return_value = _chip_safe_mock(chip_profit_rate=10.0)
         cond = _make_cand(condition_triggers={"min_chip_profit_rate": 20.0})
@@ -513,21 +513,21 @@ class TestEvaluateChipCondition:
         assert ok is False
         assert "获利盘" in msg
 
-    @patch("utils_chip.evaluate_chip_safety")
+    @patch("utils.chip.evaluate_chip_safety")
     def test_exception_triggers_graceful_degrade(self, mock_chip) -> None:
         mock_chip.side_effect = Exception("chip service down")
         ok, msg = evaluate_chip_condition(_make_quote(price=10.0), _make_cand())
         assert ok is True
         assert "降级放行" in msg
 
-    @patch("utils_chip.evaluate_chip_safety")
+    @patch("utils.chip.evaluate_chip_safety")
     def test_auto_swap_args(self, mock_chip) -> None:
         mock_chip.return_value = _chip_safe_mock()
         q = _make_quote(price=10.0, direction="buy", condition_triggers={})
         ok, _ = evaluate_chip_condition(q, {"price": 10.0, "close": 10.0})
         assert ok is True
 
-    @patch("utils_chip.evaluate_chip_safety")
+    @patch("utils.chip.evaluate_chip_safety")
     def test_direct_chip_keys(self, mock_chip) -> None:
         mock_chip.return_value = _chip_safe_mock()
         q = _make_quote(price=10.0, chipProfitRate=80.0, chipAvgCost=9.5)
@@ -543,14 +543,14 @@ class TestEvaluateChipCondition:
 class TestEvaluateFundFlowCondition:
     """Fund flow safety."""
 
-    @patch("utils_fund_flow.evaluate_fund_flow_safety")
+    @patch("utils.fund_flow.evaluate_fund_flow_safety")
     def test_sell_bypass(self, mock_fund) -> None:
         ok, msg = evaluate_fund_flow_condition({}, {"direction": "sell"})
         assert ok is True
         assert "sell_no_fund_flow_check" in msg
         mock_fund.assert_not_called()
 
-    @patch("utils_fund_flow.evaluate_fund_flow_safety")
+    @patch("utils.fund_flow.evaluate_fund_flow_safety")
     def test_safe_fund_passes(self, mock_fund) -> None:
         mock_fund.return_value = _fund_safe_mock()
         ok, _ = evaluate_fund_flow_condition(
@@ -558,14 +558,14 @@ class TestEvaluateFundFlowCondition:
         )
         assert ok is True
 
-    @patch("utils_fund_flow.evaluate_fund_flow_safety")
+    @patch("utils.fund_flow.evaluate_fund_flow_safety")
     def test_unsafe_fund_fails(self, mock_fund) -> None:
         mock_fund.return_value = _fund_safe_mock(is_safe=False, reason="fund_bad")
         ok, msg = evaluate_fund_flow_condition(_make_quote(price=10.0), _make_cand())
         assert ok is False
         assert "fund_bad" in msg
 
-    @patch("utils_fund_flow.evaluate_fund_flow_safety")
+    @patch("utils.fund_flow.evaluate_fund_flow_safety")
     def test_min_main_net_flow_fails(self, mock_fund) -> None:
         mock_fund.return_value = _fund_safe_mock(main_net_flow=1_000_000)
         cond = _make_cand(min_main_net_flow=5_000_000)
@@ -573,7 +573,7 @@ class TestEvaluateFundFlowCondition:
         assert ok is False
         assert "主力净额" in msg
 
-    @patch("utils_fund_flow.evaluate_fund_flow_safety")
+    @patch("utils.fund_flow.evaluate_fund_flow_safety")
     def test_min_main_net_flow_from_triggers(self, mock_fund) -> None:
         mock_fund.return_value = _fund_safe_mock(main_net_flow=1_000_000)
         cond = _make_cand(condition_triggers={"min_main_net_flow": 5_000_000})
@@ -581,21 +581,21 @@ class TestEvaluateFundFlowCondition:
         assert ok is False
         assert "主力净额" in msg
 
-    @patch("utils_fund_flow.evaluate_fund_flow_safety")
+    @patch("utils.fund_flow.evaluate_fund_flow_safety")
     def test_exception_triggers_graceful_degrade(self, mock_fund) -> None:
         mock_fund.side_effect = Exception("fund service down")
         ok, msg = evaluate_fund_flow_condition(_make_quote(price=10.0), _make_cand())
         assert ok is True
         assert "降级放行" in msg
 
-    @patch("utils_fund_flow.evaluate_fund_flow_safety")
+    @patch("utils.fund_flow.evaluate_fund_flow_safety")
     def test_auto_swap_args(self, mock_fund) -> None:
         mock_fund.return_value = _fund_safe_mock()
         q = _make_quote(price=10.0, direction="buy", condition_triggers={})
         ok, _ = evaluate_fund_flow_condition(q, {"price": 10.0, "close": 10.0})
         assert ok is True
 
-    @patch("utils_fund_flow.evaluate_fund_flow_safety")
+    @patch("utils.fund_flow.evaluate_fund_flow_safety")
     def test_direct_fund_keys(self, mock_fund) -> None:
         mock_fund.return_value = _fund_safe_mock()
         q = _make_quote(price=10.0, MainNetFlow=5_000_000)
@@ -611,17 +611,17 @@ class TestEvaluateFundFlowCondition:
 class TestEvaluateTrailingProfitCondition:
     """Trailing stop / take-profit logic.
     compute_limit_pct is lazy-imported inside the function body, so
-    patch utils_broken_guard directly.
+    patch utils.broken_guard directly.
     """
 
-    @patch("utils_broken_guard.compute_limit_pct")
+    @patch("utils.broken_guard.compute_limit_pct")
     def test_invalid_cost(self, mock_limit) -> None:
         mock_limit.return_value = 9.9
         ok, msg = evaluate_trailing_profit_condition({"cost_price": 0.0}, {})
         assert ok is False
         assert "成本价" in msg or "无效" in msg
 
-    @patch("utils_broken_guard.compute_limit_pct")
+    @patch("utils.broken_guard.compute_limit_pct")
     def test_invalid_price(self, mock_limit) -> None:
         mock_limit.return_value = 9.9
         # quote.get("price", ...) returns 0.0, which is falsy,
@@ -634,7 +634,7 @@ class TestEvaluateTrailingProfitCondition:
         assert ok is False
         assert "未触及" in msg
 
-    @patch("utils_broken_guard.compute_limit_pct")
+    @patch("utils.broken_guard.compute_limit_pct")
     def test_no_trigger_below_thresholds(self, mock_limit) -> None:
         mock_limit.return_value = 9.9
         pos = {"cost_price": 10.0}
@@ -644,7 +644,7 @@ class TestEvaluateTrailingProfitCondition:
         assert ok is False
         assert "未触及" in msg
 
-    @patch("utils_broken_guard.compute_limit_pct")
+    @patch("utils.broken_guard.compute_limit_pct")
     def test_tier2_triggers(self, mock_limit) -> None:
         mock_limit.return_value = 9.9
         wm = {"high_watermark_price": 11.5, "high_watermark_pct": 15.0}
@@ -654,7 +654,7 @@ class TestEvaluateTrailingProfitCondition:
         assert ok is True
         assert "核心锁利" in msg
 
-    @patch("utils_broken_guard.compute_limit_pct")
+    @patch("utils.broken_guard.compute_limit_pct")
     def test_tier0_breakeven(self, mock_limit) -> None:
         mock_limit.return_value = 9.9
         wm = {"high_watermark_price": 10.5, "high_watermark_pct": 5.0}
@@ -665,7 +665,7 @@ class TestEvaluateTrailingProfitCondition:
         assert ok is True
         assert "保本锁" in msg
 
-    @patch("utils_broken_guard.compute_limit_pct")
+    @patch("utils.broken_guard.compute_limit_pct")
     def test_tighten_stops_lowers_thresholds(self, mock_limit) -> None:
         mock_limit.return_value = 9.9
         wm = {"high_watermark_price": 10.3, "high_watermark_pct": 3.0}
@@ -677,7 +677,7 @@ class TestEvaluateTrailingProfitCondition:
         assert ok is True
         assert "保本锁" in msg
 
-    @patch("utils_broken_guard.compute_limit_pct")
+    @patch("utils.broken_guard.compute_limit_pct")
     def test_broken_limit_triggers(self, mock_limit) -> None:
         mock_limit.return_value = 9.9
         pos = {"cost_price": 10.0, "symbol": "000001.SZ"}
@@ -686,7 +686,7 @@ class TestEvaluateTrailingProfitCondition:
         assert ok is True
         assert "破位" in msg
 
-    @patch("utils_broken_guard.compute_limit_pct")
+    @patch("utils.broken_guard.compute_limit_pct")
     def test_no_watermark_uses_high_price(self, mock_limit) -> None:
         mock_limit.return_value = 9.9
         pos = {"cost_price": 10.0, "symbol": "000001.SZ"}
@@ -780,8 +780,8 @@ class TestEvaluateAll:
         "condition_evaluator",
         check_broken_and_fake_healing=MagicMock(return_value=(True, "ok")),
     )
-    @patch("utils_chip.evaluate_chip_safety")
-    @patch("utils_fund_flow.evaluate_fund_flow_safety")
+    @patch("utils.chip.evaluate_chip_safety")
+    @patch("utils.fund_flow.evaluate_fund_flow_safety")
     def test_buy_candidate_passes_all(
         self, mock_fund, mock_chip,
     ) -> None:
@@ -800,8 +800,8 @@ class TestEvaluateAll:
         "condition_evaluator",
         check_broken_and_fake_healing=MagicMock(return_value=(True, "ok")),
     )
-    @patch("utils_chip.evaluate_chip_safety")
-    @patch("utils_fund_flow.evaluate_fund_flow_safety")
+    @patch("utils.chip.evaluate_chip_safety")
+    @patch("utils.fund_flow.evaluate_fund_flow_safety")
     def test_sell_candidate_skips_buy_checks(
         self, mock_fund, mock_chip,
     ) -> None:
@@ -818,8 +818,8 @@ class TestEvaluateAll:
         "condition_evaluator",
         check_broken_and_fake_healing=MagicMock(return_value=(True, "ok")),
     )
-    @patch("utils_chip.evaluate_chip_safety")
-    @patch("utils_fund_flow.evaluate_fund_flow_safety")
+    @patch("utils.chip.evaluate_chip_safety")
+    @patch("utils.fund_flow.evaluate_fund_flow_safety")
     def test_auction_fails_halts(self, mock_fund, mock_chip) -> None:
         mock_chip.return_value = _chip_safe_mock()
         mock_fund.return_value = _fund_safe_mock()
@@ -833,8 +833,8 @@ class TestEvaluateAll:
         "condition_evaluator",
         check_broken_and_fake_healing=MagicMock(return_value=(True, "ok")),
     )
-    @patch("utils_chip.evaluate_chip_safety")
-    @patch("utils_fund_flow.evaluate_fund_flow_safety")
+    @patch("utils.chip.evaluate_chip_safety")
+    @patch("utils.fund_flow.evaluate_fund_flow_safety")
     def test_auction_amount_filter(self, mock_fund, mock_chip) -> None:
         mock_chip.return_value = _chip_safe_mock()
         mock_fund.return_value = _fund_safe_mock()
@@ -849,8 +849,8 @@ class TestEvaluateAll:
         "condition_evaluator",
         check_broken_and_fake_healing=MagicMock(return_value=(True, "ok")),
     )
-    @patch("utils_chip.evaluate_chip_safety")
-    @patch("utils_fund_flow.evaluate_fund_flow_safety")
+    @patch("utils.chip.evaluate_chip_safety")
+    @patch("utils.fund_flow.evaluate_fund_flow_safety")
     def test_speed_filter(self, mock_fund, mock_chip) -> None:
         mock_chip.return_value = _chip_safe_mock()
         mock_fund.return_value = _fund_safe_mock()
@@ -865,8 +865,8 @@ class TestEvaluateAll:
         "condition_evaluator",
         check_broken_and_fake_healing=MagicMock(return_value=(True, "ok")),
     )
-    @patch("utils_chip.evaluate_chip_safety")
-    @patch("utils_fund_flow.evaluate_fund_flow_safety")
+    @patch("utils.chip.evaluate_chip_safety")
+    @patch("utils.fund_flow.evaluate_fund_flow_safety")
     def test_index_meltdown(self, mock_fund, mock_chip) -> None:
         mock_chip.return_value = _chip_safe_mock()
         mock_fund.return_value = _fund_safe_mock()
@@ -882,8 +882,8 @@ class TestEvaluateAll:
         "condition_evaluator",
         check_broken_and_fake_healing=MagicMock(return_value=(True, "ok")),
     )
-    @patch("utils_chip.evaluate_chip_safety")
-    @patch("utils_fund_flow.evaluate_fund_flow_safety")
+    @patch("utils.chip.evaluate_chip_safety")
+    @patch("utils.fund_flow.evaluate_fund_flow_safety")
     def test_sector_deviation_limit_up_bad_sector(
         self, mock_fund, mock_chip,
     ) -> None:
@@ -900,8 +900,8 @@ class TestEvaluateAll:
         "condition_evaluator",
         check_broken_and_fake_healing=MagicMock(return_value=(True, "ok")),
     )
-    @patch("utils_chip.evaluate_chip_safety")
-    @patch("utils_fund_flow.evaluate_fund_flow_safety")
+    @patch("utils.chip.evaluate_chip_safety")
+    @patch("utils.fund_flow.evaluate_fund_flow_safety")
     def test_sentinel_dependency(self, mock_fund, mock_chip) -> None:
         mock_chip.return_value = _chip_safe_mock()
         mock_fund.return_value = _fund_safe_mock()
@@ -917,7 +917,7 @@ class TestEvaluateAll:
         "condition_evaluator",
         check_broken_and_fake_healing=MagicMock(return_value=(True, "ok")),
     )
-    @patch("utils_broken_guard.compute_limit_pct")
+    @patch("utils.broken_guard.compute_limit_pct")
     def test_sell_candidate_trailing_and_scale(self, mock_limit) -> None:
         mock_limit.return_value = 9.9
         pos = {"cost_price": 10.0, "symbol": "000001.SZ"}
@@ -934,8 +934,8 @@ class TestEvaluateAll:
         "condition_evaluator",
         check_broken_and_fake_healing=MagicMock(return_value=(True, "ok")),
     )
-    @patch("utils_chip.evaluate_chip_safety")
-    @patch("utils_fund_flow.evaluate_fund_flow_safety")
+    @patch("utils.chip.evaluate_chip_safety")
+    @patch("utils.fund_flow.evaluate_fund_flow_safety")
     def test_weak_sector_fake_strength(self, mock_fund, mock_chip) -> None:
         mock_chip.return_value = _chip_safe_mock()
         mock_fund.return_value = _fund_safe_mock()

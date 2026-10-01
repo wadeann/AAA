@@ -617,7 +617,7 @@ def main() -> int:
         try:
             candidate["quote"] = quote
             candidate["index_quotes"] = index_quotes
-            from market_regime_check import iron_rule_gate  # type: ignore
+            from core.market_regime_check import iron_rule_gate  # type: ignore
             gate_ok, gate_reason = iron_rule_gate(candidate, now_cst)
             if not gate_ok:
                 print(f"    ? AGY铁律阻断: {gate_reason}", flush=True)
