@@ -1,0 +1,251 @@
+{
+  "updated_at": "2026-09-30T07:55:02.792858+00:00",
+  "version": "AGY-R28",
+  "min_confidence": 0.65,
+  "catalyst_types": {
+    "technical_breakout": {
+      "enabled": true,
+      "min_confidence": 0.65,
+      "win_rate": 0.25,
+      "sample_count": 8,
+      "cooldown_until": null
+    },
+    "sector_rotation": {
+      "enabled": true,
+      "min_confidence": 0.6,
+      "win_rate": 0.667,
+      "sample_count": 6,
+      "cooldown_until": null
+    },
+    "limitup_leader": {
+      "enabled": true,
+      "min_confidence": 0.7,
+      "win_rate": 0.2,
+      "sample_count": 5,
+      "cooldown_until": null,
+      "shrunk_win_rate": 0.35
+    },
+    "main_uptrend_leader": {
+      "enabled": true,
+      "min_confidence": 0.65,
+      "win_rate": null,
+      "sample_count": 0,
+      "cooldown_until": null
+    },
+    "chan_buy_signal": {
+      "enabled": true,
+      "min_confidence": 0.65,
+      "win_rate": null,
+      "sample_count": 0,
+      "cooldown_until": null
+    },
+    "chan_sell_signal": {
+      "enabled": true,
+      "min_confidence": 0.65,
+      "win_rate": null,
+      "sample_count": 0,
+      "cooldown_until": null
+    },
+    "panic_bottom_fishing": {
+      "enabled": true,
+      "min_confidence": 0.65,
+      "win_rate": null,
+      "sample_count": 0,
+      "cooldown_until": null
+    },
+    "close_sell_signal": {
+      "enabled": true,
+      "min_confidence": 0.85,
+      "win_rate": 0.0,
+      "sample_count": 1,
+      "cooldown_until": null,
+      "shrunk_win_rate": 0.4167
+    },
+    "price_alert": {
+      "enabled": true,
+      "min_confidence": 0.7,
+      "win_rate": 0.125,
+      "sample_count": 8,
+      "cooldown_until": null,
+      "shrunk_win_rate": 0.2692
+    },
+    "mcp_live": {
+      "enabled": true,
+      "min_confidence": 0.65,
+      "win_rate": 0.0,
+      "sample_count": 4,
+      "cooldown_until": null,
+      "shrunk_win_rate": 0.2778
+    },
+    "1to2_weak_to_strong": {
+      "enabled": true,
+      "min_confidence": 0.7,
+      "win_rate": 0.0,
+      "sample_count": 7,
+      "cooldown_until": null,
+      "shrunk_win_rate": 0.2083
+    },
+    "call_auction_strong": {
+      "enabled": true,
+      "min_confidence": 0.7,
+      "win_rate": 0.2222,
+      "sample_count": 9,
+      "cooldown_until": null,
+      "shrunk_win_rate": 0.3214
+    },
+    "limit_up_ladder": {
+      "enabled": true,
+      "min_confidence": 0.7,
+      "win_rate": 0.75,
+      "sample_count": 8,
+      "cooldown_until": null
+    },
+    "dragon_screener": {
+      "enabled": true,
+      "min_confidence": 0.7,
+      "min_score": 10,
+      "max_position_pct": 0.25,
+      "circ_cap_limit_billion": 80,
+      "turnover_limit_pct": 25.0,
+      "max_drawdown_pct": 4.0,
+      "win_rate": 0.3333,
+      "shrunk_win_rate": 0.4091,
+      "sample_count": 6,
+      "cooldown_until": null,
+      "description": "连板真龙六因子战法 (流通盘≤80亿/连板纯度/换手率红线/龙虎榜合力/题材催化硬辟谣一票否决/早盘秒板卡位)"
+    },
+    "opening_sniper": {
+      "enabled": true,
+      "min_confidence": 0.7,
+      "win_rate": 0.75,
+      "sample_count": 6,
+      "cooldown_until": null
+    },
+    "explode_stop_loss": {
+      "enabled": true,
+      "min_confidence": 0.65,
+      "win_rate": 1.0,
+      "sample_count": 5,
+      "cooldown_until": null
+    },
+    "robotics_low_sub_30cm": {
+      "enabled": true,
+      "min_confidence": 0.65,
+      "win_rate": 0.0,
+      "shrunk_win_rate": 0.4167,
+      "sample_count": 1,
+      "cooldown_until": null
+    },
+    "auto_intraday_signal": {
+      "enabled": true,
+      "min_confidence": 0.7,
+      "win_rate": 0.3333,
+      "shrunk_win_rate": 0.4375,
+      "sample_count": 3,
+      "cooldown_until": null
+    },
+    "tdx_pullback": {
+      "enabled": true,
+      "min_confidence": 0.7,
+      "win_rate": null,
+      "shrunk_win_rate": null,
+      "sample_count": 0,
+      "cooldown_until": null,
+      "description": "通达信12/50均线回踩起爆战法 (对标立方控股)"
+    },
+    "limitup_retest": {
+      "enabled": true,
+      "min_confidence": 0.75,
+      "win_rate": null,
+      "shrunk_win_rate": null,
+      "sample_count": 0,
+      "cooldown_until": null,
+      "description": "平潭发展首板缩量踩铁底反包战法"
+    },
+    "holding_defense": {
+      "enabled": true,
+      "min_confidence": 0.65,
+      "win_rate": 1.0,
+      "shrunk_win_rate": 0.5833,
+      "sample_count": 1,
+      "cooldown_until": null
+    },
+    "sector_volume_breakout": {
+      "enabled": true,
+      "min_confidence": 0.75,
+      "win_rate": 0.1,
+      "shrunk_win_rate": 0.2333,
+      "sample_count": 10,
+      "cooldown_until": null,
+      "position_scale": 0.5
+    },
+    "guihai_yidao_breakout": {
+      "enabled": true,
+      "min_confidence": 0.65,
+      "win_rate": 0.0,
+      "shrunk_win_rate": 0.4167,
+      "sample_count": 1,
+      "cooldown_until": null
+    }
+  },
+  "global_guards": {
+    "max_position_count": 3,
+    "max_single_position_pct": 0.35,
+    "sector_max_concentration": 0.5,
+    "sell_only_mode": false,
+    "tighten_stops": false
+  },
+  "sentiment": {
+    "phase": "diverging",
+    "multiplier": 0.25,
+    "description": "分市场风控: 科创50孤立下跌 -2.51%，但三大宽基未跌超-1%、跌停未知家、炸板率未知%；仅隔离科创板，不触发全市场停买",
+    "cand_count": 0,
+    "updated_at": "2026-09-30T07:00:19.546291+00:00"
+  },
+  "blacklist": [
+    "technical_breakout"
+  ],
+  "position_limits": {
+    "max_total_pct": 0.9,
+    "max_single_pct": 0.35,
+    "max_sector_pct": 0.5
+  },
+  "stop_loss": {
+    "normal": -0.06,
+    "limit_up": -0.1,
+    "trailing": 0.05
+  },
+  "redline_state": {
+    "tripped": false,
+    "trigger_symbol": "600371.SH",
+    "tripped_at": null,
+    "reason": "新交易日 2026-09-30 开盘重置",
+    "last_tripped_at": null,
+    "healed_at": "2026-09-08T05:44:02.710560+00:00",
+    "healed_symbols": [
+      "600371.SH"
+    ],
+    "sector_trips": {
+      "轻工制造": {
+        "tripped": true,
+        "symbol": "002799.SZ",
+        "name": "环球印务",
+        "tripped_at": "2026-09-30T02:00:02.980444+00:00",
+        "reason": "轻工制造板块先锋炸板"
+      }
+    }
+  },
+  "blocked_sectors": [
+    "轻工制造"
+  ],
+  "last_sector_reset_date": "2026-09-30",
+  "sell_only_mode": false,
+  "tighten_stops": false,
+  "market_scope_guards": {
+    "blocked_market_types": [
+      "STAR"
+    ],
+    "reason": "科创50孤立下跌 -2.51%，但三大宽基未跌超-1%、跌停未知家、炸板率未知%；仅隔离科创板，不触发全市场停买",
+    "updated_at": "2026-09-30T07:00:19.546279+00:00"
+  }
+}

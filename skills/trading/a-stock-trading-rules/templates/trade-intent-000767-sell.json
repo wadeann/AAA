@@ -1,0 +1,26 @@
+{
+  "symbol": "000767",
+  "market": "SZSE",
+  "thesis": "晋控电力累计亏损-20.16%，换手率27.46%极端异常，大盘走强下逆势走弱，资金撤离信号明确，执行技术面止损清仓",
+  "direction": "sell",
+  "catalyst_type": "technical_breakout",
+  "confidence": 0.75,
+  "entry_rule": "当前价 6.10 元附近立即减仓，首笔卖出 2000 股（持仓的 50%），若盘中跌破 6.00 元则追加卖出剩余 2000 股全部清仓",
+  "exit_rule": "止损卖出操作，不设止盈；若减仓后股价回升站稳 6.50 元以上且大盘确认强势，可择机重新评估是否回补",
+  "initial_position_pct": 0.05,
+  "max_position_pct": 0.0,
+  "time_horizon": "0d",
+  "valid_until": "2026-06-02T15:00:00+08:00",
+  "risk_notes": [
+    "止损卖出方向明确，主要风险为卖在半路后快速反弹（概率较低，因换手率异常偏高说明资金出逃意愿强烈）",
+    "大盘若尾盘跳水可能冲击卖价，建议限价单略低于市价确保成交",
+    "清仓后该标的短期内不设回补计划，需重新满足入场条件方可再次建仓"
+  ],
+  "tool_evidence": [
+    "mcp_intel_query_data: 000767 晋控电力 最新价 6.10，涨跌幅 -2.27%，换手率 27.46%",
+    "mcp_exec_get_positions: 000767 持仓 4000 股，成本 7.64，现价 6.10，浮亏 -20.16%",
+    "mcp_intel_wencai_search: 换手率 27.46% 处于历史极值区间（近1年分位数 > 95%），大盘走强背景下逆势走弱属资金撤离典型信号"
+  ],
+  "market_condition": "NEUTRAL",
+  "approval_status": "pending"
+}

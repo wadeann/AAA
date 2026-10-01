@@ -1,0 +1,45 @@
+# MCP 服务器配置
+mcp:
+  intel:
+    host: 127.0.0.1
+    port: 9001
+  risk:
+    host: 127.0.0.1
+    port: 9002
+  exec:
+    host: 127.0.0.1
+    port: 9003
+
+# 交易参数
+trading:
+  timezone: Asia/Shanghai
+  premarket_start: "09:00"
+  auction_time: "09:25"
+  morning_open: "09:30"
+  morning_close: "11:30"
+  afternoon_open: "13:00"
+  afternoon_close: "15:00"
+  postmarket_start: "15:10"
+
+# 风控参数
+risk:
+  max_position_count: 5
+  max_single_position_pct: 0.35
+  sector_concentration_limit: 0.40
+  total_exposure_limit: 0.80
+  stop_loss_normal: -0.06
+  stop_loss_limitup: -0.10
+  trailing_stop: 0.05
+
+# 飞书通知
+feishu:
+  webhook_url: ""
+  app_id: ""
+  app_secret: ""
+  chat_id: ""
+
+# AGY 审计
+agy:
+  cli_path: ~/.local/bin/agy
+  default_timeout: 360
+  fallback_model: "Gemini 3.7 Flash (High)"

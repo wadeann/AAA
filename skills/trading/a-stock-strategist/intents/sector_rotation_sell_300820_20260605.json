@@ -1,0 +1,25 @@
+{
+  "symbol": "300820",
+  "market": "SZSE",
+  "thesis": "P0遗留项 - 半导体行业集中度治理：英杰电气全清，行业集中度从60%降至38.7%",
+  "direction": "sell",
+  "confidence": 0.85,
+  "catalyst_type": "sector_rotation",
+  "exit_rule": {
+    "stop_loss": "N/A - 减仓不设止损",
+    "target_profit": "N/A",
+    "trailing_stop": "N/A"
+  },
+  "max_position_pct": 0.214,
+  "time_horizon": "1d",
+  "valid_until": "2026-06-05T15:00:00+08:00",
+  "risk_notes": "P0集中度治理 - 半导体行业60%超40%上限，sector_rotation历史胜率0%应立刻减仓",
+  "tool_evidence": [
+    "行业集中度60%超40%上限",
+    "英杰电气持仓21.4%",
+    "sector_rotation催化剂类型 - 板块轮动应立刻减仓",
+    "当前微盈+0.2%，卖出无伤"
+  ],
+  "market_condition": "NEUTRAL",
+  "approval_status": "pending"
+}

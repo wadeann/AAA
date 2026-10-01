@@ -1,0 +1,61 @@
+{
+  "_comment": "TradeIntent JSON 标准模板 v1.1 — 所有角色共用，字段说明见注释",
+
+  "symbol": "600519",
+  "_symbol": "股票代码（6位数字）",
+
+  "market": "SSE",
+  "_market": "交易所：SSE=上交所, SZSE=深交所",
+
+  "thesis": "交易理由摘要（一句话）",
+  "_thesis": "必填，简洁说明为何此时此标的值得交易",
+
+  "direction": "buy",
+  "_direction": "buy | sell",
+
+  "catalyst_type": "technical_breakout",
+  "_catalyst_type": "信号类型（影响持仓期和止盈策略）：news_event=消息驱动 | technical_breakout=技术突破 | sector_rotation=板块轮动 | earnings=业绩催化",
+
+  "confidence": 0.75,
+  "_confidence": "信心度 0-1。纯消息驱动上限 0.70；量价配合才能达到 0.80+；低于 0.65 直接丢弃",
+
+  "entry_rule": "价格回调至 1650 元以下，且成交量低于5日均量时建仓（第一笔）；突破 1720 元且放量时加仓至满仓",
+  "_entry_rule": "必须包含：初始入场触发价（第一笔，半仓起）+ 加仓触发价（突破确认后补至满仓）",
+
+  "exit_rule": "止损：跌破 1600 元无条件全平；目标止盈：涨至 1850 元减半仓；移动止盈：半仓后跌破10日均线全清",
+  "_exit_rule": "必须包含三档：① 硬止损价（到价无条件全出）② 目标止盈价（到价减半仓锁利）③ 移动止盈触发（均线/回撤触发清仓）",
+
+  "initial_position_pct": 0.05,
+  "_initial_position_pct": "初始建仓仓位（总资产占比），建议 0.03~0.08，右侧确认后再加仓",
+
+  "max_position_pct": 0.15,
+  "_max_position_pct": "最大允许仓位上限（含加仓后），单票不超过 0.20",
+
+  "time_horizon": "5d",
+  "_time_horizon": "预期持仓周期：news_event ≤ 2d；sector_rotation 1~3d；technical_breakout 3~10d；earnings 视公告节点",
+
+  "valid_until": "2026-04-05T15:00:00+08:00",
+  "_valid_until": "信号有效截止时间。time_horizon 过半仍未入场则自动失效；news_event 类型不超过 T+2 收盘",
+
+  "risk_notes": "风险提示",
+  "_risk_notes": "主要下行风险，至少一条",
+
+  "tool_evidence": [
+    "mcp_intel_query_data: 近5日均额 3.2亿，换手率 1.8%",
+    "mcp_intel_wencai_search: 主力近5日净流入 +2.1亿，累计占流通市值 1.4%",
+    "mcp_intel_screen_stocks: 20日均线多头排列，MACD 金叉"
+  ],
+  "_tool_evidence": "必填，每条对应一次实际工具调用的关键数值，不可填模糊描述",
+
+  "market_condition": "NEUTRAL",
+  "_market_condition": "入场时的大盘环境（由 researcher 在大盘环境判断步骤填入）：BULL | NEUTRAL | BEAR",
+
+  "approval_status": "pending",
+  "_approval_status": "只有风控员可修改：pending → approved | rejected | reduced",
+
+  "_风控后追加字段（由风控员填写）": {
+    "rejection_reason": "拒绝原因",
+    "risk_flags": ["触发的风控标志"],
+    "adjusted_position_pct": 0.08
+  }
+}
