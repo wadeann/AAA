@@ -13,13 +13,13 @@ import datetime as dt
 import json
 import os
 import subprocess
-from pathlib import Path
 from typing import Any
 
+from config import STATE_DIR
 from mcp_client import get_mcp_client
 
-STATE_PATH = Path(os.path.expanduser("~/.hermes/trading/watchdog-runs.json"))
-JOBS_PATH = Path(os.path.expanduser("~/.hermes/cron/jobs.json"))
+STATE_PATH = STATE_DIR / "watchdog-runs.json"
+JOBS_PATH = STATE_DIR / "jobs.json"
 
 
 def now_utc() -> dt.datetime:
@@ -43,7 +43,6 @@ def run_cmd(cmd: str, timeout: int = 120) -> tuple[int, str]:
         capture_output=True,
         text=True,
         timeout=timeout,
-        env={**os.environ, "HOME": os.path.expanduser("~")},
     )
     return r.returncode, (r.stdout or "") + (r.stderr or "")
 
@@ -63,9 +62,12 @@ def save_watchdog_state(state: dict[str, Any]) -> None:
 
 
 def load_jobs() -> list[dict[str, Any]]:
-    with open(JOBS_PATH, encoding="utf-8") as f:
-        data = json.load(f)
-    return data.get("jobs", data) if isinstance(data, dict) else data
+    try:
+        with open(JOBS_PATH, encoding="utf-8") as f:
+            data = json.load(f)
+        return data.get("jobs", data) if isinstance(data, dict) else data
+    except (FileNotFoundError, json.JSONDecodeError):
+        return []
 
 
 def parse_cron_schedule(schedule: str) -> list[tuple[int, int]]:
@@ -135,6 +137,11 @@ def parse_cron_schedule(schedule: str) -> list[tuple[int, int]]:
     return results
 
 
+def _run_python_script(script_path: str) -> tuple[int, str]:
+    """Run a Python module via python3 -m."""
+    return run_cmd(f"python3 -m {script_path}")
+
+
 def main() -> None:
     """Check for missed cron runs and retrigger them."""
     now = now_utc()
@@ -154,13 +161,13 @@ def main() -> None:
     except Exception:
         return
 
-    rc, _ = run_cmd("hermes cron list --all")
-    if rc != 0:
-        return
-
     try:
         jobs = load_jobs()
     except Exception:
+        return
+
+    if not jobs:
+        print("Watchdog: no jobs found, using script scheduler instead", flush=True)
         return
 
     # Build watch set: jobs that run during 01:00-07:55 UTC (09:00-15:55 CST)
@@ -190,10 +197,15 @@ def main() -> None:
         if not relevant_triggers:
             continue
 
+        # Map script name to Astock Python module path
+        module_path = _script_to_module(script)
+        if not module_path:
+            continue
+
         watch_jobs.append({
             "id": jid,
             "name": name or script,
-            "script": script,
+            "module": module_path,
             "triggers": relevant_triggers,
         })
 
@@ -233,8 +245,8 @@ def main() -> None:
         if has_run or day_state.get(jid):
             continue
 
-        # Job hasn't run today — trigger recovery
-        rc2, output = run_cmd(f"hermes cron run {jid}")
+        # Job hasn't run today — trigger recovery via direct Python invocation
+        rc2, output = _run_python_script(wj["module"])
         day_state[jid] = {
             "attempted_at": now.isoformat(),
             "returncode": rc2,
@@ -249,6 +261,31 @@ def main() -> None:
 
     if retriggered:
         print(f"发现漏发轮次，已自动补跑: {', '.join(retriggered)}", flush=True)
+
+
+def _script_to_module(script: str) -> str | None:
+    """Map myhermes script names to Astock module paths."""
+    mapping = {
+        "morning_master_orchestrator.py": "orchestrator.morning_master",
+        "direct_executor.py": "execution.direct_executor",
+        "full_market_intraday_discovery.py": "discovery.full_market_discovery",
+        "run_autonomous_trades.py": "execution.batch_trade_gate",
+        "close_session_scan.py": "defense.close_session_defense",
+        "intraday_leader_monitor.py": "discovery.leader_monitor",
+        "call_auction_scanner.py": "discovery.auction_scanner",
+        "limit_up_scanner.py": "discovery.limitup_scanner",
+        "intraday_theme_trigger.py": "discovery.theme_trigger",
+        "explode_monitor.py": "defense.explode_monitor",
+        "sector_flow.py": "intelligence.sector_flow",
+        "performance_reporter.py": "evolution.performance_reporter",
+        "evolution_audit.py": "evolution.strategy_audit",
+        "market_regime_check.py": "market_regime_check",
+        "condition_evaluator.py": "condition_evaluator",
+        "sentiment_engine.py": "core.sentiment_engine",
+    }
+    # Try to strip path prefixes
+    base = script.split("/")[-1]
+    return mapping.get(base, None)
 
 
 if __name__ == "__main__":

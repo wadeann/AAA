@@ -115,9 +115,13 @@ def get_account_snapshot() -> tuple[float, float, float]:
 
 def load_max_regime_ratio() -> float:
     try:
-        from market_regime import get_market_regime  # type: ignore
-        r_info = get_market_regime(output_only=True)
-        return float(r_info.get("max_regime_ratio", 0.80) or 0.80)
+        from config import STATE_DIR
+        import json as _json
+        _r_path = STATE_DIR / "market_regime.json"
+        if _r_path.exists():
+            _r = _json.loads(_r_path.read_text(encoding="utf-8"))
+            return float(_r.get("max_regime_ratio", 0.80) or 0.80)
+        return 0.80
     except Exception:
         return 0.80
 
@@ -742,7 +746,7 @@ def main() -> int:
         # 风控+下单
         try:
             result = risk_check_and_execute(
-                [intent], dry_run=os.environ.get("HERMES_DRY_RUN") == "1")
+                [intent], dry_run=os.environ.get("ASTOCK_DRY_RUN") == "1")
         except Exception as e:
             result = {"executed": [], "blocked": [str(e)], "skipped": []}
 

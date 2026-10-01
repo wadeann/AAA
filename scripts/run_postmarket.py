@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import logging
-import sys
 
 logging.basicConfig(
     level=logging.INFO,
@@ -17,32 +16,32 @@ def main() -> None:
     logger.info("Starting post-market pipeline")
 
     try:
-        from intelligence.performance_report import generate
-        generate()
+        from evolution.performance_reporter import main as perf_main
+        perf_main()
         logger.info("Performance report generated")
     except ImportError:
-        logger.warning("intelligence.performance_report not available")
+        logger.warning("evolution.performance_reporter not available")
 
     try:
-        from intelligence.sector_flow import report
-        report()
+        from intelligence.sector_flow import main as sector_main
+        sector_main()
         logger.info("Sector flow report generated")
     except ImportError:
         logger.warning("intelligence.sector_flow not available")
 
     try:
-        from evolution.evolution_audit import audit
-        audit()
+        from evolution.strategy_audit import main as audit_main
+        audit_main()
         logger.info("Evolution audit completed")
     except ImportError:
-        logger.warning("evolution.evolution_audit not available")
+        logger.warning("evolution.strategy_audit not available")
 
     try:
-        from discovery.ladder_builder import build
-        build()
+        from discovery.limitup_scanner import get_ladder
+        get_ladder()
         logger.info("Limit-up ladder built")
     except ImportError:
-        logger.warning("discovery.ladder_builder not available")
+        logger.warning("discovery.limitup_scanner.get_ladder not available")
 
     logger.info("Post-market pipeline finished")
 

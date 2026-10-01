@@ -22,7 +22,7 @@ from config import DATA_DIR, STATE_DIR
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 try:
-    from chanlun_engine import analyze_chanlun  # type: ignore
+    from core.chanlun_engine import analyze_chanlun  # type: ignore
 except ImportError:
     analyze_chanlun = None  # type: ignore
 

@@ -223,9 +223,12 @@ def main() -> None:
     max_regime_ratio = 0.80
 
     try:
-        from market_regime import get_market_regime  # type: ignore
-        r_info = get_market_regime(output_only=True)
-        max_regime_ratio = float(r_info.get("max_regime_ratio", 0.80) or 0.80)
+        from config import STATE_DIR
+        import json as _json
+        _r_path = STATE_DIR / "market_regime.json"
+        if _r_path.exists():
+            _r = _json.loads(_r_path.read_text(encoding="utf-8"))
+            max_regime_ratio = float(_r.get("max_regime_ratio", 0.80) or 0.80)
     except Exception:
         max_regime_ratio = 0.80
 
@@ -355,7 +358,7 @@ def main() -> None:
         valid_intents.append(intent)
     intents = valid_intents
 
-    dry_run = os.environ.get("HERMES_MCP_DRY_RUN") == "1"
+    dry_run = os.environ.get("ASTOCK_MCP_DRY_RUN") == "1"
     result = risk_check_and_execute(intents, dry_run=dry_run)
 
     for item in result.get("rejected", []):

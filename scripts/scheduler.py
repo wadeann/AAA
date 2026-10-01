@@ -7,7 +7,6 @@ running in the Astock project context. Uses Asia/Shanghai timezone.
 from __future__ import annotations
 
 import logging
-import sys
 from typing import Any
 
 from apscheduler.schedulers.blocking import BlockingScheduler
@@ -27,10 +26,10 @@ logger = logging.getLogger("scheduler")
 def theme_arbitrage_scanner() -> None:
     """09:10 — 隔日题材套利盘前雷达: discovery scan for theme arbitrage."""
     try:
-        from discovery.theme_arbitrage_scanner import scan
-        scan()
+        from discovery.theme_trigger import trigger_themes
+        trigger_themes({})
     except ImportError:
-        logger.warning("discovery.theme_arbitrage_scanner not available")
+        logger.warning("discovery.theme_trigger not available")
 
 
 def print_playbook() -> None:
@@ -45,8 +44,8 @@ def print_playbook() -> None:
 def morning_master() -> None:
     """09:25 — 早盘主控 orchestrator."""
     try:
-        from orchestrator.morning_master import run
-        run()
+        from orchestrator.morning_master import main
+        main()
     except ImportError:
         logger.warning("orchestrator.morning_master not available")
 
@@ -54,7 +53,7 @@ def morning_master() -> None:
 # ── Intraday (every 5 min, 09:30-14:55 CST) ──
 
 
-def market_regime() -> None:
+def refresh_market_regime() -> None:
     """Refresh market regime state."""
     try:
         from core.market_regime import MarketRegime
@@ -69,8 +68,8 @@ def market_regime() -> None:
 def direct_executor() -> None:
     """即时执行轮询 — check and execute approved intents."""
     try:
-        from execution.direct_executor import execute_loop
-        execute_loop()
+        from execution.direct_executor import main
+        main()
     except ImportError:
         logger.warning("execution.direct_executor not available")
 
@@ -87,10 +86,10 @@ def full_market_discovery() -> None:
 def leader_monitor() -> None:
     """持仓与警戒计划统一监控."""
     try:
-        from execution.leader_monitor import monitor
-        monitor()
+        from discovery.leader_monitor import monitor_leaders
+        monitor_leaders()
     except ImportError:
-        logger.warning("execution.leader_monitor not available")
+        logger.warning("discovery.leader_monitor not available")
 
 
 # ── Watchdog (every 15 min) ──
@@ -99,10 +98,10 @@ def leader_monitor() -> None:
 def watchdog() -> None:
     """交易轮次守护 — check for missed cron runs and backfill."""
     try:
-        from defense.watchdog import check
-        check()
+        from orchestrator.watchdog import main
+        main()
     except ImportError:
-        logger.warning("defense.watchdog not available")
+        logger.warning("orchestrator.watchdog not available")
 
 
 # ── Close session gate (10:55, 14:55 CST) ──
@@ -111,8 +110,8 @@ def watchdog() -> None:
 def batch_trade_gate() -> None:
     """统一交易闸门 — 持仓检查/未成交过期撤单."""
     try:
-        from execution.batch_trade_gate import run_gate
-        run_gate()
+        from execution.batch_trade_gate import main
+        main()
     except ImportError:
         logger.warning("execution.batch_trade_gate not available")
 
@@ -123,8 +122,8 @@ def batch_trade_gate() -> None:
 def close_session_defense() -> None:
     """尾盘清仓防守 — 弱势持仓止损/止盈."""
     try:
-        from defense.close_session_defense import run_defense
-        run_defense()
+        from defense.close_session_defense import main
+        main()
     except ImportError:
         logger.warning("defense.close_session_defense not available")
 
@@ -135,17 +134,17 @@ def close_session_defense() -> None:
 def performance_report() -> None:
     """盘后绩效报告."""
     try:
-        from intelligence.performance_report import generate
-        generate()
+        from evolution.performance_reporter import main
+        main()
     except ImportError:
-        logger.warning("intelligence.performance_report not available")
+        logger.warning("evolution.performance_reporter not available")
 
 
 def sector_flow() -> None:
     """盘后板块资金流向记录."""
     try:
-        from intelligence.sector_flow import report
-        report()
+        from intelligence.sector_flow import main
+        main()
     except ImportError:
         logger.warning("intelligence.sector_flow not available")
 
@@ -153,10 +152,10 @@ def sector_flow() -> None:
 def evolution_audit() -> None:
     """每日策略进化审计."""
     try:
-        from evolution.evolution_audit import audit
-        audit()
+        from evolution.strategy_audit import main
+        main()
     except ImportError:
-        logger.warning("evolution.evolution_audit not available")
+        logger.warning("evolution.strategy_audit not available")
 
 
 # ── Scheduler setup ──
@@ -188,7 +187,7 @@ def build_scheduler() -> BlockingScheduler:
 
     # Intraday — every 5 min during trading hours (09:30-11:30, 13:00-14:55)
     for job_id, func, desc in [
-        ("market_regime", market_regime, "市场状态机刷新"),
+        ("market_regime", refresh_market_regime, "市场状态机刷新"),
         ("direct_executor", direct_executor, "即时执行轮询"),
         ("full_market_discovery", full_market_discovery, "全市场发现"),
         ("leader_monitor", leader_monitor, "持仓与警戒监控"),
