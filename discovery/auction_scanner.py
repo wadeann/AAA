@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import datetime as dt
 from typing import Any
 
 from mcp_client import get_mcp_client
@@ -50,8 +51,18 @@ def scan_auction() -> list[dict]:
             "gap_pct": gap_pct,
             "volume_ratio": volume_ratio,
             "market_cap": market_cap,
-            "confidence": _confidence_label(score),
+            "confidence": min(1.0, max(0.0, score / 100.0)),
             "score": round(score, 1),
+            # Pipeline compatibility fields
+            "direction": "buy",
+            "price": auction_price,
+            "quantity": 0,
+            "candidate_id": f"auction-{symbol}-{dt.date.today().isoformat()}",
+            "thesis": f"[集合竞价] {name}({symbol}) 跳空{gap_pct:.1f}% 量比{volume_ratio:.1f}",
+            "entry_rule": "auction_gap_up",
+            "catalyst_type": "call_auction",
+            "llm_approved": False,
+            "agy_approved": False,
         })
 
     candidates.sort(key=lambda x: x["score"], reverse=True)

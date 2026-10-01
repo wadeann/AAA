@@ -92,6 +92,8 @@ class DataManager:
         for cid, upd in updates.items():
             if cid in candidates:
                 candidates[cid].update(upd)
+                # Preserve original record_type — update records should not overwrite it
+                candidates[cid]["record_type"] = "candidate"
         return list(candidates.values())
 
 

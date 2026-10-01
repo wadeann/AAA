@@ -84,7 +84,7 @@ def main() -> dict[str, Any]:
         "total_pnl_pct": float(balance.get("total_pnl_pct", 0)),
         "position_count": position_count,
         "trade_count": trade_count,
-        "daily_pnl": pnl,
+        "daily_pnl": float(pnl.get("daily_pnl", pnl.get("pnl", 0)) if isinstance(pnl, dict) else pnl),
     }
 
     rows = [r for r in _load_rows() if r.get("date") != today]

@@ -39,7 +39,7 @@ def monitor_leaders() -> dict:
             "name": name,
             "boards": boards,
             "source": "ladder",
-            "entry_price": _safe_float(entry, ("封单金额", "sealing_amount")),
+            "entry_price": _safe_float(entry, ("最新价", "price", "current_price", "涨停价", "limit_up")),
             "current_price": 0.0,
             "highest_price": 0.0,
             "pnl_pct": 0.0,

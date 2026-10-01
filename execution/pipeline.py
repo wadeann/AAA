@@ -322,9 +322,11 @@ def risk_check_and_execute(
     else:
         agy_approved = [i for i in intents if i.get("llm_approved") or i.get("agy_approved")]
         if agy_approved:
+            logging.warning("AGY fallback: risk server unavailable, approving %d intents without risk checks", len(agy_approved))
             results = []
             for i in agy_approved:
                 results.append({"approved": True, "approval_status": "approved", "approved_by": "antigravity_fallback"})
+                i["agy_fallback"] = True
             intents = agy_approved
             risk = {"results": results}
         else:
@@ -332,9 +334,25 @@ def risk_check_and_execute(
 
     results = risk.get("results", []) if isinstance(risk, dict) else []
     if len(results) != len(intents):
-        rejection_reason = risk.get("error", "risk response count mismatch") if isinstance(risk, dict) else "risk unavailable"
-        rejected = [dict(i, approval_status="rejected", rejection_reason=rejection_reason) for i in intents]
-        return {"approved": [], "rejected": rejected, "executed": [], "skipped": []}
+        if not results:
+            rejection_reason = risk.get("error", "risk response count mismatch") if isinstance(risk, dict) else "risk unavailable"
+            rejected = [dict(i, approval_status="rejected", rejection_reason=rejection_reason) for i in intents]
+            return {"approved": [], "rejected": rejected, "executed": [], "skipped": []}
+        # Partial results: pair up what we can, reject the rest individually
+        matched = min(len(results), len(intents))
+        approved, rejected = [], []
+        for i in range(matched):
+            item = dict(intents[i])
+            item.update(results[i] if isinstance(results[i], dict) else {})
+            if item.get("approval_status") not in {"approved", "reduced"} and not item.get("approved"):
+                item["approval_status"] = "rejected"
+                rejected.append(item)
+            else:
+                item["approval_status"] = "approved"
+                approved.append(item)
+        for i in range(matched, len(intents)):
+            rejected.append(dict(intents[i], approval_status="rejected", rejection_reason="no risk response for this intent"))
+        return {"approved": approved, "rejected": rejected, "executed": [], "skipped": []}
 
     approved, rejected = [], []
     for original, result in zip(intents, results):

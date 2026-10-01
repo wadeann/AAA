@@ -19,6 +19,7 @@ from typing import Any, Callable
 
 from data import get_data_manager
 from mcp_client import get_mcp_client
+from condition_evaluator import evaluate_all as cond_eval
 from execution.pipeline import (
     is_catalyst_enabled,
     load_strategy_params,
@@ -638,7 +639,6 @@ def main() -> int:
         # 条件求值器核验
         if direction == "buy":
             try:
-                from condition_evaluator import evaluate_all as cond_eval  # type: ignore
                 now_time_str = now_cst.strftime("%H:%M")
                 sentinel_quotes = quote.get("anchors", {}) if isinstance(quote, dict) else {}
                 ce = cond_eval(candidate, quote, now_time=now_time_str,
