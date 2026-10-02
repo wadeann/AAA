@@ -1,0 +1,46 @@
+{
+  "params": {
+    "hard_filters": {
+      "min_rs": 30,
+      "ma_pct": 0.95,
+      "min_vr": 0.7
+    },
+    "sell_rules": {
+      "weak_thresh": 0.5,
+      "breakeven_peak": 3.0,
+      "max_hold": 7,
+      "trail_low_rate": 0.35,
+      "breakeven_thresh": 0.3,
+      "trail_high_rate": 0.35
+    },
+    "max_pos_pct": 0.25,
+    "ensemble_min_score": 70
+  },
+  "config": {
+    "hard_filters": {
+      "min_rs": 30,
+      "ma_pct": 0.95,
+      "min_vr": 0.7
+    },
+    "sell_rules": {
+      "weak_thresh": 0.5,
+      "breakeven_peak": 3.0,
+      "max_hold": 7,
+      "trail_low_rate": 0.35,
+      "breakeven_thresh": 0.3,
+      "trail_high_rate": 0.35
+    },
+    "max_pos_pct": 0.25,
+    "ensemble_min_score": 70
+  },
+  "results": {
+    "ret": 433.78458750000004,
+    "sharpe": 6.539354225400401,
+    "wr": 75.49591598599767,
+    "pf": 2.422036598598327,
+    "mdd": 3.6074967992101947,
+    "monthly_ret_mean": 7.2935643658350875,
+    "trades": 857,
+    "composite": 31.7
+  }
+}

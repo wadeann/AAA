@@ -1,67 +1,34 @@
 ========================================================================================================================
   Astock 自动迭代报告
-  时间: 2026-10-02 15:14:36
+  时间: 2026-10-02 21:41:49
   策略档案: lotus
-  总轮数: 50
-  最佳 composite: 31.42
+  总轮数: 20
+  最佳 composite: -12.39
 ========================================================================================================================
 
 最佳参数:
-    hard_filters = {'min_vr': 0.7, 'min_rs': 20, 'ma_pct': 0.95}
-    max_pos_pct = 0.4
-    min_vr = 2.0
-    sell_rules = {'breakeven_thresh': 0, 'max_hold': 6, 'weak_thresh': 0.5, 'trail_low_rate': 0.44999999999999996, 'breakeven_peak': 4.0, 'trail_trigger': 2.0}
+    sell_rules = {'max_hold': 4, 'weak_thresh': 0.5}
 
 Round Param                          Change           Composite    Ret% Sharpe   WR%   MDD% Trades Verdict
 ------------------------------------------------------------------------------------------------------------------------
-    0 -                              -                    29.0 +697.5%   5.5   75%   4.6%   834 
-    1 hard_filters.min_vr            0.8→0.5              29.0 +697.5%   5.5   75%   4.6%   834 ACCEPT (new best)
-    2 min_close                      10.0→15.0            27.2 +678.6%   5.2   74%  10.5%   829 REJECT
-    3 max_pos_pct                    0.35→0.25            29.6 +509.5%   5.8   75%   3.6%   834 ACCEPT (new best)
-    4 min_close                      10.0→8.0             28.5 +458.9%   5.6   72%   4.7%   852 REJECT
-    5 hard_filters.min_rs            25→35                29.6 +509.5%   5.8   75%   3.6%   834 ACCEPT (new best)
-    6 max_pos_pct                    0.25→0.35            29.0 +697.5%   5.5   75%   4.6%   834 REJECT
-    7 sell_rules.trail_high_rate     0.25→0.15            29.0 +549.6%   5.5   76%   3.6%   832 REJECT
-    8 hard_filters.min_rs            35→30                29.6 +509.5%   5.8   75%   3.6%   834 ACCEPT (new best)
-    9 sell_rules.max_hold            5→4                  29.4 +441.0%   5.7   76%   3.6%   832 REJECT
-   10 sell_rules.breakeven_thresh    0.3→0                29.5 +443.3%   5.8   76%   3.6%   832 ACCEPT (new best)
-   11 sell_rules.weak_hold           2→3                  28.7 +429.7%   5.5   76%   3.6%   828 REJECT
-   12 sell_rules.max_hold            5→4                  29.4 +441.0%   5.7   76%   3.6%   832 ACCEPT (new best)
-   13 min_vr                         1.5→1.2              29.4 +441.0%   5.7   76%   3.6%   832 ACCEPT (new best)
-   14 sell_rules.weak_thresh         0.0→0.5              30.0 +461.0%   5.9   75%   3.6%   838 ACCEPT (new best)
-   15 hard_filters.min_rs            30→35                30.0 +461.0%   5.9   75%   3.6%   838 ACCEPT (new best)
-   16 max_pos_pct                    0.25→0.35            29.6 +630.5%   5.8   75%   4.6%   838 REJECT
-   17 hard_filters.min_vr            0.5→0.8              30.0 +461.0%   5.9   75%   3.6%   838 ACCEPT (new best)
-   18 sell_rules.max_hold            4→5                  30.1 +463.5%   6.0   75%   3.6%   837 ACCEPT (new best)
-   19 hard_filters.min_rs            35→20                30.1 +463.5%   6.0   75%   3.6%   837 ACCEPT (new best)
-   20 sell_rules.weak_thresh         0.5→-0.5             29.5 +443.3%   5.8   76%   3.6%   832 REJECT
-   21 min_close                      10.0→15.0            27.0 +431.3%   5.3   74%   9.7%   830 REJECT
-   22 max_pos_pct                    0.25→0.3             29.8 +550.6%   5.8   75%   4.1%   837 REJECT
-   23 sell_rules.weak_hold           2→1                  29.3 +443.7%   5.8   73%   3.6%   863 REJECT
-   24 hard_filters.ma_pct            0.95→0.96            30.1 +463.5%   6.0   75%   3.6%   837 ACCEPT (new best)
-   25 sell_rules.trail_low_rate      0.35→0.44999999999999996     30.1 +452.0%   6.0   75%   3.7%   837 ACCEPT (new best)
-   26 hard_filters.min_rs            20→25                30.1 +452.0%   6.0   75%   3.7%   837 ACCEPT (new best)
-   27 min_close                      10.0→15.0            26.9 +420.6%   5.2   74%   9.9%   830 REJECT
-   28 hard_filters.ma_pct            0.96→0.93            30.1 +452.0%   6.0   75%   3.7%   837 ACCEPT (new best)
-   29 sell_rules.weak_hold           2→1                  29.2 +431.9%   5.8   73%   3.6%   863 REJECT
-   30 sell_rules.breakeven_peak      4.0→5.0              30.1 +452.0%   6.0   75%   3.7%   837 ACCEPT (new best)
-   31 sell_rules.trail_high_rate     0.25→0.15            29.2 +558.9%   5.6   75%   3.7%   837 REJECT
-   32 sell_rules.max_hold            5→4                  29.9 +449.6%   5.9   75%   3.7%   838 REJECT
-   33 sell_rules.trail_trigger       3.0→2.0              30.5 +518.6%   6.0   81%   4.5%   929 ACCEPT (new best)
-   34 max_pos_pct                    0.25→0.4             31.4 +790.6%   6.2   81%   5.6%   929 ACCEPT (new best)
-   35 min_close                      10.0→8.0             30.2 +665.5%   6.0   78%   5.5%   935 REJECT
-   36 max_pos_pct                    0.4→0.35             30.2 +710.9%   5.8   81%   5.4%   929 REJECT
-   37 sell_rules.weak_hold           2→1                  30.4 +778.1%   5.9   79%   5.6%   943 REJECT
-   38 sell_rules.weak_thresh         0.5→-0.5             31.5 +797.2%   6.2   81%   5.6%   927 ACCEPT (new best)
-   39 sell_rules.max_hold            5→6                  31.5 +797.2%   6.2   81%   5.6%   927 ACCEPT (new best)
-   40 hard_filters.min_rs            25→20                31.5 +797.2%   6.2   81%   5.6%   927 ACCEPT (new best)
-   41 min_vr                         1.2→2.0              31.5 +797.2%   6.2   81%   5.6%   927 ACCEPT (new best)
-   42 sell_rules.weak_hold           2→1                  30.5 +776.7%   5.9   79%   5.6%   942 REJECT
-   43 hard_filters.min_rs            20→25                31.5 +797.2%   6.2   81%   5.6%   927 ACCEPT (new best)
-   44 sell_rules.weak_thresh         -0.5→0.5             31.4 +790.6%   6.2   81%   5.6%   929 ACCEPT (new best)
-   45 hard_filters.min_rs            25→20                31.4 +790.6%   6.2   81%   5.6%   929 ACCEPT (new best)
-   46 hard_filters.min_vr            0.8→0.7              31.4 +790.6%   6.2   81%   5.6%   929 ACCEPT (new best)
-   47 hard_filters.min_vr            0.7→0.5              31.4 +790.6%   6.2   81%   5.6%   929 ACCEPT (new best)
-   48 sell_rules.breakeven_peak      5.0→4.0              31.4 +790.6%   6.2   81%   5.6%   929 ACCEPT (new best)
-   49 hard_filters.min_vr            0.5→0.7              31.4 +790.6%   6.2   81%   5.6%   929 ACCEPT (new best)
-   50 hard_filters.ma_pct            0.93→0.95            31.4 +790.6%   6.2   81%   5.6%   929 ACCEPT (new best)
+    0 -                              -                   -13.8  -64.4%  -1.7   44%  72.2%   592 
+    1 sell_rules.trail_high_rate     0.25→0.35           -14.5  -66.8%  -1.8   43%  74.5%   590 REJECT
+    2 sell_rules.trail_high_rate     0.25→0.15           -14.4  -65.4%  -1.8   44%  73.8%   592 REJECT
+    3 sell_rules.max_hold            5→4                 -13.7  -62.7%  -1.7   44%  71.5%   592 ACCEPT (new best)
+    4 sell_rules.trail_high_rate     0.25→0.35           -13.7  -63.1%  -1.7   44%  71.8%   591 REJECT
+    5 hard_filters.ma_pct            0.95→0.98           -13.7  -62.7%  -1.7   44%  71.5%   592 REJECT
+    6 sell_rules.max_hold            4→6                 -14.2  -64.7%  -1.8   43%  73.0%   590 REJECT
+    7 hard_filters.ma_pct            0.95→0.96           -13.7  -62.7%  -1.7   44%  71.5%   592 REJECT
+    8 hard_filters.min_rs            25→20               -13.7  -62.7%  -1.7   44%  71.5%   592 REJECT
+    9 sell_rules.trail_low_rate      0.35→0.44999999999999996    -13.7  -62.7%  -1.7   44%  71.5%   592 REJECT
+   10 sell_rules.trail_high_rate     0.25→0.35           -13.7  -63.1%  -1.7   44%  71.8%   591 REJECT
+   11 sell_rules.trail_low_rate      0.35→0.24999999999999997    -13.7  -62.7%  -1.7   44%  71.5%   592 REJECT
+   12 min_vr                         1.5→2.0             -13.7  -62.7%  -1.7   44%  71.5%   592 REJECT
+   13 sell_rules.weak_thresh         0.0→-0.5            -13.7  -62.7%  -1.7   44%  71.5%   592 REJECT
+   14 hard_filters.min_rs            25→30               -13.7  -62.7%  -1.7   44%  71.5%   592 REJECT
+   15 hard_filters.ma_pct            0.95→0.98           -13.7  -62.7%  -1.7   44%  71.5%   592 REJECT
+   16 sell_rules.breakeven_peak      4.0→5.0             -13.7  -62.7%  -1.7   44%  71.5%   592 REJECT
+   17 hard_filters.min_rs            25→20               -13.7  -62.7%  -1.7   44%  71.5%   592 REJECT
+   18 hard_filters.ma_pct            0.95→0.98           -13.7  -62.7%  -1.7   44%  71.5%   592 REJECT
+   19 sell_rules.weak_thresh         0.0→-0.5            -13.7  -62.7%  -1.7   44%  71.5%   592 REJECT
+   20 sell_rules.weak_thresh         0.0→0.5             -12.4  -56.5%  -1.5   44%  66.1%   594 ACCEPT (new best)

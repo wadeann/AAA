@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-02T21:14:46.202909",
+  "updated_at": "2026-10-02T22:08:38.335672",
   "version": "auto_iterate_best",
   "min_confidence": 0.65,
   "catalyst_types": {
@@ -255,15 +255,11 @@
     "cooldown": [
       60,
       3,
-      0.25
+      0.2
     ]
   },
   "backtest_results": {
-    "ret": -9.950449999999996,
-    "sharpe": -0.10560685725012678,
-    "wr": 44.329896907216494,
-    "mdd": 39.93059625345266,
-    "composite": -3.57,
-    "trades": 582
+    "composite": -3.34,
+    "note": "final_momentum_v5"
   }
 }
