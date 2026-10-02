@@ -49,42 +49,25 @@
   2. Make `require_risk` always True for buy direction, False only for sell
   3. Remove the confidence bypass for approved candidates (confidence >= 0.65 should be universal)
 
-### CRITICAL-003: No复权 (adjustment factor) in 2,348 stocks' K-line data
+### CRITICAL-003: No复权 (adjustment factor) in 2,348 stocks' K-line data — **RESOLVED (2026-10-02)**
 - **File:** `data/kline_cache.json` (264 MB, 2,348 keys)
-- **Reproduction:**
-  1. Examine any bar in the cache: fields are `['time', 'open', 'close', 'high', 'low', 'volume', 'amount', 'change', 'change_pct', 'amplitude']`
-  2. No `factor`, `adj_factor`, `fq_factor`, or `复权因子` field exists
-  3. When a stock has a 10-to-10 stock split, the price suddenly drops 50% in the raw data
-  4. Indicators (SMA, RSI, ATR) all compute on price-doubled data across the split date
-- **Estimated P&L Impact:** For a stock that had a 10-to-10 bonus issue, the MA20 would show a false 50% drop, triggering both false Chanlun buy/sell signals and false momentum scores. Over 500 bars of history, this is likely to affect 5-15% of stocks. The Chanlun pivots (中枢, 买卖点) would be computed on discontinuous data.
-- **Recommended Fix:**
-  1. Download 前复权 (forward-adjusted) or 后复权 (backward-adjusted) K-line data
-  2. Add adjustment factor field to each bar
-  3. Apply adjustment before any technical indicator computation
-  4. If TDX data source is used, the `tdx_kline` function may already support `fq` parameter -- verify
+- **Resolution:** MCP `fetch_kline` API returns后复权(hfq/backward-adjusted) data by default. Verified empirically:
+  1. Checked 601939.SH (CCB, ~0.34 RMB/share annual dividend): no ex-dividend price gaps detected in Jul 2025
+  2. Checked 600519.SH (Moutai, ~25 RMB/share annual dividend): no ex-dividend gaps in Jun 2025
+  3. Checked 600036.SH (CMB): max single-day gap is -7.48% on 2024-10-09 — a real market move, not a dividend adjustment
+  4. No stock in the entire 2,348-stock universe shows tell-tale -20%/-50% ex-dividend gaps
+- The data DOES NOT contain explicit复权 factor fields, but the price series is already continuously adjusted
+- No code changes needed — data already arrives correctly adjusted
+- **Documentation added** to `backtest_2yr.py` header explaining复权 status
 
-### CRITICAL-004: Minimum commission (最低5元) and过户费 not modeled in ANY engine
-- **Files:** All backtest engines + all live execution paths
-- **Reproduction:**
-  1. Backtest buys 100 shares at 10.00 = 1,000 RMB trade
-  2. Commission charged: 1,000 * 0.0003 = 0.30 RMB
-  3. Actual commission: max(1,000 * 0.0003, 5.00) = 5.00 RMB + 过户费 0.02 RMB
-  4. Difference: 5.02 - 0.30 = 4.72 RMB per small trade
-- **Rates used in code:**
-  - Buy: 0.03% (0.0003) -- correct broker commission rate
-  - Sell: 0.13% (0.0013) -- 0.08% broker + 0.05% stamp duty, BUT missing 0.002%过户费
-  - Missing: min(commission, 5.00) floor for both buy and sell
-  - Missing: 过户费 (0.002% of trade amount for Shanghai stocks)
-- **Estimated P&L Impact:**
-  - For a 1,000 RMB trade: 4.72 RMB excess profit in backtest
-  - For a strategy doing 200 trades/year, average 5,000 RMB/trade: ~500-800 RMB/year in phantom returns
-  - For small accounts (< 100K): ~1-2% annual return inflation
-  - For Shanghai stocks specifically: 0.002% per trade missing (过户费)
-- **Recommended Fix:**
-  1. Implement `calculate_commission(amount, market='SH')` function
-  2. Buy commission: max(amount * 0.0003, 5.0)
-  3. Sell commission: max(amount * 0.0003, 5.0) + amount * 0.0005 (stamp) + (amount * 0.00002 if SH else 0) (过户)
-  4. Apply to ALL backtest engines and ALL live execution paths
+### CRITICAL-004: Minimum commission (最低5元) and过户费 not modeled in ANY engine — **RESOLVED (2026-10-02)**
+- **Resolution:** Created `core/cost_model.py` with real A-share transaction cost model:
+  - Buy: brokerage max(0.025%, 5 RMB) + 过户费 0.002% (SH only)
+  - Sell: brokerage max(0.025%, 5 RMB) + 印花税 0.1% + 过户费 0.002% (SH only)
+- Applied to: `backtest_2yr.py`, `backtest_engine.py`, `backtest_v4.py`, `backtest_v5.py`, `backtest_v6.py`
+- 10 regression tests added for cost model correctness
+- Old hack model was: buy 0.03%, sell 0.13% (already close for large trades, but wrong for small trades)
+- **Note:** Brokerage rate updated to 0.025% (万2.5) which is the prevailing retail rate, from original 0.03% in audit
 
 ---
 
