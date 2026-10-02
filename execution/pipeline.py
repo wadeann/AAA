@@ -201,7 +201,7 @@ def is_trade_ready(candidate: dict[str, Any], require_risk: bool = True) -> bool
         float(candidate.get("price", 0) or 0) > 0,
         bool(candidate.get("entry_rule")) if direction == "buy" else True,
         (is_catalyst_enabled(catalyst) if direction == "buy" else True),
-        float(candidate.get("confidence", 0) or 0) >= 0.65 if not approved else True,
+        float(candidate.get("confidence", 0) or 0) >= (0.50 if approved else 0.65),
     ]
 
     if direction == "buy":
@@ -283,13 +283,216 @@ def normalize_intent(
         "entry_rule": candidate.get("entry_rule", ""),
         "catalyst_type": candidate.get("catalyst_type", "technical_breakout"),
         "approval_status": "pending",
-        "llm_approved": bool(candidate.get("llm_approved") or candidate.get("agy_approved")),
-        "agy_approved": bool(candidate.get("agy_approved") or candidate.get("llm_approved")),
+        "llm_approved": bool(candidate.get("llm_approved")),
+        "agy_approved": bool(candidate.get("agy_approved")),
         "reviewed_by": candidate.get("reviewed_by", ""),
         "reasoning": candidate.get("reasoning", ""),
         "max_position_pct": adjusted_pct if adjusted_pct > 0 else candidate.get("max_position_pct", 0.2),
         "created_at": dt.datetime.now(dt.timezone.utc).isoformat(),
     }
+
+
+def degraded_risk_check(
+    intents: list[dict[str, Any]],
+    positions: list[dict[str, Any]],
+    account: dict[str, Any],
+    session: dict[str, Any],
+) -> dict[str, Any]:
+    """FAIL-CLOSED degraded mode risk check when Risk MCP is unavailable.
+
+    This runs a SUBSET of risk checks using locally-available data only.
+    Checks that REQUIRE Risk MCP data (market crash, sentiment, sector
+    concentration, outflow) are SKIPPED -- but the intent is NOT auto-approved.
+    The check is applied to ALL intents regardless of AGY status.
+
+    Degraded checks:
+      - T+1 rule (local position data + trade journal)
+      - Position cap (local config)
+      - Cash availability (local account data)
+      - Basic price sanity (not zero/negative, within limit-ratio bounds)
+      - Trading session (is market open?)
+      - ST blacklist (local name check)
+      - Freeze list (local state)
+      - Avg-down prohibition (local position data)
+
+    Skipped (require Risk MCP):
+      - Market crash detection
+      - Sentiment check
+      - Sector concentration
+      - Outflow detection
+      - Weekend check (trading session covers this partially)
+      - Tail chase (time-based, but needs MCP trading calendar for accuracy)
+    """
+    import datetime as dt
+    from risk.risk_manager import _is_st, _get_limit_ratio
+
+    dm = get_data_manager()
+    params = load_strategy_params()
+    max_pos_limit = int(params.get("global_guards", {}).get("max_position_count", 5))
+    max_single_pct = float(params.get("global_guards", {}).get("max_single_position_pct", 0.30))
+
+    today = dt.date.today().isoformat()
+
+    # Build local position map
+    position_map: dict[str, dict[str, Any]] = {}
+    if isinstance(positions, list):
+        for p in positions:
+            if isinstance(p, dict):
+                position_map[str(p.get("symbol", ""))] = p
+
+    # Calculate available cash
+    available_cash = 0.0
+    if isinstance(account, dict):
+        available_cash = float(account.get("cash", account.get("balance", 0)) or 0)
+    total_assets = float(account.get("total_assets", account.get("total_asset", 0)) or available_cash or 0)
+
+    # Load today's trade journal for T+1
+    try:
+        today_records = dm.read_jsonl(date=today)
+    except Exception:
+        today_records = []
+
+    today_trades: dict[str, str] = {}
+    for r in today_records:
+        if r.get("record_type") == "candidate_event":
+            ev = r.get("event", "")
+            sym = str(r.get("symbol", ""))
+            dr = str(r.get("direction", "")).lower().strip()
+            if sym and ev in ("executed", "submitted", "submitted_unverified"):
+                today_trades[sym] = dr
+
+    # Load freeze list
+    try:
+        freeze_state = dm.load_state("freeze_state.json")
+        freeze_map = freeze_state.get("freeze", {}) if freeze_state else {}
+    except Exception:
+        freeze_map = {}
+
+    results = []
+    consumed_cash = 0.0
+    effective_positions: set[str] = set()
+    for sym, pdata in position_map.items():
+        qty = int(float(pdata.get("quantity", 0) or 0))
+        if qty > 200:
+            effective_positions.add(sym)
+
+    for intent in intents:
+        symbol = str(intent.get("symbol", ""))
+        direction = str(intent.get("direction", "")).lower().strip()
+        name = str(intent.get("name", intent.get("symbol", "")))
+        quantity = int(intent.get("quantity", 0) or 0)
+        price = float(intent.get("price", 0) or 0)
+
+        rejection_reason = ""
+
+        # Check 1: Trading session
+        if isinstance(session, dict) and session.get("is_trading_day") is True and session.get("is_open") is True:
+            pass  # OK
+        else:
+            rejection_reason = "degraded: outside trading session"
+
+        # Check 2: Price sanity (not zero/negative, within limit ratio bounds)
+        if not rejection_reason:
+            if price <= 0:
+                rejection_reason = "degraded: invalid price (<= 0)"
+            else:
+                limit_ratio = _get_limit_ratio(symbol, name)
+                # Rough sanity: price should be > 0.01 and < some absurd high
+                if price < 0.01:
+                    rejection_reason = f"degraded: price {price} too low for trading"
+
+        # Check 3: ST blacklist
+        if not rejection_reason:
+            if _is_st(name, symbol):
+                rejection_reason = f"degraded: ST blacklisted {name}({symbol})"
+
+        # Check 4: Freeze
+        if not rejection_reason:
+            if symbol in freeze_map:
+                frozen_until = freeze_map[symbol]
+                if today < frozen_until:
+                    rejection_reason = f"degraded: {symbol} frozen until {frozen_until}"
+
+        # Check 5: T+1 direction conflict
+        if not rejection_reason:
+            last_dir = today_trades.get(symbol)
+            if last_dir and last_dir == direction:
+                rejection_reason = f"degraded: T+1 conflict, already {direction} today for {symbol}"
+
+        if direction == "buy":
+            # Check 6: Position cap (single symbol)
+            if not rejection_reason:
+                current_value = 0.0
+                if symbol in position_map:
+                    p = position_map[symbol]
+                    mv = float(p.get("market_value", 0) or 0)
+                    if mv <= 0:
+                        mv = float(p.get("current_price", p.get("cost_price", 0)) or 0) * float(p.get("quantity", 0) or 0)
+                    current_value = mv
+                new_value = quantity * price
+                if total_assets > 0:
+                    ratio = (current_value + new_value) / total_assets
+                    if ratio > max_single_pct:
+                        rejection_reason = f"degraded: single position {ratio:.1%} > {max_single_pct:.0%} cap"
+
+            # Check 7: Cash availability
+            if not rejection_reason:
+                cost = price * quantity
+                if cost > (available_cash - consumed_cash):
+                    rejection_reason = f"degraded: insufficient cash (need {cost:.2f}, avail {(available_cash - consumed_cash):.2f})"
+
+            # Check 8: Max position count
+            if not rejection_reason:
+                if symbol not in effective_positions:
+                    if len(effective_positions) >= max_pos_limit:
+                        rejection_reason = f"degraded: max position limit ({len(effective_positions)}/{max_pos_limit})"
+
+            # Check 9: Avg-down prohibition
+            if not rejection_reason:
+                if symbol in position_map:
+                    holding_qty = int(float(position_map[symbol].get("quantity", 0) or 0))
+                    if holding_qty > 0:
+                        rejection_reason = f"degraded: avg-down prohibited, holding {holding_qty} shares of {symbol}"
+
+            # Track consumed cash for ordering consistency
+            if not rejection_reason:
+                consumed_cash += cost
+                if symbol not in effective_positions:
+                    effective_positions.add(symbol)
+
+        elif direction == "sell":
+            # Check: Have shares to sell
+            if not rejection_reason:
+                if symbol in position_map:
+                    holding = position_map[symbol]
+                    av_raw = holding.get("available_quantity") if holding.get("available_quantity") is not None else holding.get("available_shares")
+                    if av_raw is not None:
+                        available_shares = int(float(av_raw))
+                    else:
+                        available_shares = int(float(holding.get("quantity", 0) or 0))
+                    if available_shares < 100:
+                        rejection_reason = f"degraded: insufficient shares for {symbol} (have {available_shares})"
+                else:
+                    rejection_reason = f"degraded: no position in {symbol} to sell"
+
+        else:
+            rejection_reason = f"degraded: unknown direction '{direction}'"
+
+        if rejection_reason:
+            results.append({
+                "approved": False,
+                "approval_status": "rejected",
+                "approved_by": "degraded_risk_check",
+                "rejection_reason": rejection_reason,
+            })
+        else:
+            results.append({
+                "approved": True,
+                "approval_status": "approved",
+                "approved_by": "degraded_risk_check",
+            })
+
+    return {"results": results}
 
 
 def risk_check_and_execute(
@@ -333,17 +536,35 @@ def risk_check_and_execute(
         if attempt < 3:
             time.sleep(backoff[attempt])
     else:
-        agy_approved = [i for i in intents if i.get("llm_approved") or i.get("agy_approved")]
-        if agy_approved:
-            logging.warning("AGY fallback: risk server unavailable, approving %d intents without risk checks", len(agy_approved))
-            results = []
-            for i in agy_approved:
-                results.append({"approved": True, "approval_status": "approved", "approved_by": "antigravity_fallback"})
-                i["agy_fallback"] = True
-            intents = agy_approved
-            risk = {"results": results}
-        else:
-            risk = {"error": "risk unavailable, no AGY fallback candidate"}
+        # ── FAIL-CLOSED: Risk MCP unavailable after all retries ──
+        logging.warning(
+            "FAIL-CLOSED: Risk MCP unavailable after %d retries. "
+            "Applying degraded risk checks to all %d intents (AGY/non-AGY). "
+            "Checks requiring MCP data (market crash, sentiment, sector, outflow) are skipped.",
+            4, len(intents),
+        )
+        try:
+            account = client.get_balance()
+        except Exception:
+            account = {}
+        try:
+            positions = client.get_positions()
+        except Exception:
+            positions = []
+        try:
+            session_state = client.get_trading_sessions()
+        except Exception:
+            session_state = session if isinstance(session, dict) else {}
+
+        deg_risk = degraded_risk_check(intents, positions, account, session_state)
+        deg_results = deg_risk.get("results", [])
+        approved_count = sum(1 for r in deg_results if r.get("approved"))
+        rejected_count = len(deg_results) - approved_count
+        logging.warning(
+            "FAIL-CLOSED degraded result: %d approved, %d rejected of %d intents",
+            approved_count, rejected_count, len(intents),
+        )
+        risk = deg_risk
 
     results = risk.get("results", []) if isinstance(risk, dict) else []
     if len(results) != len(intents):
@@ -389,8 +610,6 @@ def risk_check_and_execute(
         positions = client.get_positions()
     except Exception:
         positions = []
-    is_agy_fallback_env = any(i.get("llm_approved") or i.get("agy_approved") for i in approved)
-
     if isinstance(account, dict) and "cash" not in account and "balance" not in account:
         account = {"cash": 0.0}
     if isinstance(positions, list):

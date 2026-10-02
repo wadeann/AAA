@@ -272,7 +272,10 @@ def main() -> None:
         if candidate.get("record_type") != "shadow_candidate" and is_shadow_ready(candidate):
             record_shadow_candidate(candidate, date=today)
 
-        if is_trade_ready(candidate, require_risk=False):
+        is_buy = str(candidate.get("direction", "")).lower() == "buy"
+        require_risk = is_buy  # buys MUST pass risk check; sells are defensive
+
+        if is_trade_ready(candidate, require_risk=require_risk):
             sym = candidate.get("symbol", "")
             cid = candidate.get("candidate_id", "")
             dir_ = candidate.get("direction", "")
