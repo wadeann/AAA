@@ -242,7 +242,9 @@
   "score_weights": {
     "chg": 10
   },
-  "hard_filters": {},
+  "hard_filters": {
+    "min_close": 8.0
+  },
   "sell_rules": {
     "max_hold": 7
   },
@@ -256,10 +258,27 @@
       60,
       3,
       0.2
+    ],
+    "euphoria": [
+      65,
+      2,
+      0.35
+    ],
+    "hot": [
+      70,
+      1,
+      0.2
+    ],
+    "warmup": [
+      60,
+      5,
+      0.3
     ]
   },
   "backtest_results": {
     "composite": -3.34,
-    "note": "final_momentum_v5"
+    "note": "final_momentum_v5_60rounds",
+    "ret": -8.25,
+    "surv_ret": -14.25
   }
 }
