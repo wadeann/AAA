@@ -126,7 +126,7 @@ def run_backtest(config_override: dict | None = None, profile: str = "momentum_v
         profile_params = {**prof.default_params, **cfg.get("score_weights", {})}
         score_fn = prof.score_fn
         screen_fn = prof.screen_fn or shared_screen
-        _REGIME_MAP = cfg.get("regime_map", SHARED_REGIME_MAP)
+        _REGIME_MAP = cfg.get("regime_map", {}) or SHARED_REGIME_MAP
 
     # 卖出规则 (单策略用)
     from core.strategy import SellRules
@@ -218,6 +218,7 @@ def run_backtest(config_override: dict | None = None, profile: str = "momentum_v
     peak = INITIAL_CAPITAL
     pos: dict[str, dict] = {}
     pos_profile_count: dict[str, int] = {}  # 多策略: 各子策略当前持仓数 {profile_name: count}
+    pending_sells: list[dict] = []  # D日卖出信号 → D+1开盘执行
     log: list[dict] = []
     eq: list[dict] = []
     comm = 0.0
@@ -243,6 +244,86 @@ def run_backtest(config_override: dict | None = None, profile: str = "momentum_v
             ms, mx, cp = _rm_entry.get("0", 60), _rm_entry.get("1", 3), _rm_entry.get("2", 0.25)
         else:
             ms, mx, cp = _rm_entry
+
+        # ── 执行前日卖出信号 (D日信号 → D+1开盘执行) ──
+        executed_sells: list[str] = []
+        for sell_signal in pending_sells:
+            sym = sell_signal["sym"]
+            if sym not in pos:
+                continue
+            p = pos[sym]
+            # 用当日开盘价卖出
+            td = next(
+                (b for b in all_bars.get(sym, []) if str(b.get("time", "")) == dt_),
+                None,
+            )
+            if td:
+                exit_price = _sf(td.get("open"))
+            else:
+                exit_price = sell_signal.get("price", p["ep"])
+            if exit_price <= 0:
+                exit_price = sell_signal.get("price", p["ep"])
+
+            rev = p["qty"] * exit_price
+            fee = rev * 0.0013
+            cash += rev - fee
+            comm += fee
+            pnl = (rev - fee) - (p["qty"] * p["ep"])
+            pnl_pct = pnl / (p["qty"] * p["ep"]) * 100
+            log.append({
+                "date": dt_,
+                "d": "S",
+                "sym": sym,
+                "p": exit_price,
+                "q": p["qty"],
+                "pnl": pnl,
+                "pp": pnl_pct,
+                "hold": sell_signal.get("hold", 0),
+                "why": sell_signal["why"],
+                "nm": p["nm"],
+                "reg": p["reg"],
+                "sc": p["sc"],
+            })
+            if is_multi:
+                pname = p.get("profile", "momentum_v5")
+                pos_profile_count[pname] = max(0, pos_profile_count.get(pname, 0) - 1)
+            executed_sells.append(sym)
+        for sym in executed_sells:
+            del pos[sym]
+        pending_sells = []
+
+        # ── SELL 检测 (D日检测 → 存入 pending_sells, D+1开盘执行) ──
+        for sym in list(pos.keys()):
+            p = pos[sym]
+            td = next(
+                (b for b in all_bars.get(sym, []) if str(b.get("time", "")) == dt_),
+                None,
+            )
+            if not td:
+                continue
+            hi = _sf(td.get("high"))
+            lo = _sf(td.get("low"))
+            cl = _sf(td.get("close"))
+            if hi > p["mp"]:
+                p["mp"] = hi
+            if p["ed"] == dt_:
+                continue
+            ep_ = p["ep"]
+            hold = (dt.date.fromisoformat(dt_) - dt.date.fromisoformat(p["ed"])).days
+
+            # 选择正确的 SellRules
+            if is_multi:
+                cur_sr = allocator.get_sell_rules(p.get("profile", "momentum_v5"))
+            else:
+                cur_sr = sr_obj
+            sell, sp_, why = cur_sr.evaluate(p, hi, lo, cl, hold)
+            if sell:
+                pending_sells.append({
+                    "sym": sym,
+                    "price": sp_,
+                    "why": why,
+                    "hold": hold,
+                })
 
         # ── BUY ──
         if len(pos) < mx:
@@ -380,57 +461,6 @@ def run_backtest(config_override: dict | None = None, profile: str = "momentum_v
                         "date": ed, "d": "B", "sym": sym, "p": ep, "q": qty,
                         "sc": r["score"], "nm": r["name"], "reg": regime,
                     })
-
-        # ── SELL ──
-        for sym in list(pos.keys()):
-            p = pos[sym]
-            td = next(
-                (b for b in all_bars.get(sym, []) if str(b.get("time", "")) == dt_),
-                None,
-            )
-            if not td:
-                continue
-            hi = _sf(td.get("high"))
-            lo = _sf(td.get("low"))
-            cl = _sf(td.get("close"))
-            if hi > p["mp"]:
-                p["mp"] = hi
-            if p["ed"] == dt_:
-                continue
-            ep_ = p["ep"]
-            hold = (dt.date.fromisoformat(dt_) - dt.date.fromisoformat(p["ed"])).days
-
-            # 选择正确的 SellRules
-            if is_multi:
-                cur_sr = allocator.get_sell_rules(p.get("profile", "momentum_v5"))
-            else:
-                cur_sr = sr_obj
-            sell, sp_, why = cur_sr.evaluate(p, hi, lo, cl, hold)
-            if sell:
-                rev = p["qty"] * sp_
-                fee = rev * 0.0013
-                cash += rev - fee
-                comm += fee
-                pnl = (rev - fee) - (p["qty"] * ep_)
-                pnl_pct = pnl / (p["qty"] * ep_) * 100
-                log.append({
-                    "date": dt_,
-                    "d": "S",
-                    "sym": sym,
-                    "p": sp_,
-                    "q": p["qty"],
-                    "pnl": pnl,
-                    "pp": pnl_pct,
-                    "hold": hold,
-                    "why": why,
-                    "nm": p["nm"],
-                    "reg": p["reg"],
-                    "sc": p["sc"],
-                })
-                if is_multi:
-                    pname = p.get("profile", "momentum_v5")
-                    pos_profile_count[pname] = max(0, pos_profile_count.get(pname, 0) - 1)
-                del pos[sym]
 
         # ── Equity ──
         pv = sum(
@@ -722,6 +752,8 @@ def main():
     parser = argparse.ArgumentParser(description="Astock 全市场回测")
     parser.add_argument("--profile", default="momentum_v5", choices=list_profiles(),
                         help="策略档案 (默认: momentum_v5)")
+    parser.add_argument("--use-best", action="store_true",
+                        help="使用 results/best_config_{profile}.json 最优参数")
     parser.add_argument("--list-profiles", action="store_true",
                         help="列出所有可用策略档案")
     parser.add_argument("--show-accepted", action="store_true", default=True,
@@ -736,7 +768,23 @@ def main():
             print(f"                  来源: {prof.source}")
         return
 
-    results = run_backtest(profile=args.profile)
+    # 如果指定 --use-best，加载最优参数
+    config_override = None
+    if args.use_best:
+        best_file = Path(__file__).resolve().parent.parent / "results" / f"best_config_{args.profile}.json"
+        if best_file.exists():
+            with open(best_file) as f:
+                best_data = json.load(f)
+            # 优先用 config 字段，其次 params 字段
+            config_override = best_data.get("config") or best_data.get("params", {})
+            print(f"  加载最优参数: {best_file}")
+            ret_val = best_data.get('results', {}).get('ret', '?')
+            comp_val = best_data.get('results', {}).get('composite', '?')
+            print(f"  原结果: ret={ret_val} composite={comp_val}")
+        else:
+            print(f"  [WARN] 最优参数文件不存在: {best_file}，使用默认参数")
+
+    results = run_backtest(config_override=config_override, profile=args.profile)
     if results:
         print(f"\n{'=' * 40} 概览 ({args.profile}) {'=' * 40}")
         print(f"  股票: {results['valid_symbols']}/{results['total_symbols']} | "
