@@ -33,6 +33,7 @@ from core.strategy import (
     sma,
     REGIME_MAP as SHARED_REGIME_MAP,
 )
+from core.cost_model import buy_cost, sell_cost
 from core.strategy_profiles import get_profile, list_profiles
 
 # ── 回测参数 ──
@@ -265,7 +266,7 @@ def run_backtest(config_override: dict | None = None, profile: str = "momentum_v
                 exit_price = sell_signal.get("price", p["ep"])
 
             rev = p["qty"] * exit_price
-            fee = rev * 0.0013
+            fee = sell_cost(rev, sym)
             cash += rev - fee
             comm += fee
             pnl = (rev - fee) - (p["qty"] * p["ep"])
@@ -388,7 +389,7 @@ def run_backtest(config_override: dict | None = None, profile: str = "momentum_v
                     amt = min(cash * alloc_pct, INITIAL_CAPITAL * _max_pos_pct)
                     qty = max(100, int(amt / ep / 100) * 100)
                     cost = qty * ep
-                    fee = cost * 0.0003
+                    fee = buy_cost(cost, sym)
                     if cash < cost + fee:
                         continue
                     cash -= cost + fee
@@ -447,7 +448,7 @@ def run_backtest(config_override: dict | None = None, profile: str = "momentum_v
                     amt = min(cash * alloc, INITIAL_CAPITAL * _max_pos_pct)
                     qty = max(100, int(amt / ep / 100) * 100)
                     cost = qty * ep
-                    fee = cost * 0.0003
+                    fee = buy_cost(cost, sym)
                     if cash < cost + fee:
                         continue
                     cash -= cost + fee

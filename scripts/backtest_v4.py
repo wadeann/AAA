@@ -17,6 +17,7 @@ from typing import Any
 from mcp_client import get_mcp_client
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from core.cost_model import buy_cost, sell_cost
 
 CST = dt.timezone(dt.timedelta(hours=8))
 
@@ -284,7 +285,7 @@ def run_backtest(symbols: list[str], start_date: str, end_date: str, ic: float =
                 amt = min(cash * cp, ic * 0.18)
                 qty = max(100, int(amt / ep / 100) * 100)
                 cost = qty * ep
-                fee = cost * 0.0003
+                fee = buy_cost(cost, sym)
                 if cash < cost + fee:
                     continue
                 cash -= cost + fee
@@ -335,7 +336,7 @@ def run_backtest(symbols: list[str], start_date: str, end_date: str, ic: float =
 
             if sell:
                 rev = p["qty"] * sp_
-                fee = rev * 0.0013
+                fee = sell_cost(rev, sym)
                 cash += rev - fee
                 comm += fee
                 pnl = (rev - fee) - (p["qty"] * ep)

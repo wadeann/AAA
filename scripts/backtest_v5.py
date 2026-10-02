@@ -13,6 +13,7 @@ from typing import Any
 from mcp_client import get_mcp_client
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from core.cost_model import buy_cost, sell_cost
 
 STOCK_UNIVERSE = [
     "600519.SH","000858.SZ","601899.SH","600036.SH","002594.SZ","300750.SZ",
@@ -238,7 +239,7 @@ def run_backtest(symbols: list[str], start_date: str, end_date: str, ic: float =
                 alloc = min(cp + 0.05, 0.35) if sc >= 80 else cp if sc >= 70 else cp * 0.8 if sc >= 60 else cp * 0.6
                 amt = min(cash * alloc, ic * 0.35)
                 qty = max(100, int(amt / ep / 100) * 100)
-                cost = qty * ep; fee = cost * 0.0003
+                cost = qty * ep; fee = buy_cost(cost, sym)
                 if cash < cost + fee: continue
                 cash -= cost + fee; comm += fee
                 pos[sym] = {"sym": sym, "qty": qty, "ep": ep, "ed": ed, "mp": ep,
@@ -267,7 +268,7 @@ def run_backtest(symbols: list[str], start_date: str, end_date: str, ic: float =
             elif hold >= 2 and cp_ < -0.5: sell = True; why = f"弱{hold}d"
             elif hold >= 5: sell = True; why = f"时间{hold}d"
             if sell:
-                rev = p["qty"] * sp_; fee = rev * 0.0013
+                rev = p["qty"] * sp_; fee = sell_cost(rev, sym)
                 cash += rev - fee; comm += fee
                 pnl = (rev - fee) - (p["qty"] * ep); pnl_pct = pnl / (p["qty"] * ep) * 100
                 log.append({"date": dt_, "d": "S", "sym": sym, "p": sp_, "q": p["qty"],

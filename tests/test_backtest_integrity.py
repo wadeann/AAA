@@ -211,3 +211,85 @@ def test_sma_insufficient_data() -> None:
     result = sma(bars, "close", 5)
     # SMA of [10, 20] = 30/2 = 15 (uses all available)
     assert abs(result - 15.0) < 0.001
+
+
+# ── CRITICAL-004: Real A-stock transaction cost model ──
+
+from core.cost_model import buy_cost, sell_cost, is_sh
+
+
+def test_is_sh_shanghai() -> None:
+    """Shanghai suffix identified correctly."""
+    assert is_sh("600519.SH") is True
+    assert is_sh("688981.SH") is True
+    assert is_sh("000001.SH") is True
+
+
+def test_is_sh_shenzhen() -> None:
+    """Shenzhen suffix identified correctly."""
+    assert is_sh("000001.SZ") is False
+    assert is_sh("300750.SZ") is False
+    assert is_sh("002594.SZ") is False
+
+
+def test_buy_cost_sh() -> None:
+    """Buy cost for Shanghai stock: brokerage + transfer fee."""
+    # 10000 RMB trade: brokerage = max(10000*0.00025, 5) = 5.0, transfer = 10000*0.00002 = 0.2
+    cost = buy_cost(10000.0, "600519.SH")
+    assert cost == 5.2, f"Expected 5.2, got {cost}"
+
+
+def test_buy_cost_sz_no_transfer() -> None:
+    """Buy cost for Shenzhen stock: no transfer fee."""
+    cost = buy_cost(10000.0, "000858.SZ")
+    # brokerage = max(10000*0.00025, 5) = 5.0, no transfer
+    assert cost == 5.0, f"Expected 5.0, got {cost}"
+
+
+def test_buy_cost_min_brokerage() -> None:
+    """Buy brokerage has 5 RMB minimum."""
+    # 1000 RMB trade: brokerage would be 0.25 RMB but min is 5 RMB
+    cost = buy_cost(1000.0, "000001.SZ")
+    assert cost == 5.0, f"Expected 5.0, got {cost}"
+
+
+def test_buy_cost_large_trade() -> None:
+    """Buy brokerage proportional above minimum threshold."""
+    # 500000 RMB trade: brokerage = 500000 * 0.00025 = 125 RMB
+    cost = buy_cost(500000.0, "000001.SZ")
+    assert cost == 125.0, f"Expected 125.0, got {cost}"
+
+
+def test_sell_cost_sh() -> None:
+    """Sell cost for Shanghai: brokerage + stamp + transfer."""
+    # 10000 RMB trade: brokerage=5, stamp=10, transfer=0.2 = 15.2
+    cost = sell_cost(10000.0, "600519.SH")
+    assert cost == 15.2, f"Expected 15.2, got {cost}"
+
+
+def test_sell_cost_sz() -> None:
+    """Sell cost for Shenzhen: brokerage + stamp only."""
+    cost = sell_cost(10000.0, "000858.SZ")
+    # brokerage=5, stamp=10 = 15.0
+    assert cost == 15.0, f"Expected 15.0, got {cost}"
+
+
+def test_sell_cost_large_sh() -> None:
+    """Sell cost for large Shanghai trade with all components."""
+    # 100000 RMB trade: brokerage=25, stamp=100, transfer=2 = 127
+    cost = sell_cost(100000.0, "600519.SH")
+    assert cost == 127.0, f"Expected 127.0, got {cost}"
+
+
+def test_old_vs_new_cost_difference() -> None:
+    """Verify new cost model is more expensive than old hack model (only effective for small trades)."""
+    # Old: buy 0.03%, sell 0.13%
+    # New: buy 0.025% (min 5) + transfer, sell 0.025% (min 5) + 0.1% + transfer
+    # For 10000 RMB SH trade:
+    old_buy = 10000 * 0.0003  # 3.0
+    new_buy = buy_cost(10000, "600519.SH")  # 5.2
+    assert new_buy > old_buy, "New model should be more expensive for small trades"
+
+    old_sell = 10000 * 0.0013  # 13.0
+    new_sell = sell_cost(10000, "600519.SH")  # 15.2
+    assert new_sell > old_sell, "New sell cost should be more expensive"

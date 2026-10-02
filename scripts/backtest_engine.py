@@ -27,6 +27,7 @@ from mcp_client import get_mcp_client
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from core.chanlun_engine import analyze_chanlun, normalize_bars
+from core.cost_model import buy_cost, sell_cost
 from data import get_data_manager
 
 CST = dt.timezone(dt.timedelta(hours=8))
@@ -548,7 +549,7 @@ def run_backtest(
                 if qty < 100:
                     continue
                 cost = qty * entry_price
-                commission = cost * 0.0003
+                commission = buy_cost(cost, sym)
                 if cash < cost + commission:
                     continue
 
@@ -699,7 +700,7 @@ def run_backtest(
 
             if sell_triggered:
                 revenue = pos["qty"] * sell_price
-                fee = revenue * 0.0013
+                fee = sell_cost(revenue, sym)
                 cash += (revenue - fee)
                 total_commissions += fee
                 pnl = (revenue - fee) - (pos["qty"] * entry_p)
