@@ -121,32 +121,6 @@ def buy_signal_from_chanlun(analysis: dict[str, Any]) -> str | None:
     return None
 
 
-def load_market_regime() -> dict[str, Any]:
-    """Load market regime with defensive defaults."""
-    default = {
-        "standard_regime": "warmup",
-        "regime_multiplier": 0.45,
-        "sell_only_mode": False,
-        "fail_closed": False,
-    }
-    try:
-        dm = get_data_manager()
-        regime = dm.load_state("market_regime.json")
-        if regime:
-            rm = float(regime.get("regime_multiplier", 0.45))
-            standard = str(regime.get("standard_regime", "warmup"))
-            return {
-                "standard_regime": standard,
-                "regime_multiplier": rm,
-                "sell_only_mode": regime.get("sell_only_mode") is True,
-                "fail_closed": regime.get("fail_closed") is True,
-                "description": regime.get("description", ""),
-                "blocked_market_types": regime.get("blocked_market_types", []),
-            }
-    except Exception:
-        pass
-    return default
-
 
 def compute_signal_score(
     buy_point: str | None,
@@ -270,19 +244,15 @@ def compute_signal_score(
 def compute_regime_sentiment(
     index_bars: list[dict],
     curr_date: str,
-    regime: dict[str, Any],
 ) -> tuple[str, float]:
-    """Enhanced sentiment that combines regime state and index multi-day trend.
+    """Point-in-time sentiment from historical index bars only (no future leakage).
+
+    Derives phase and multiplier purely from index data available at curr_date.
+    This replaces the previous load_market_regime() approach which leaked
+    future information into historical backtest dates.
 
     Returns (phase, multiplier).
     """
-    # If market regime says sell-only or fail-closed, force ice
-    if regime.get("sell_only_mode") or regime.get("fail_closed"):
-        return "ice", 0.0
-
-    # Get regime multiplier from state
-    reg_mult = regime.get("regime_multiplier", 0.45)
-
     # Compute multi-day index trend (last 5 days)
     idx_bars_til = [b for b in index_bars if str(b.get("time", "")) <= curr_date]
     if len(idx_bars_til) >= 5:
@@ -316,15 +286,15 @@ def compute_regime_sentiment(
     blended = chg * 0.4 + avg_5d_chg * 0.3 + mom * 0.3
 
     if blended > 1.0:
-        phase, mult = "euphoria", min(0.85, reg_mult * 1.3)
+        phase, mult = "euphoria", min(0.85, 0.45 * 1.3)
     elif blended >= 0.3:
-        phase, mult = "hot", min(0.75, reg_mult * 1.2)
+        phase, mult = "hot", min(0.75, 0.45 * 1.2)
     elif blended >= -0.3:
-        phase, mult = "warmup", min(0.60, reg_mult)
+        phase, mult = "warmup", min(0.60, 0.45)
     elif blended >= -1.0:
-        phase, mult = "cooldown", min(0.35, reg_mult * 0.7)
+        phase, mult = "cooldown", min(0.35, 0.45 * 0.7)
     else:
-        phase, mult = "ice", min(0.15, reg_mult * 0.3)
+        phase, mult = "ice", min(0.15, 0.45 * 0.3)
 
     return phase, round(mult, 3)
 
@@ -335,17 +305,9 @@ def run_backtest(
     end_date: str,
     initial_capital: float = 400000.0,
 ) -> dict[str, Any]:
-    # ── 0. 加载市场状态 ──
-    regime = load_market_regime()
-    print(f"市场状态: {regime['standard_regime']} | 乘数: {regime['regime_multiplier']}")
-    if regime.get("sell_only_mode") or regime.get("fail_closed"):
-        print("!!! 市场处于防御模式 (sell_only/fail_closed) !!!")
-    print()
-
     # ── 1. 数据准备 ──
     all_bars: dict[str, list[dict[str, Any]]] = {}
     weekly_bars: dict[str, list[dict[str, Any]]] = {}
-    weekly_trends: dict[str, str] = {}
     for sym in symbols:
         bars = fetch_klines(sym, period="D", count=200)
         if len(bars) >= 80:
@@ -359,21 +321,10 @@ def run_backtest(
         else:
             # Fall back to daily for weekly trend
             weekly_bars[sym] = bars
-        # Pre-compute weekly trend from latest available data
-        w_analysis = analyze_chanlun(w_bars) if len(w_bars) >= 20 else analyze_chanlun(bars)
-        weekly_trends[sym] = w_analysis.get("trend_type", "range")
 
     if not all_bars:
         print("无足够K线")
         return {}
-
-    # ── 市场健康度检查: 多少股票周线多头? ──
-    weekly_uptrend_count = sum(1 for t in weekly_trends.values() if t in ("uptrend", "range"))
-    weekly_uptrend_pct = weekly_uptrend_count / len(weekly_trends) * 100 if weekly_trends else 0
-    print(f"市场健康度: {weekly_uptrend_pct:.0f}% 标的周线处于多头/震荡 ({weekly_uptrend_count}/{len(weekly_trends)})")
-    if weekly_uptrend_pct < 25:
-        print("!!! 警告: 不足25%标的周线多头, 市场整体弱势, 大幅收紧交易条件 !!!")
-    print()
 
     index_bars = fetch_klines("000001.SH", count=200)
     trade_dates = sorted({
@@ -399,18 +350,13 @@ def run_backtest(
     cooldown_days = 10
     min_score_threshold = 55  # Minimum signal score to consider
 
-    # ── 动态仓位上限: 弱势市场降仓位 ──
-    effective_max_positions = max_positions
-    if weekly_uptrend_pct < 25:
-        effective_max_positions = min(max_positions, 3)
-        min_score_threshold = max(min_score_threshold, 55)
-    elif weekly_uptrend_pct < 35:
-        effective_max_positions = min(max_positions, 4)
-        min_score_threshold = max(min_score_threshold, 50)
-
     # Stats by signal type
     stats_by_signal: dict[str, dict] = {}
     stats_by_grade: dict[str, dict] = {}
+
+    # Track final-day values for summary output
+    final_effective_max_pos = max_positions
+    final_score_threshold = min_score_threshold
 
     for day_idx, curr_date in enumerate(trade_dates):
         # ── 清理过期冷却 ──
@@ -418,8 +364,36 @@ def run_backtest(
             if curr_date >= cooldowns[sym]:
                 del cooldowns[sym]
 
-        # ── 增强情绪相位 (多日趋势 + 市场状态) ──
-        sent_phase, sent_mult = compute_regime_sentiment(index_bars, curr_date, regime)
+        # ── 动态市场健康度 (PIT: 只用截止 curr_date 的数据) ──
+        weekly_uptrend_count = 0
+        weekly_total_count = 0
+        for sym in all_bars:
+            w_bars_all = weekly_bars.get(sym, all_bars[sym])
+            w_lookback = [b for b in w_bars_all if str(b.get("time", "")) <= curr_date]
+            if len(w_lookback) >= 20:
+                w_analysis = analyze_chanlun(w_lookback)
+                wt = w_analysis.get("trend_type", "range")
+                if wt in ("uptrend", "range"):
+                    weekly_uptrend_count += 1
+                weekly_total_count += 1
+        weekly_uptrend_pct = weekly_uptrend_count / weekly_total_count * 100 if weekly_total_count > 0 else 0
+
+        # ── 动态仓位上限 (每日常新计算) ──
+        effective_max_positions = max_positions
+        score_threshold = min_score_threshold
+        if weekly_uptrend_pct < 25:
+            effective_max_positions = min(max_positions, 3)
+            score_threshold = max(min_score_threshold, 55)
+        elif weekly_uptrend_pct < 35:
+            effective_max_positions = min(max_positions, 4)
+            score_threshold = max(min_score_threshold, 50)
+
+        # 保存当日阈值用于最终统计
+        final_effective_max_pos = effective_max_positions
+        final_score_threshold = score_threshold
+
+        # ── 增强情绪相位 (PIT: 只用截止 curr_date 的指数数据) ──
+        sent_phase, sent_mult = compute_regime_sentiment(index_bars, curr_date)
 
         # ── 3. 买入信号 (带评分) ──
         if sent_mult > 0.15 and len(positions) < effective_max_positions:
@@ -466,6 +440,19 @@ def run_backtest(
                 if weekly_trend == "downtrend":
                     continue
 
+                # Volume confirmation
+                vol = _safe_float(lookback[-1].get("volume"))
+                avg_vol = sma(lookback, "volume", 20)
+                has_volume = vol >= avg_vol * 0.8 if avg_vol > 0 else True
+                if not has_volume:
+                    continue
+                vol_ratio = vol / avg_vol if avg_vol > 0 else 1.0
+
+                # RSI computation (must precede MA20 filter which references rsi)
+                rsi = compute_rsi(lookback)
+                if rsi > 68:
+                    continue  # Skip overbought
+
                 # MA trend filter: price should not be too far below MA20
                 # (avoids catching falling knives unless deeply oversold)
                 closes_ma = [b.get("close", 0) for b in lookback if b.get("close")]
@@ -475,18 +462,7 @@ def run_backtest(
                     # Price more than 8% below MA20 and not deeply oversold = skip
                     continue
 
-                # Volume confirmation
-                vol = _safe_float(lookback[-1].get("volume"))
-                avg_vol = sma(lookback, "volume", 20)
-                has_volume = vol >= avg_vol * 0.8 if avg_vol > 0 else True
-                if not has_volume:
-                    continue
-                vol_ratio = vol / avg_vol if avg_vol > 0 else 1.0
-
-                # RSI filter
-                rsi = compute_rsi(lookback)
-                if rsi > 68:
-                    continue  # Skip overbought
+                # RSI filter (already computed above, but keep as explicit skip)
 
                 # Compute signal score
                 score_result = compute_signal_score(
@@ -500,9 +476,9 @@ def run_backtest(
 
                 # 二买 requires higher minimum score (weakest signal in this regime)
                 bp_type = cand_bp if locals().get('cand_bp') else bp
-                if bp == "二买" and score_result["total"] < max(min_score_threshold, 65):
+                if bp == "二买" and score_result["total"] < max(score_threshold, 65):
                     continue
-                if score_result["total"] < min_score_threshold:
+                if score_result["total"] < score_threshold:
                     continue
 
                 candidates.append({
@@ -540,6 +516,10 @@ def run_backtest(
                     continue
                 entry_price = _safe_float(entry_bar.get("open"))
                 if entry_price <= 0:
+                    continue
+
+                # Suspension check: skip if entry bar has zero volume
+                if _safe_float(entry_bar.get("volume")) <= 0:
                     continue
 
                 # ── 差异化仓位: 根据评分调节 ──
@@ -623,7 +603,17 @@ def run_backtest(
             if pos["entry_date"] == curr_date:
                 continue
 
+            # Suspension check: skip if volume is zero (no trading)
+            if _safe_float(bar.get("volume")) <= 0:
+                continue
+
             entry_p = pos["entry_price"]
+            prev_close = None
+            lookback_all = all_bars.get(sym, [])
+            if len(lookback_all) >= 2:
+                prev_bars = [b for b in lookback_all if str(b.get("time", "")) < curr_date]
+                if prev_bars:
+                    prev_close = _safe_float(prev_bars[-1].get("close"))
             max_p = pos["max_price"]
             max_profit_pct = (max_p - entry_p) / entry_p * 100
             curr_profit_pct = (close - entry_p) / entry_p * 100
@@ -672,10 +662,18 @@ def run_backtest(
                     sell_triggered, sell_price = True, close
                     sell_reason = f"保本出 (曾涨{max_profit_pct:.1f}%)"
 
-            # 动态硬止损
+            # 动态硬止损 — CONSERVATIVE execution policy
+            # Daily OHLC cannot determine intraday order of stop vs target.
+            # Conservative assumption: when both could trigger, stop executes first.
+            # Gap-through handling: if open gaps below stop, use open as fill price.
             if not sell_triggered:
                 stop = round(entry_p * (1 + stop_loss_pct / 100), 2)
-                if low <= stop:
+                open_price = _safe_float(bar.get("open"))
+                # Gap-through: open already below stop
+                if prev_close is not None and open_price <= stop < prev_close:
+                    sell_triggered, sell_price = True, open_price
+                    sell_reason = f"止损{stop_loss_pct:.0f}%(跳空)"
+                elif low <= stop:
                     sell_triggered, sell_price = True, stop
                     sell_reason = f"止损{stop_loss_pct:.0f}%"
 
@@ -837,7 +835,7 @@ def run_backtest(
     print(f"  初始资金: {initial_capital:>10,.2f}   期末: {final['total']:>10,.2f}   净利润: {net:>+10,.2f}  收益率: {ret:>+6.2f}%")
     print(f"  交易: {len(trade_log)//2}笔   胜率: {wr:.0f}% ({len(wins)}胜/{len(losses)}负)   盈亏比: {pf:.2f}")
     print(f"  最大回撤: {mdd:.2f}%   夏普: {sharpe:.2f}   均持仓: {avg_hold:.0f}d   手续费: {total_commissions:.0f}")
-    print(f"  均盈: {avg_win:>+.0f}   均亏: {avg_loss:>+.0f}   仓位上限: {effective_max_positions}   评分门槛: {min_score_threshold}")
+    print(f"  均盈: {avg_win:>+.0f}   均亏: {avg_loss:>+.0f}   仓位上限: {final_effective_max_pos}   评分门槛: {final_score_threshold}")
     print(f"  {'='*100}")
 
     return {

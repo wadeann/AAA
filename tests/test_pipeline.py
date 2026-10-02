@@ -8,6 +8,7 @@ from execution.pipeline import (
     compute_empirical_bayes_win_rate,
     extract_attribution_layers,
     hierarchical_attribution,
+    degraded_risk_check,
 )
 
 
@@ -141,3 +142,210 @@ def test_hierarchical_attribution_empty() -> None:
     result = hierarchical_attribution([])
     assert result["level_1"] == {}
     assert result["level_2"] == {}
+
+
+# ── degraded_risk_check ──
+
+
+def _make_trading_session(is_open: bool = True) -> dict:
+    return {"is_trading_day": True, "is_open": is_open}
+
+
+def _make_account(cash: float = 100000.0, total_assets: float = 200000.0) -> dict:
+    return {"cash": cash, "total_assets": total_assets}
+
+
+def _make_positions(*holdings) -> list[dict]:
+    """Each holding: (symbol, quantity, market_value, available_quantity)."""
+    result = []
+    for h in holdings:
+        sym, qty, mv, avail = h
+        result.append({
+            "symbol": sym,
+            "quantity": qty,
+            "market_value": mv,
+            "available_quantity": avail,
+        })
+    return result
+
+
+def _make_intent(
+    symbol: str = "000001.SZ",
+    direction: str = "buy",
+    price: float = 10.0,
+    quantity: int = 1000,
+    name: str = "",
+    agy_approved: bool = False,
+) -> dict:
+    return {
+        "symbol": symbol,
+        "direction": direction,
+        "price": price,
+        "quantity": quantity,
+        "name": name or symbol,
+        "agy_approved": agy_approved,
+        "llm_approved": agy_approved,
+    }
+
+
+def test_degraded_risk_check_all_pass() -> None:
+    """Healthy intent passes all degraded checks."""
+    session = _make_trading_session(is_open=True)
+    account = _make_account(cash=100000, total_assets=200000)
+    positions = _make_positions()
+    intents = [_make_intent("000001.SZ", "buy", 10.0, 1000)]
+    result = degraded_risk_check(intents, positions, account, session)
+    assert result["results"][0]["approved"] is True
+
+
+def test_degraded_risk_check_rejects_outside_session() -> None:
+    """Intent rejected when market is closed."""
+    session = {"is_trading_day": False, "is_open": False}
+    account = _make_account()
+    positions = _make_positions()
+    intents = [_make_intent()]
+    result = degraded_risk_check(intents, positions, account, session)
+    assert result["results"][0]["approved"] is False
+    assert "outside trading session" in result["results"][0]["rejection_reason"]
+
+
+def test_degraded_risk_check_rejects_invalid_price() -> None:
+    """Zero or negative price rejected."""
+    session = _make_trading_session()
+    account = _make_account()
+    positions = _make_positions()
+    intents = [_make_intent(price=0.0)]
+    result = degraded_risk_check(intents, positions, account, session)
+    assert result["results"][0]["approved"] is False
+    assert "invalid price" in result["results"][0]["rejection_reason"]
+
+
+def test_degraded_risk_check_rejects_st_blacklist() -> None:
+    """ST stocks rejected even in degraded mode."""
+    session = _make_trading_session()
+    account = _make_account()
+    positions = _make_positions()
+    intents = [_make_intent(symbol="000001.SZ", name="ST平安")]
+    result = degraded_risk_check(intents, positions, account, session)
+    assert result["results"][0]["approved"] is False
+    assert "ST blacklisted" in result["results"][0]["rejection_reason"]
+
+
+def test_degraded_risk_check_rejects_insufficient_cash() -> None:
+    """Buy with insufficient cash rejected."""
+    session = _make_trading_session()
+    account = _make_account(cash=5000, total_assets=200000)
+    positions = _make_positions()
+    intents = [_make_intent(price=10.0, quantity=1000)]  # cost = 10000, cash = 5000
+    result = degraded_risk_check(intents, positions, account, session)
+    assert result["results"][0]["approved"] is False
+    assert "insufficient cash" in result["results"][0]["rejection_reason"]
+
+
+def test_degraded_risk_check_rejects_avg_down() -> None:
+    """Avg-down prohibited when already holding."""
+    session = _make_trading_session()
+    account = _make_account(cash=100000, total_assets=200000)
+    positions = _make_positions(("000001.SZ", 500, 5000, 500))
+    intents = [_make_intent("000001.SZ", "buy", 10.0, 1000)]
+    result = degraded_risk_check(intents, positions, account, session)
+    assert result["results"][0]["approved"] is False
+    assert "avg-down" in result["results"][0]["rejection_reason"]
+
+
+def test_degraded_risk_check_rejects_max_position_limit() -> None:
+    """Max position limit exceeded for new symbol."""
+    session = _make_trading_session()
+    account = _make_account(cash=200000, total_assets=500000)
+    # Already holding 5 symbols with >200 shares each
+    positions = _make_positions(
+        ("A1.SZ", 500, 10000, 500),
+        ("A2.SZ", 500, 10000, 500),
+        ("A3.SZ", 500, 10000, 500),
+        ("A4.SZ", 500, 10000, 500),
+        ("A5.SZ", 500, 10000, 500),
+    )
+    intents = [_make_intent("NEW.SZ", "buy", 10.0, 1000)]
+    result = degraded_risk_check(intents, positions, account, session)
+    assert result["results"][0]["approved"] is False
+    assert "max position limit" in result["results"][0]["rejection_reason"]
+
+
+def test_degraded_risk_check_sell_with_position_passes() -> None:
+    """Sell with available shares passes."""
+    session = _make_trading_session()
+    account = _make_account()
+    positions = _make_positions(("000001.SZ", 500, 5000, 500))
+    intents = [_make_intent("000001.SZ", "sell", 10.0, 300)]
+    result = degraded_risk_check(intents, positions, account, session)
+    assert result["results"][0]["approved"] is True
+
+
+def test_degraded_risk_check_sell_without_position_rejected() -> None:
+    """Sell without position rejected."""
+    session = _make_trading_session()
+    account = _make_account()
+    positions = _make_positions()
+    intents = [_make_intent("000001.SZ", "sell", 10.0, 300)]
+    result = degraded_risk_check(intents, positions, account, session)
+    assert result["results"][0]["approved"] is False
+    assert "no position" in result["results"][0]["rejection_reason"]
+
+
+def test_degraded_risk_check_sell_insufficient_shares_rejected() -> None:
+    """Sell with insufficient shares rejected."""
+    session = _make_trading_session()
+    account = _make_account()
+    positions = _make_positions(("000001.SZ", 50, 500, 50))
+    intents = [_make_intent("000001.SZ", "sell", 10.0, 200)]
+    result = degraded_risk_check(intents, positions, account, session)
+    assert result["results"][0]["approved"] is False
+    assert "insufficient shares" in result["results"][0]["rejection_reason"]
+
+
+def test_degraded_risk_check_agy_intent_no_special_treatment() -> None:
+    """AGY-approved intent gets same treatment as non-AGY in degraded mode."""
+    session = _make_trading_session()
+    account = _make_account(cash=5000, total_assets=200000)
+    positions = _make_positions()
+    # AGY-approved but insufficient cash - should still be rejected
+    intents = [_make_intent(price=10.0, quantity=1000, agy_approved=True)]
+    result = degraded_risk_check(intents, positions, account, session)
+    assert result["results"][0]["approved"] is False
+    assert "insufficient cash" in result["results"][0]["rejection_reason"]
+
+
+def test_degraded_risk_check_multiple_intents_order_sensitive() -> None:
+    """First buy consumes cash, second may fail due to ordering."""
+    session = _make_trading_session()
+    account = _make_account(cash=10000, total_assets=200000)
+    positions = _make_positions()
+    intents = [
+        _make_intent("A1.SZ", "buy", 10.0, 600),   # cost 6000, OK
+        _make_intent("A2.SZ", "buy", 10.0, 600),   # cost 6000, only 4000 left -> fail
+    ]
+    result = degraded_risk_check(intents, positions, account, session)
+    assert result["results"][0]["approved"] is True
+    assert result["results"][1]["approved"] is False
+    assert "insufficient cash" in result["results"][1]["rejection_reason"]
+
+
+def test_degraded_risk_check_single_position_cap() -> None:
+    """Single position exceeds 30% cap."""
+    session = _make_trading_session()
+    account = _make_account(cash=100000, total_assets=100000)
+    positions = _make_positions(("000001.SZ", 3000, 30000, 3000))  # 30% already
+    # Adding another 10% -> 40% total, exceeds 30%
+    intents = [_make_intent("000001.SZ", "buy", 10.0, 1000)]
+    result = degraded_risk_check(intents, positions, account, session)
+    assert result["results"][0]["approved"] is False
+    assert "single position" in result["results"][0]["rejection_reason"]
+
+
+def test_degraded_risk_check_empty_intents() -> None:
+    """Empty intents list returns empty results."""
+    session = _make_trading_session()
+    account = _make_account()
+    positions = _make_positions()
+    result = degraded_risk_check([], positions, account, session)
+    assert result["results"] == []
