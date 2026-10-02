@@ -105,48 +105,64 @@ def monitor_leaders() -> dict:
 
 
 def check_exit_triggers(position: dict, current_price: float) -> str | None:
-    """Evaluate 3-tier exit rules for a position.
-
-    Tier 1 — Trailing stop-profit (锁盈):
-        If price falls >= 5% from highest since entry, signal 'trailing_stop'.
-
-    Tier 2 — Hard stop-loss (止损):
-        If PnL <= -7%, signal 'hard_stop_loss'.
-
-    Tier 3 — Time-based exit (时间止损):
-        If held > 10 trading days and PnL < 3%, signal 'time_exit'.
+    """Evaluate exit rules using shared SellRules engine.
 
     Returns:
-        'trailing_stop' | 'hard_stop_loss' | 'time_exit' | None (hold).
+        'trailing_stop' | 'hard_stop_loss' | 'time_exit' | 'weak_exit' | 'breakeven' | None (hold).
     """
     cost = position.get("cost", 0.0)
-    highest = position.get("highest_price", current_price)
-    entry_time = position.get("entry_time", "")
-    pnl_pct = position.get("pnl_pct", 0.0)
-
     if cost <= 0 or current_price <= 0:
         return None
 
-    # Tier 1: trailing stop-profit
-    if highest > cost * 1.03:
-        drawdown = (highest - current_price) / highest * 100
-        if drawdown >= 5.0:
-            return "trailing_stop"
+    # 从 strategy_params.json 加载卖出规则
+    import json
+    from pathlib import Path
+    sr = {}
+    sp_file = Path(__file__).resolve().parent.parent / "config" / "strategy_params.json"
+    if sp_file.exists():
+        try:
+            sp_data = json.loads(sp_file.read_text())
+            sr = sp_data.get("sell_rules", {})
+        except Exception:
+            pass
 
-    # Tier 2: hard stop-loss
-    if pnl_pct <= -7.0:
-        return "hard_stop_loss"
+    # 构造兼容的 position dict
+    pos = {
+        "ep": cost,
+        "mp": position.get("highest_price", current_price),
+        "tp": position.get("target_pct", sr.get("target_pct", 8)),
+        "sp": position.get("stop_pct", sr.get("stop_pct", -2.8)),
+        "ed": position.get("entry_time", "").split("T")[0],
+        "hd": position.get("hold_days", 5),
+    }
 
-    # Tier 3: time-based exit
+    from datetime import datetime
+    entry_time = position.get("entry_time", "")
     if entry_time:
         try:
             entry_dt = datetime.fromisoformat(entry_time)
-            days_held = (datetime.now() - entry_dt).days
-            if days_held > 10 and pnl_pct < 3.0:
-                return "time_exit"
+            hold = (datetime.now() - entry_dt).days
         except (ValueError, TypeError):
-            pass
+            hold = 0
+    else:
+        hold = 0
 
+    from core.strategy import SellRules
+    rules_obj = SellRules(sr)
+    sell, sp_, why = rules_obj.evaluate(pos, current_price, current_price, current_price, hold)
+    if sell:
+        if "回落" in why:
+            return "trailing_stop"
+        if "止损" in why:
+            return "hard_stop_loss"
+        if "保本" in why:
+            return "breakeven"
+        if "时间" in why:
+            return "time_exit"
+        if "弱" in why:
+            return "weak_exit"
+        if "目标" in why:
+            return "profit_target"
     return None
 
 

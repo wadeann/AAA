@@ -1,0 +1,109 @@
+{
+  "params": {
+    "min_vr": 2.0,
+    "score_weights": {
+      "new_high_bonus": 3,
+      "stop_pct": -3.0
+    },
+    "regime_map": {
+      "ice": {
+        "0": 70,
+        "1": 2
+      },
+      "hot": {
+        "0": 65,
+        "2": 0.25
+      },
+      "warmup": {
+        "0": 55,
+        "2": 0.25
+      },
+      "euphoria": {
+        "0": 60,
+        "2": 0.25
+      }
+    },
+    "hard_filters": {
+      "ma_pct": 0.98,
+      "min_vr": 0.5,
+      "min_rs": 20
+    },
+    "ma_pct": 0.6,
+    "max_pos_pct": 0.3,
+    "sell_rules": {
+      "trail_trigger": 1.0,
+      "weak_hold": 1,
+      "breakeven_thresh": 0
+    },
+    "min_close": 15.0,
+    "hold_days": 2,
+    "chg": 12,
+    "stop_pct": -1.7,
+    "vol_bonus": 4,
+    "target_pct": 4,
+    "volume": 20
+  },
+  "config": {
+    "min_vr": 2.0,
+    "score_weights": {
+      "new_high_bonus": 3,
+      "stop_pct": -3.0
+    },
+    "regime_map": {
+      "ice": [
+        70,
+        2,
+        0.15
+      ],
+      "hot": [
+        65,
+        1,
+        0.25
+      ],
+      "warmup": [
+        55,
+        5,
+        0.25
+      ],
+      "euphoria": [
+        60,
+        2,
+        0.25
+      ],
+      "cooldown": [
+        60,
+        3,
+        0.28
+      ]
+    },
+    "hard_filters": {
+      "ma_pct": 0.98,
+      "min_vr": 0.5,
+      "min_rs": 20
+    },
+    "ma_pct": 0.6,
+    "max_pos_pct": 0.3,
+    "sell_rules": {
+      "trail_trigger": 1.0,
+      "weak_hold": 1,
+      "breakeven_thresh": 0
+    },
+    "min_close": 15.0,
+    "hold_days": 2,
+    "chg": 12,
+    "stop_pct": -1.7,
+    "vol_bonus": 4,
+    "target_pct": 4,
+    "volume": 20
+  },
+  "results": {
+    "ret": 415.11330250000003,
+    "sharpe": 9.836681609138239,
+    "wr": 81.19312436804853,
+    "pf": 2.5746506649063705,
+    "mdd": 6.462468450933205,
+    "monthly_ret_mean": 7.09653068097818,
+    "trades": 989,
+    "composite": 41.63
+  }
+}

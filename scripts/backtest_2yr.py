@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """
 Astock 全市场动量回测 — 2 年回测 (2024-10-01 ~ 2026-10-01)
-基于 v5 引擎，扩展至 800+ 全市场股票，添加行业分析。
+使用 core.strategy 共享策略模块，支持 --profile 多策略回测。
 """
 from __future__ import annotations
 
+import argparse
 import datetime as dt
 import json
 import os
@@ -19,26 +20,31 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from mcp_client import get_mcp_client
 from stock_universe_full import STOCK_UNIVERSE, get_industry, get_universe_size, get_industry_distribution
 
+# ── 共享策略模块 ──
+from core.strategy import (
+    _sf,
+    atr,
+    clear_param_overrides,
+    get_regime,
+    load_strategy_config,
+    screen_candidates as shared_screen,
+    score_momentum_core,
+    set_param_overrides,
+    sma,
+    REGIME_MAP as SHARED_REGIME_MAP,
+)
+from core.strategy_profiles import get_profile, list_profiles
+
 # ── 回测参数 ──
 START_DATE = "2024-10-01"
 END_DATE = "2026-10-01"
 INITIAL_CAPITAL = 400000.0
-KLINE_COUNT = 500       # 2年需要更多数据
-MIN_BARS = 120          # 最少 K 线数
+KLINE_COUNT = 500
+MIN_BARS = 120
 CACHE_FILE = Path(__file__).resolve().parent.parent / "data" / "kline_cache.json"
 
-# ── 参数覆盖（用于自动迭代）──
-_PARAM_OVERRIDES: dict = {}
-
-# ── 工具函数 ──
+# ── MCP 缓存 ──
 _MCP_CACHE: dict[str, list[dict]] = {}
-
-
-def _sf(v: Any, d: float = 0.0) -> float:
-    try:
-        return float(v) if v is not None else d
-    except (TypeError, ValueError):
-        return d
 
 
 def load_cache() -> dict[str, list[dict]]:
@@ -92,264 +98,34 @@ def fetch_klines(symbol: str, count: int = KLINE_COUNT, retries: int = 3) -> lis
     return []
 
 
-def sma(bars: list[dict], key: str = "close", period: int = 5) -> float:
-    vals = [_sf(b.get(key)) for b in bars[-period:] if _sf(b.get(key)) > 0]
-    return sum(vals) / len(vals) if vals else 0
-
-
-def rsi(bars: list[dict], period: int = 14) -> float:
-    closes = [_sf(b.get("close")) for b in bars if _sf(b.get("close")) > 0]
-    if len(closes) < period + 1:
-        return 50.0
-    g = l = 0.0
-    for i in range(-period, 0):
-        c = closes[i] - closes[i - 1]
-        g += max(c, 0)
-        l += max(-c, 0)
-    a, b = g / period, l / period or 0.01
-    return 100 - 100 / (1 + a / b)
-
-
-def atr(bars: list[dict], period: int = 14) -> float:
-    trs = []
-    for i in range(-period, 0):
-        if abs(i) > len(bars):
-            continue
-        hi = _sf(bars[i].get("high"))
-        lo = _sf(bars[i].get("low"))
-        pc = _sf(bars[i - 1].get("close")) if i > -len(bars) else hi
-        trs.append(max(hi - lo, abs(hi - pc), abs(lo - pc)))
-    avg_tr = sum(trs) / len(trs) if trs else 0
-    cp = _sf(bars[-1].get("close"))
-    return avg_tr / cp * 100 if cp > 0 else 0
-
-
-def get_regime(index_bars: list[dict], curr_date: str) -> str:
-    bars = [b for b in index_bars if str(b.get("time", "")) <= curr_date]
-    if len(bars) < 10:
-        return "warmup"
-    c5 = [_sf(b.get("close")) for b in bars[-5:]]
-    chg5 = (c5[-1] - c5[0]) / c5[0] * 100 if c5[0] > 0 else 0
-    ma10 = sma(bars, "close", 10)
-    ma20 = sma(bars, "close", 20)
-    lc = _sf(bars[-1].get("close"))
-    if chg5 > 3 and lc > ma10 > ma20:
-        return "euphoria"
-    if chg5 > 1 and lc > ma20:
-        return "hot"
-    if chg5 > -1.5 and lc > ma20 * 0.95:
-        return "warmup"
-    if chg5 > -3:
-        return "cooldown"
-    return "ice"
-
-
-REGIME_MAP = {
-    "euphoria": (65, 2, 0.35),
-    "hot": (70, 1, 0.20),
-    "warmup": (60, 5, 0.30),
-    "cooldown": (60, 3, 0.28),
-    "ice": (70, 1, 0.15),
-}
-
-
-def screen_candidates(
-    bars_dict: dict[str, list[dict]], curr_date: str,
-    min_vr: float = 1.5, min_close: float = 10.0,
-) -> list[str]:
-    cand = []
-    for sym, bars in bars_dict.items():
-        lb = [b for b in bars if str(b.get("time", "")) <= curr_date]
-        if len(lb) < 30:
-            continue
-        last = lb[-1]
-        close = _sf(last.get("close"))
-        if close < min_close:
-            continue
-        vol = _sf(last.get("volume"))
-        if vol <= 0:
-            continue
-        avg_v = sma(lb, "volume", 20)
-        vr = vol / avg_v if avg_v > 0 else 0
-        if vr < min_vr:
-            continue
-        if close < sma(lb, "close", 20) * 0.95:
-            continue
-        cand.append(sym)
-    return cand
-
-
-def score_stock(bars: list[dict]) -> dict[str, Any]:
-    """统一动量评分 (与 v5 完全相同)."""
-    if len(bars) < 25:
-        return {"score": 0, "grade": "D"}
-
-    # 配置覆盖
-    sw = _PARAM_OVERRIDES.get("score_weights", {})
-    _vol_w = sw.get("volume", 25)
-    _dh_w = sw.get("dh", 20)
-    _ma_w = sw.get("ma", 20)
-    _rsi_w = sw.get("rsi", 15)
-    _chg_w = sw.get("chg", 15)
-    _vol_bonus_w = sw.get("vol_bonus", 5)
-    _new_high_bonus = sw.get("new_high_bonus", 5)
-    _pullback_bonus = sw.get("pullback_bonus", 10)
-    _target_pct = sw.get("target_pct", 8)
-    _stop_pct = sw.get("stop_pct", -2.8)
-    _hold_days = sw.get("hold_days", 3)
-
-    # 硬过滤阈值
-    hf = _PARAM_OVERRIDES.get("hard_filters", {})
-    _min_vr = hf.get("min_vr", 0.8)
-    _min_rs = hf.get("min_rs", 25)
-    _ma_pct = hf.get("ma_pct", 0.95)
-    last = bars[-1]
-    close = _sf(last.get("close"))
-    vol = _sf(last.get("volume"))
-    chg = _sf(last.get("change_pct"))
-    avg_vol = sma(bars, "volume", 20)
-    vr = vol / avg_vol if avg_vol > 0 else 0
-    ma5 = sma(bars, "close", 5)
-    ma10 = sma(bars, "close", 10)
-    ma20 = sma(bars, "close", 20)
-    rs = rsi(bars)
-    h10 = [_sf(b.get("high")) for b in bars[-10:]]
-    h20 = [_sf(b.get("high")) for b in bars[-20:]]
-    hi10 = max(h10) if h10 else close
-    hi20 = max(h20) if h20 else close
-    dh10 = (hi10 - close) / hi10 * 100
-    atr_pct = atr(bars)
-    # Hard filters
-    if vr < _min_vr or rs < _min_rs:
-        return {"score": 0, "grade": "D"}
-    if close < ma20 * _ma_pct:
-        return {"score": 0, "grade": "D"}
-    score = 0
-    name = "momentum"
-    # 1. Volume (0-25)
-    if vr > 3.0:
-        score += _vol_w
-    elif vr > 2.0:
-        score += int(_vol_w * 0.8)
-    elif vr > 1.5:
-        score += int(_vol_w * 0.6)
-    elif vr > 1.2:
-        score += int(_vol_w * 0.4)
-    elif vr > 1.0:
-        score += int(_vol_w * 0.24)
+def run_backtest(config_override: dict | None = None, profile: str = "momentum_v5") -> dict:
+    """运行 2 年全市场回测. 支持 --profile 选择策略档案."""
+    # ── 配置加载 ──
+    if config_override:
+        set_param_overrides(config_override)
+        cfg = config_override
     else:
-        score += int(_vol_w * 0.12)
-    # 2. Distance from 10d high (0-_dh_w)
-    if dh10 < 1:
-        score += _dh_w
-    elif dh10 < 3:
-        score += int(_dh_w * 0.8)
-    elif dh10 < 5:
-        score += int(_dh_w * 0.6)
-    elif dh10 < 8:
-        score += int(_dh_w * 0.35)
-    elif dh10 < 12:
-        score += int(_dh_w * 0.2)
-    # 3. MA alignment (0-_ma_w)
-    if close > ma5 > ma10 > ma20:
-        score += _ma_w
-        name = "trend"
-    elif close > ma5 > ma20:
-        score += int(_ma_w * 0.7)
-    elif close > ma20:
-        score += int(_ma_w * 0.5)
-    else:
-        score += int(_ma_w * 0.1)
-    # 4. RSI (0-_rsi_w)
-    if 45 <= rs <= 65:
-        score += _rsi_w
-    elif 65 < rs <= 75:
-        score += int(_rsi_w * 0.67)
-    elif 35 <= rs < 45:
-        score += int(_rsi_w * 0.53)
-    elif rs > 75:
-        score += int(_rsi_w * 0.27)
-    else:
-        score += int(_rsi_w * 0.13)
-    # 5. Daily change (0-_chg_w)
-    if chg > 7:
-        score += _chg_w
-        name = "ignition"
-    elif chg > 5:
-        score += int(_chg_w * 0.87)
-        name = "ignition"
-    elif chg > 3:
-        score += int(_chg_w * 0.67)
-    elif chg > 1.5:
-        score += int(_chg_w * 0.47)
-    elif chg > 0.5:
-        score += int(_chg_w * 0.27)
-    else:
-        score += int(_chg_w * 0.07)
-    # 6. Volatility bonus (0-_vol_bonus_w)
-    rng = (
-        (_sf(last.get("high")) - _sf(last.get("low"))) / _sf(last.get("low")) * 100
-        if _sf(last.get("low")) > 0
-        else 0
-    )
-    if rng > 5:
-        score += _vol_bonus_w
-    elif rng > 3:
-        score += int(_vol_bonus_w * 0.6)
-    # 7. 20d new high bonus
-    if hi10 >= hi20 * 0.99:
-        score += _new_high_bonus
-        name = "breakout"
-    # 8. Pullback bonus (0-_pullback_bonus)
-    chgs = [
-        (cc - o) / o * 100
-        for b in bars[-10:-1]
-        if (o := _sf(b.get("open", 0))) > 0
-        for cc in [_sf(b.get("close", 0))]
-    ]
-    if chgs and max(chgs) > 5 and vr < 0.9:
-        score += _pullback_bonus
-        name = "pullback"
-    score = min(score, 100)
-    if score >= 65:
-        grade = "A"
-    elif score >= 50:
-        grade = "B"
-    elif score >= 35:
-        grade = "C"
-    else:
-        grade = "D"
-    return {
-        "score": score,
-        "grade": grade,
-        "name": name,
-        "target_pct": _target_pct,
-        "stop_pct": _stop_pct,
-        "hold_days": _hold_days,
-        "atr_pct": atr_pct,
-    }
+        cfg = load_strategy_config()
 
+    # 加载策略档案
+    prof = get_profile(profile)
+    profile_params = {**prof.default_params, **cfg.get("score_weights", {})}
 
-def run_backtest(config_override: dict | None = None) -> dict:
-    """运行 2 年全市场回测."""
-    # ── 配置覆盖（用于自动迭代）──
-    global _PARAM_OVERRIDES
-    _PARAM_OVERRIDES = config_override or {}
-    cfg = _PARAM_OVERRIDES
-    _REGIME_MAP = cfg.get("regime_map", REGIME_MAP)
-    _MIN_CLOSE = cfg.get("min_close", 10.0)
-    _MIN_VR = cfg.get("min_vr", 1.5)
-    _TARGET_PCT = cfg.get("target_pct", 8)
-    _STOP_PCT = cfg.get("stop_pct", -2.8)
-    _HOLD_DAYS = cfg.get("hold_days", 3)
-    _SCORE_WEIGHTS = cfg.get("score_weights", {})
-    _SELL_RULES = cfg.get("sell_rules", {})
-    _HARD_FILTERS = cfg.get("hard_filters", {})
+    # 评分函数
+    score_fn = prof.score_fn
+    screen_fn = prof.screen_fn or shared_screen
+
+    # 体制映射
+    _REGIME_MAP = cfg.get("regime_map", SHARED_REGIME_MAP)
+
+    # 卖出规则
+    from core.strategy import SellRules
+    sell_rules_obj = SellRules(cfg.get("sell_rules", prof.sell_rules))
 
     symbols = cfg.get("symbols", STOCK_UNIVERSE)
     total_symbols = len(symbols)
     print(f"{'=' * 100}")
-    print(f"  全市场动量回测  v5-ext")
+    print(f"  全市场回测  |  策略: {profile}")
     print(f"  股票池: {total_symbols} 只 | 时间: {START_DATE} ~ {END_DATE}")
     print(f"  初始资金: {INITIAL_CAPITAL:,.0f}")
     print(f"  行业覆盖: {len(get_industry_distribution())}")
@@ -438,17 +214,8 @@ def run_backtest(config_override: dict | None = None) -> dict:
     total_days = len(dates)
     last_progress_pct = 0
 
-    # 从覆盖参数中提取 sell rules
-    sr = _SELL_RULES
-    _trail_trigger = sr.get("trail_trigger", 3.0)
-    _trail_high = sr.get("trail_high_rate", 0.3)
-    _trail_low = sr.get("trail_low_rate", 0.4)
-    _trail_high_thresh = sr.get("trail_high_thresh", 5.0)
-    _breakeven_peak = sr.get("breakeven_peak", 3.0)
-    _breakeven_thresh = sr.get("breakeven_thresh", 0.5)
-    _weak_hold = sr.get("weak_hold", 2)
-    _weak_thresh = sr.get("weak_thresh", -0.5)
-    _max_hold = sr.get("max_hold", 5)
+    # 使用 SellRules 引擎
+    sr_obj = sell_rules_obj
 
     for di, dt_ in enumerate(dates):
         # 进度
@@ -459,7 +226,7 @@ def run_backtest(config_override: dict | None = None) -> dict:
             last_progress_pct = progress_pct // 10
 
         regime = get_regime(index_bars, dt_)
-        _rm = cfg.get("regime_map", REGIME_MAP)
+        _rm = _REGIME_MAP
         _rm_entry = _rm[regime]
         if isinstance(_rm_entry, dict):
             ms, mx, cp = _rm_entry.get("0", 60), _rm_entry.get("1", 3), _rm_entry.get("2", 0.25)
@@ -470,7 +237,7 @@ def run_backtest(config_override: dict | None = None) -> dict:
         if len(pos) < mx:
             screen_min_vr = cfg.get("min_vr", 1.5)
             screen_min_close = cfg.get("min_close", 10.0)
-            screen = screen_candidates(all_bars, dt_, min_vr=screen_min_vr, min_close=screen_min_close)
+            screen = screen_fn(all_bars, dt_, min_vr=screen_min_vr, min_close=screen_min_close)
             cand = []
             for sym in screen:
                 if sym in pos:
@@ -478,7 +245,7 @@ def run_backtest(config_override: dict | None = None) -> dict:
                 lb = [b for b in all_bars[sym] if str(b.get("time", "")) <= dt_]
                 if len(lb) < 25:
                     continue
-                r = score_stock(lb)
+                r = score_fn(lb, profile_params)
                 if r["grade"] in ("D", "C") or r["score"] < ms:
                     continue
                 cand.append((sym, r))
@@ -556,34 +323,8 @@ def run_backtest(config_override: dict | None = None) -> dict:
             if p["ed"] == dt_:
                 continue
             ep_ = p["ep"]
-            cp_ = (cl - ep_) / ep_ * 100
-            mp_ = (p["mp"] - ep_) / ep_ * 100
             hold = (dt.date.fromisoformat(dt_) - dt.date.fromisoformat(p["ed"])).days
-            sell = False
-            sp_ = cl
-            why = ""
-            if cp_ >= p["tp"]:
-                sell = True
-                why = f"目标+{p['tp']:.0f}%"
-            elif mp_ >= _trail_trigger:
-                tr = _trail_high if mp_ >= _trail_high_thresh else _trail_low
-                tp = ep_ * (1 + mp_ * (1 - tr) / 100)
-                if lo <= tp:
-                    sell = True
-                    sp_ = tp
-                    why = f"回落{tr*100:.0f}%(高{mp_:.1f}%)"
-            elif cp_ <= p["sp"]:
-                sell = True
-                why = f"止损{p['sp']:.0f}%"
-            elif mp_ >= _breakeven_peak and cp_ < _breakeven_thresh:
-                sell = True
-                why = f"保本(曾{mp_:.1f}%)"
-            elif hold >= _weak_hold and cp_ < _weak_thresh:
-                sell = True
-                why = f"弱{hold}d"
-            elif hold >= _max_hold:
-                sell = True
-                why = f"时间{hold}d"
+            sell, sp_, why = sr_obj.evaluate(p, hi, lo, cl, hold)
             if sell:
                 rev = p["qty"] * sp_
                 fee = rev * 0.0013
@@ -889,14 +630,31 @@ def run_backtest(config_override: dict | None = None) -> dict:
         "strategy_stats": strategy_stats,
         "industry_stats": industry_stats,
     }
-    _PARAM_OVERRIDES.clear()
+    clear_param_overrides()
     return results
 
 
 def main():
-    results = run_backtest()
+    parser = argparse.ArgumentParser(description="Astock 全市场回测")
+    parser.add_argument("--profile", default="momentum_v5", choices=list_profiles(),
+                        help="策略档案 (默认: momentum_v5)")
+    parser.add_argument("--list-profiles", action="store_true",
+                        help="列出所有可用策略档案")
+    parser.add_argument("--show-accepted", action="store_true", default=True,
+                        help="显示接受的交易记录 (默认: 显示)")
+    args = parser.parse_args()
+
+    if args.list_profiles:
+        print("可用策略档案:")
+        for name in list_profiles():
+            prof = get_profile(name)
+            print(f"  {name:<20} {prof.description}")
+            print(f"                  来源: {prof.source}")
+        return
+
+    results = run_backtest(profile=args.profile)
     if results:
-        print(f"\n{'=' * 40} 概览 {'=' * 40}")
+        print(f"\n{'=' * 40} 概览 ({args.profile}) {'=' * 40}")
         print(f"  股票: {results['valid_symbols']}/{results['total_symbols']} | "
               f"交易日: {results['total_days']}")
         print(f"  收益: {results['ret']:+.2f}% | 年化: {results['annual_ret']:+.2f}% | "

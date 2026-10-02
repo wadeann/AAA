@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-09-30T07:55:02.792858+00:00",
-  "version": "AGY-R28",
+  "updated_at": "2026-10-02T16:27:56.341872",
+  "version": "auto_iterate_best",
   "min_confidence": 0.65,
   "catalyst_types": {
     "technical_breakout": {
@@ -238,5 +238,24 @@
     ],
     "reason": "科创50孤立下跌 -2.51%，但三大宽基未跌超-1%、跌停未知家、炸板率未知%；仅隔离科创板，不触发全市场停买",
     "updated_at": "2026-10-01T06:37:48.748644+00:00"
+  },
+  "score_weights": {},
+  "hard_filters": {
+    "min_rs": 30,
+    "ma_pct": 0.95,
+    "min_vr": 0.7
+  },
+  "sell_rules": {
+    "weak_thresh": 0.5,
+    "breakeven_peak": 3.0,
+    "max_hold": 7,
+    "trail_low_rate": 0.35,
+    "breakeven_thresh": 0.3,
+    "trail_high_rate": 0.35
+  },
+  "regime_map": {},
+  "backtest_results": {
+    "composite": 31.7,
+    "note": "final_ensemble_top3"
   }
 }

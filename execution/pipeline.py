@@ -18,9 +18,22 @@ from data import get_data_manager
 
 
 def load_strategy_params() -> dict[str, Any]:
-    """从 data/state/ 加载动态策略参数。"""
+    """加载动态策略参数，带 fallback 到 config/strategy_params.json。"""
     dm = get_data_manager()
-    return dm.load_state("strategy_params.json")
+    params = dm.load_state("strategy_params.json")
+    if params:
+        return params
+    # Fallback: 从 config/strategy_params.json 加载
+    import json
+    from pathlib import Path
+    fallback = Path(__file__).resolve().parent.parent / "config" / "strategy_params.json"
+    if fallback.exists():
+        try:
+            with open(fallback) as f:
+                return json.load(f)
+        except (json.JSONDecodeError, OSError):
+            pass
+    return {}
 
 
 def is_catalyst_enabled(
