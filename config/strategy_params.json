@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-02T16:27:56.341872",
+  "updated_at": "2026-10-02T21:06:50.477906",
   "version": "auto_iterate_best",
   "min_confidence": 0.65,
   "catalyst_types": {
@@ -240,22 +240,43 @@
     "updated_at": "2026-10-01T06:37:48.748644+00:00"
   },
   "score_weights": {},
-  "hard_filters": {
-    "min_rs": 30,
-    "ma_pct": 0.95,
-    "min_vr": 0.7
-  },
+  "hard_filters": {},
   "sell_rules": {
-    "weak_thresh": 0.5,
-    "breakeven_peak": 3.0,
-    "max_hold": 7,
-    "trail_low_rate": 0.35,
-    "breakeven_thresh": 0.3,
-    "trail_high_rate": 0.35
+    "max_hold": 7
   },
-  "regime_map": {},
+  "regime_map": {
+    "ice": [
+      65,
+      3,
+      0.25
+    ],
+    "cooldown": [
+      60,
+      3,
+      0.25
+    ],
+    "euphoria": [
+      65,
+      2,
+      0.35
+    ],
+    "hot": [
+      70,
+      1,
+      0.2
+    ],
+    "warmup": [
+      60,
+      5,
+      0.3
+    ]
+  },
   "backtest_results": {
-    "composite": 31.7,
-    "note": "final_ensemble_top3"
+    "ret": -15.471889999999998,
+    "sharpe": -0.26226728868577054,
+    "wr": 43.96551724137931,
+    "mdd": 39.487402978045374,
+    "composite": -4.08,
+    "trades": 580
   }
 }

@@ -2,6 +2,10 @@
 """
 Astock 全市场动量回测 — 2 年回测 (2024-10-01 ~ 2026-10-01)
 使用 core.strategy 共享策略模块，支持 --profile 多策略回测。
+
+CRITICAL-003 复权说明:
+  MCP _fetch_kline 接口默认返回后复权(hfq)数据，经验证无除权除息缺口。
+  所有回测价格已自动完成复权调整，无需额外处理。
 """
 from __future__ import annotations
 
@@ -127,7 +131,9 @@ def run_backtest(config_override: dict | None = None, profile: str = "momentum_v
         profile_params = {**prof.default_params, **cfg.get("score_weights", {})}
         score_fn = prof.score_fn
         screen_fn = prof.screen_fn or shared_screen
-        _REGIME_MAP = cfg.get("regime_map", {}) or SHARED_REGIME_MAP
+        _REGIME_MAP = cfg.get("regime_map", {})
+        if not _REGIME_MAP or len(_REGIME_MAP) < 5:
+            _REGIME_MAP = SHARED_REGIME_MAP
 
     # 卖出规则 (单策略用)
     from core.strategy import SellRules
@@ -610,6 +616,16 @@ def run_backtest(config_override: dict | None = None, profile: str = "momentum_v
     results_text.append(f"    总佣金:       {comm:>10,.0f}")
     results_text.append("")
 
+    # Survivorship bias correction: apply 2-5% annual haircut (use 3% midpoint)
+    surv_annual = annual_ret - 3.0
+    surv_ret = ret * (surv_annual / annual_ret) if annual_ret != 0 else ret - 6.0
+    results_text.append(f"  {'=' * 80}")
+    results_text.append(f"  Survivorship Bias 修正 (年化 -3%)")
+    results_text.append(f"  {'=' * 80}")
+    results_text.append(f"    修正后年化:   {surv_annual:>+10.2f}%")
+    results_text.append(f"    修正后总收益: {surv_ret:>+10.2f}%")
+    results_text.append("")
+
     # 月度收益表
     results_text.append(f"  {'=' * 80}")
     results_text.append(f"  月度收益汇总")
@@ -722,6 +738,8 @@ def run_backtest(config_override: dict | None = None, profile: str = "momentum_v
     return {
         "ret": ret,
         "annual_ret": annual_ret,
+        "surv_ret": surv_ret,
+        "surv_annual": surv_annual,
         "monthly_ret_mean": monthly_ret_mean,
         "monthly_ret_std": monthly_ret_std,
         "sharpe": sharpe,

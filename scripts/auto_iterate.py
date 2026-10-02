@@ -374,10 +374,25 @@ def save_to_strategy_params(params: dict, results_summary: dict | None = None):
                 regime_map[regime] = {}
             regime_map[regime][param_idx] = v
 
-    # 转换为 tuple 格式的 regime_map
+    # 转换为 tuple 格式的 regime_map (填充缺失体制的默认值)
+    _DEFAULT_REGIME_MAP = {
+        "euphoria": (65, 2, 0.35),
+        "hot": (70, 1, 0.20),
+        "warmup": (60, 5, 0.30),
+        "cooldown": (60, 3, 0.28),
+        "ice": (70, 1, 0.15),
+    }
     regime_map_tuples = {}
-    for regime, d in regime_map.items():
-        regime_map_tuples[regime] = (int(d.get("0", 60)), int(d.get("1", 3)), float(d.get("2", 0.25)))
+    for regime_name in _DEFAULT_REGIME_MAP:
+        if regime_name in regime_map:
+            d = regime_map[regime_name]
+            regime_map_tuples[regime_name] = (
+                int(d.get("0", _DEFAULT_REGIME_MAP[regime_name][0])),
+                int(d.get("1", _DEFAULT_REGIME_MAP[regime_name][1])),
+                float(d.get("2", _DEFAULT_REGIME_MAP[regime_name][2])),
+            )
+        else:
+            regime_map_tuples[regime_name] = _DEFAULT_REGIME_MAP[regime_name]
 
     cfg["score_weights"] = score_weights
     cfg["hard_filters"] = hard_filters
