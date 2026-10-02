@@ -99,7 +99,7 @@ def fetch_klines(symbol: str, count: int = KLINE_COUNT, retries: int = 3) -> lis
 
 
 def run_backtest(config_override: dict | None = None, profile: str = "momentum_v5") -> dict:
-    """运行 2 年全市场回测. 支持 --profile 选择策略档案."""
+    """运行 2 年全市场回测. 支持 --profile 选择策略档案。"""
     # ── 配置加载 ──
     if config_override:
         set_param_overrides(config_override)
@@ -109,18 +109,28 @@ def run_backtest(config_override: dict | None = None, profile: str = "momentum_v
 
     # 加载策略档案
     prof = get_profile(profile)
-    profile_params = {**prof.default_params, **cfg.get("score_weights", {})}
+    is_multi = (profile == "multi")
 
-    # 评分函数
-    score_fn = prof.score_fn
-    screen_fn = prof.screen_fn or shared_screen
+    # 多策略分仓组合
+    if is_multi:
+        from core.strategy_profiles import get_multi_allocator
+        multi_cfg = cfg.get("multi_profiles", None)
+        allocator = get_multi_allocator(multi_cfg)
+        profile_params = {}
+        score_fn = prof.score_fn  # 占位, 实际用 allocator
+        screen_fn = prof.screen_fn  # 占位, 实际用 allocator
+        # 多策略使用默认 regime_map
+        _REGIME_MAP = SHARED_REGIME_MAP
+        print(f"  多策略分仓组合: {allocator.describe()}")
+    else:
+        profile_params = {**prof.default_params, **cfg.get("score_weights", {})}
+        score_fn = prof.score_fn
+        screen_fn = prof.screen_fn or shared_screen
+        _REGIME_MAP = cfg.get("regime_map", SHARED_REGIME_MAP)
 
-    # 体制映射
-    _REGIME_MAP = cfg.get("regime_map", SHARED_REGIME_MAP)
-
-    # 卖出规则
+    # 卖出规则 (单策略用)
     from core.strategy import SellRules
-    sell_rules_obj = SellRules(cfg.get("sell_rules", prof.sell_rules))
+    sell_rules_obj = SellRules(cfg.get("sell_rules", prof.sell_rules)) if not is_multi else None
 
     symbols = cfg.get("symbols", STOCK_UNIVERSE)
     total_symbols = len(symbols)
@@ -207,6 +217,7 @@ def run_backtest(config_override: dict | None = None, profile: str = "momentum_v
     cash = INITIAL_CAPITAL
     peak = INITIAL_CAPITAL
     pos: dict[str, dict] = {}
+    pos_profile_count: dict[str, int] = {}  # 多策略: 各子策略当前持仓数 {profile_name: count}
     log: list[dict] = []
     eq: list[dict] = []
     comm = 0.0
@@ -237,74 +248,138 @@ def run_backtest(config_override: dict | None = None, profile: str = "momentum_v
         if len(pos) < mx:
             screen_min_vr = cfg.get("min_vr", 1.5)
             screen_min_close = cfg.get("min_close", 10.0)
-            screen = screen_fn(all_bars, dt_, min_vr=screen_min_vr, min_close=screen_min_close)
-            cand = []
-            for sym in screen:
-                if sym in pos:
-                    continue
-                lb = [b for b in all_bars[sym] if str(b.get("time", "")) <= dt_]
-                if len(lb) < 25:
-                    continue
-                r = score_fn(lb, profile_params)
-                if r["grade"] in ("D", "C") or r["score"] < ms:
-                    continue
-                cand.append((sym, r))
-            cand.sort(key=lambda x: -x[1]["score"])
-            for sym, r in cand[: mx - len(pos)]:
-                ei = di + 1
-                if ei >= len(dates):
-                    continue
-                ed = dates[ei]
-                eb = next(
-                    (b for b in all_bars[sym] if str(b.get("time", "")) == ed),
-                    None,
-                )
-                if not eb:
-                    continue
-                ep = _sf(eb.get("open"))
-                if ep <= 0:
-                    continue
-                sc = r["score"]
-                _max_pos_pct = cfg.get("max_pos_pct", 0.35)
-                if sc >= 80:
-                    alloc = min(cp + 0.05, _max_pos_pct)
-                elif sc >= 70:
-                    alloc = cp
-                elif sc >= 60:
-                    alloc = cp * 0.8
-                else:
-                    alloc = cp * 0.6
-                amt = min(cash * alloc, INITIAL_CAPITAL * _max_pos_pct)
-                qty = max(100, int(amt / ep / 100) * 100)
-                cost = qty * ep
-                fee = cost * 0.0003
-                if cash < cost + fee:
-                    continue
-                cash -= cost + fee
-                comm += fee
-                pos[sym] = {
-                    "sym": sym,
-                    "qty": qty,
-                    "ep": ep,
-                    "ed": ed,
-                    "mp": ep,
-                    "tp": r["target_pct"],
-                    "sp": r["stop_pct"],
-                    "hd": r["hold_days"],
-                    "sc": r["score"],
-                    "nm": r["name"],
-                    "reg": regime,
-                }
-                log.append({
-                    "date": ed,
-                    "d": "B",
-                    "sym": sym,
-                    "p": ep,
-                    "q": qty,
-                    "sc": r["score"],
-                    "nm": r["name"],
-                    "reg": regime,
-                })
+
+            if is_multi:
+                # ── 多策略分仓买入 ──
+                screen = allocator.screen_all(all_bars, dt_, min_vr=screen_min_vr, min_close=screen_min_close)
+                scored = allocator.score_all(screen, all_bars, profile_params, min_score=ms)
+                # 按 symbol 聚合: 合并多策略评分结果
+                sym_agg: dict[str, dict] = {}
+                for sym, r, pname in scored:
+                    if sym in pos:
+                        continue
+                    if sym not in sym_agg:
+                        sym_agg[sym] = {
+                            "best_r": r, "best_pname": pname, "best_score": r["score"],
+                            "profiles": [], "total_weight": 0.0,
+                        }
+                    agg = sym_agg[sym]
+                    agg["profiles"].append(pname)
+                    agg["total_weight"] += r.get("weight", 0.2)
+                    if r["score"] > agg["best_score"]:
+                        agg["best_r"] = r
+                        agg["best_pname"] = pname
+                        agg["best_score"] = r["score"]
+
+                # 按最佳 score 排序
+                sorted_syms = sorted(sym_agg.items(), key=lambda x: -x[1]["best_score"])
+                for sym, agg in sorted_syms:
+                    if len(pos) >= mx:
+                        break
+                    _max_pos_pct = cfg.get("max_pos_pct", 0.35)
+                    # 多策略共振: 每多一个策略加成 0.3 倍仓位
+                    resonance = 1.0 + (len(agg["profiles"]) - 1) * 0.3
+                    alloc_pct = allocator.get_alloc_pct(
+                        agg["best_pname"], agg["best_score"], cp, _max_pos_pct
+                    ) * resonance
+                    # 限制单策略预算
+                    if agg["best_pname"] in pos_profile_count:
+                        budgets = allocator.get_budgets(mx)
+                        p_budget = budgets.get(agg["best_pname"], 1)
+                        if pos_profile_count.get(agg["best_pname"], 0) >= p_budget:
+                            alloc_pct *= 0.5  # 超预算减半
+
+                    r = agg["best_r"]
+                    pname = agg["best_pname"]
+                    ei = di + 1
+                    if ei >= len(dates):
+                        continue
+                    ed = dates[ei]
+                    eb = next(
+                        (b for b in all_bars.get(sym, []) if str(b.get("time", "")) == ed),
+                        None,
+                    )
+                    if not eb:
+                        continue
+                    ep = _sf(eb.get("open"))
+                    if ep <= 0:
+                        continue
+                    amt = min(cash * alloc_pct, INITIAL_CAPITAL * _max_pos_pct)
+                    qty = max(100, int(amt / ep / 100) * 100)
+                    cost = qty * ep
+                    fee = cost * 0.0003
+                    if cash < cost + fee:
+                        continue
+                    cash -= cost + fee
+                    comm += fee
+                    pos[sym] = {
+                        "sym": sym, "qty": qty, "ep": ep, "ed": ed, "mp": ep,
+                        "tp": r.get("target_pct", 8), "sp": r.get("stop_pct", -2.8),
+                        "hd": r.get("hold_days", 3), "sc": r["score"],
+                        "nm": "multi_" + pname, "reg": regime, "profile": pname,
+                        "profiles": agg["profiles"],
+                    }
+                    pos_profile_count[pname] = pos_profile_count.get(pname, 0) + 1
+                    log.append({
+                        "date": ed, "d": "B", "sym": sym, "p": ep, "q": qty,
+                        "sc": r["score"], "nm": "multi_" + pname, "reg": regime,
+                    })
+            else:
+                # ── 单策略买入 ──
+                screen = screen_fn(all_bars, dt_, min_vr=screen_min_vr, min_close=screen_min_close)
+                cand = []
+                for sym in screen:
+                    if sym in pos:
+                        continue
+                    lb = [b for b in all_bars[sym] if str(b.get("time", "")) <= dt_]
+                    if len(lb) < 25:
+                        continue
+                    r = score_fn(lb, profile_params)
+                    if r["grade"] in ("D", "C") or r["score"] < ms:
+                        continue
+                    cand.append((sym, r))
+                cand.sort(key=lambda x: -x[1]["score"])
+                for sym, r in cand[: mx - len(pos)]:
+                    ei = di + 1
+                    if ei >= len(dates):
+                        continue
+                    ed = dates[ei]
+                    eb = next(
+                        (b for b in all_bars[sym] if str(b.get("time", "")) == ed),
+                        None,
+                    )
+                    if not eb:
+                        continue
+                    ep = _sf(eb.get("open"))
+                    if ep <= 0:
+                        continue
+                    sc = r["score"]
+                    _max_pos_pct = cfg.get("max_pos_pct", 0.35)
+                    if sc >= 80:
+                        alloc = min(cp + 0.05, _max_pos_pct)
+                    elif sc >= 70:
+                        alloc = cp
+                    elif sc >= 60:
+                        alloc = cp * 0.8
+                    else:
+                        alloc = cp * 0.6
+                    amt = min(cash * alloc, INITIAL_CAPITAL * _max_pos_pct)
+                    qty = max(100, int(amt / ep / 100) * 100)
+                    cost = qty * ep
+                    fee = cost * 0.0003
+                    if cash < cost + fee:
+                        continue
+                    cash -= cost + fee
+                    comm += fee
+                    pos[sym] = {
+                        "sym": sym, "qty": qty, "ep": ep, "ed": ed, "mp": ep,
+                        "tp": r["target_pct"], "sp": r["stop_pct"], "hd": r["hold_days"],
+                        "sc": r["score"], "nm": r["name"], "reg": regime,
+                    }
+                    log.append({
+                        "date": ed, "d": "B", "sym": sym, "p": ep, "q": qty,
+                        "sc": r["score"], "nm": r["name"], "reg": regime,
+                    })
 
         # ── SELL ──
         for sym in list(pos.keys()):
@@ -324,7 +399,13 @@ def run_backtest(config_override: dict | None = None, profile: str = "momentum_v
                 continue
             ep_ = p["ep"]
             hold = (dt.date.fromisoformat(dt_) - dt.date.fromisoformat(p["ed"])).days
-            sell, sp_, why = sr_obj.evaluate(p, hi, lo, cl, hold)
+
+            # 选择正确的 SellRules
+            if is_multi:
+                cur_sr = allocator.get_sell_rules(p.get("profile", "momentum_v5"))
+            else:
+                cur_sr = sr_obj
+            sell, sp_, why = cur_sr.evaluate(p, hi, lo, cl, hold)
             if sell:
                 rev = p["qty"] * sp_
                 fee = rev * 0.0013
@@ -346,6 +427,9 @@ def run_backtest(config_override: dict | None = None, profile: str = "momentum_v
                     "reg": p["reg"],
                     "sc": p["sc"],
                 })
+                if is_multi:
+                    pname = p.get("profile", "momentum_v5")
+                    pos_profile_count[pname] = max(0, pos_profile_count.get(pname, 0) - 1)
                 del pos[sym]
 
         # ── Equity ──

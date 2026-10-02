@@ -757,3 +757,206 @@ register_profile(StrategyProfile(
     ),
     weight=1.0,
 ))
+
+
+# ═══════════════════════════════════════════════════════════════
+# Profile 11: multi_alloc — 多策略分仓组合
+# ═══════════════════════════════════════════════════════════════
+
+class MultiStrategyAllocator:
+    """多策略分仓分配器 — 运行多个子策略，各自独立评分、独立仓位、独立卖出规则。
+
+    每个子策略:
+      - 独立 screen + score (全市场筛选)
+      - 按 weight 分配仓位预算
+      - 标记每笔持仓的来源策略
+      - 使用各自的 SellRules 离场
+    多策略共振: 同一股票被多个子策略同时选中时，仓位叠加 (共振加仓).
+
+    Usage:
+        alloc = MultiStrategyAllocator([
+            {"name": "momentum_v5", "weight": 0.6},
+            {"name": "single_yang", "weight": 0.2},
+            {"name": "lotus", "weight": 0.2},
+        ])
+        candidates = alloc.screen_all(bars_dict, date)
+        results = alloc.score_all(candidates, bars_dict, params)
+        # results: [(sym, score_result, profile_name), ...]
+    """
+
+    def __init__(self, profile_configs: list[dict]):
+        """
+        Args:
+            profile_configs: list of {"name": str, "weight": float, "sell_rules"?: dict}
+                weight 总和不必为 1，程序会归一化处理。
+        """
+        from core.strategy import SellRules
+        self.sub_profiles: list[dict] = []
+        total_weight = sum(c.get("weight", 1.0) for c in profile_configs) or 1.0
+        for cfg in profile_configs:
+            p = get_profile(cfg["name"])
+            w = cfg.get("weight", 1.0) / total_weight  # 归一化
+            sr = SellRules(cfg.get("sell_rules", p.sell_rules))
+            self.sub_profiles.append({
+                "profile": p,
+                "name": cfg["name"],
+                "weight": w,
+                "sell_rules": sr,
+                "budget": 0,  # 每轮回测动态分配
+            })
+
+    @property
+    def profile_names(self) -> list[str]:
+        return [sp["name"] for sp in self.sub_profiles]
+
+    def describe(self) -> str:
+        parts = [f"{sp['name']}({sp['weight']*100:.0f}%)" for sp in self.sub_profiles]
+        return "+".join(parts)
+
+    def screen_all(self, bars_dict: dict, date: str, **kwargs) -> list[str]:
+        """取所有子策略筛选结果的并集。"""
+        candidates: set[str] = set()
+        for sp in self.sub_profiles:
+            fn = sp["profile"].screen_fn or screen_candidates
+            try:
+                result = fn(bars_dict, date, **kwargs)
+                if result:
+                    candidates.update(result)
+            except Exception:
+                continue
+        return sorted(candidates)
+
+    def score_all(
+        self, symbols: list[str], bars_dict: dict[str, list[dict]],
+        params: dict, min_score: int = 60,
+    ) -> list[tuple[str, dict, str]]:
+        """对每个候选股运行所有子策略评分。
+
+        Returns:
+            list of (symbol, score_result, profile_name) 按 score 降序排列，
+            仅包含 grade 非 D/C 且 score >= min_score 的结果。
+        """
+        results: list[tuple[str, dict, str]] = []
+        for sym in symbols:
+            bars = bars_dict.get(sym, [])
+            if len(bars) < 25:
+                continue
+            for sp in self.sub_profiles:
+                try:
+                    r = sp["profile"].score_fn(bars, params)
+                    if r.get("grade") in ("D", "C"):
+                        continue
+                    if r.get("score", 0) < min_score:
+                        continue
+                    r["profile"] = sp["name"]
+                    r["weight"] = sp["weight"]
+                    results.append((sym, r, sp["name"]))
+                except Exception:
+                    continue
+
+        # 去重: 同一股票 + 同一策略只保留最高分
+        seen: set[tuple[str, str]] = set()
+        deduped: list[tuple[str, dict, str]] = []
+        for sym, r, pname in sorted(results, key=lambda x: -x[1].get("score", 0)):
+            key = (sym, pname)
+            if key not in seen:
+                seen.add(key)
+                deduped.append((sym, r, pname))
+
+        # 按 score 降序
+        deduped.sort(key=lambda x: -x[1].get("score", 0))
+        return deduped
+
+    def get_sell_rules(self, profile_name: str):
+        """获取指定子策略的卖出规则对象。"""
+        for sp in self.sub_profiles:
+            if sp["name"] == profile_name:
+                return sp["sell_rules"]
+        return self.sub_profiles[0]["sell_rules"]
+
+    def get_budgets(self, max_positions: int) -> dict[str, int]:
+        """按 weight 分配总仓位预算到各子策略。
+
+        Returns:
+            dict[profile_name] -> position_slots
+        """
+        budgets: dict[str, int] = {}
+        remaining = max_positions
+        # 先按 weight 整数分配
+        for sp in sorted(self.sub_profiles, key=lambda x: -x["weight"]):
+            slots = max(1, int(max_positions * sp["weight"]))
+            slots = min(slots, remaining)
+            budgets[sp["name"]] = slots
+            remaining -= slots
+        # 补余
+        if remaining > 0:
+            for sp in self.sub_profiles:
+                budgets[sp["name"]] = budgets.get(sp["name"], 0) + 1
+                remaining -= 1
+                if remaining <= 0:
+                    break
+        return budgets
+
+    def get_alloc_pct(self, profile_name: str, score: float, regime_cap: float, max_pos_pct: float) -> float:
+        """计算单笔仓位比例。"""
+        if score >= 80:
+            return min(regime_cap + 0.05, max_pos_pct)
+        elif score >= 70:
+            return regime_cap
+        elif score >= 60:
+            return regime_cap * 0.8
+        return regime_cap * 0.6
+
+
+# 默认多策略组合: momentum_v5 主力 + single_yang 辅助 + lotus 辅助
+_DEFAULT_MULTI_CONFIG = [
+    {"name": "momentum_v5", "weight": 0.60},
+    {"name": "single_yang", "weight": 0.20},
+    {"name": "lotus", "weight": 0.20},
+]
+
+# 全局 allocator 实例 (懒加载)
+_multi_alloc_instance: MultiStrategyAllocator | None = None
+
+
+def get_multi_allocator(config: list[dict] | None = None) -> MultiStrategyAllocator:
+    """获取/创建多策略分配器。"""
+    global _multi_alloc_instance
+    if config is not None:
+        _multi_alloc_instance = MultiStrategyAllocator(config)
+    elif _multi_alloc_instance is None:
+        _multi_alloc_instance = MultiStrategyAllocator(_DEFAULT_MULTI_CONFIG)
+    return _multi_alloc_instance
+
+
+def _score_multi(bars: list[dict], params: dict | None = None) -> dict[str, Any]:
+    """多策略评分入口 — 委托给 allocator，此处返回空 (由 backtest 循环直接调用 allocator)。
+
+    注意: multi profile 不走标准 score_fn 流程，
+    而是由 backtest 循环直接调用 MultiStrategyAllocator.score_all()。
+    此函数仅为满足接口而存在。
+    """
+    return {"score": 0, "grade": "D", "name": "multi"}
+
+
+def _screen_multi(bars_dict: dict, date: str, params: dict | None = None, **kwargs) -> list[str]:
+    """多策略筛选入口 — 委托给 allocator 取并集。"""
+    alloc = get_multi_allocator()
+    return alloc.screen_all(bars_dict, date, **kwargs)
+
+
+register_profile(StrategyProfile(
+    name="multi",
+    description="多策略分仓组合: momentum_v5(60%) + single_yang(20%) + lotus(20%)",
+    source="core/strategy_profiles.py (multi-strategy allocator)",
+    score_fn=_score_multi,
+    screen_fn=_screen_multi,
+    regime_fn=get_regime,
+    sell_rules=dict(
+        trail_trigger=3.0, trail_high_rate=0.25, trail_low_rate=0.35,
+        trail_high_thresh=4.0, breakeven_peak=4.0, breakeven_thresh=0.3,
+        weak_hold=2, weak_thresh=0.0, max_hold=5,
+    ),
+    default_params=dict(),
+    weight=1.0,
+))

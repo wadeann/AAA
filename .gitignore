@@ -10,3 +10,5 @@ data/state/
 .DS_Store
 *.swp
 *.swo
+data/kline_cache.json
+*.zip
