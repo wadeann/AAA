@@ -14,3 +14,4 @@ data/kline_cache.json
 *.zip
 results/pattern_all_trades.csv
 results/pattern_overlap_summary.csv
+results/event_level_trades.csv
