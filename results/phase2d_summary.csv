@@ -1,0 +1,4 @@
+regime,frozen_candidates,revalidated,uncertain,failed,low_date_count,not_observed
+warmup,13,11,2,0,0,0
+hot,8,8,0,0,0,0
+OVERALL,21,19,2,0,0,0
