@@ -282,8 +282,8 @@ def run_single_backtest(config: dict, profile: str = "momentum_v5", silent: bool
     # 始终跳过缓存写入（首次已缓存）
     cfg = {**config, "skip_cache_save": True}
     # 导入（每次重新加载）
-    import backtest_2yr
-    importlib.reload(backtest_2yr)
+    import backtest
+    importlib.reload(backtest)
 
     # 保存当前打印函数，临时替换为静默
     orig_print = _builtins.print
@@ -294,7 +294,7 @@ def run_single_backtest(config: dict, profile: str = "momentum_v5", silent: bool
 
     try:
         t0 = time.time()
-        results = backtest_2yr.run_backtest(cfg, profile=profile)
+        results = backtest.run_backtest(cfg, profile=profile)
         elapsed = time.time() - t0
         if results:
             results["elapsed"] = round(elapsed, 1)

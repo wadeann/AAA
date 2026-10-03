@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Astock 全市场动量回测 — 2 年回测 (2024-10-01 ~ 2026-10-01)
-使用 core.strategy 共享策略模块，支持 --profile 多策略回测。
+Astock 全市场动量回测.
+支持 --profile 多策略回测，--start/--end 自定义日期范围。
 
 CRITICAL-003 复权说明:
   MCP _fetch_kline 接口默认返回后复权(hfq)数据，经验证无除权除息缺口。
@@ -41,8 +41,6 @@ from core.cost_model import buy_cost, sell_cost
 from core.strategy_profiles import get_profile, list_profiles
 
 # ── 回测参数 ──
-START_DATE = "2024-10-01"
-END_DATE = "2026-10-01"
 INITIAL_CAPITAL = 400000.0
 KLINE_COUNT = 500
 MIN_BARS = 120
@@ -103,8 +101,9 @@ def fetch_klines(symbol: str, count: int = KLINE_COUNT, retries: int = 3) -> lis
     return []
 
 
-def run_backtest(config_override: dict | None = None, profile: str = "momentum_v5") -> dict:
-    """运行 2 年全市场回测. 支持 --profile 选择策略档案。"""
+def run_backtest(config_override: dict | None = None, profile: str = "momentum_v5",
+                 start_date: str = "2024-10-01", end_date: str = "2026-10-01") -> dict:
+    """运行全市场回测. 支持 --profile 选择策略档案，--start/--end 指定日期范围。"""
     # ── 配置加载 ──
     if config_override:
         set_param_overrides(config_override)
@@ -143,7 +142,7 @@ def run_backtest(config_override: dict | None = None, profile: str = "momentum_v
     total_symbols = len(symbols)
     print(f"{'=' * 100}")
     print(f"  全市场回测  |  策略: {profile}")
-    print(f"  股票池: {total_symbols} 只 | 时间: {START_DATE} ~ {END_DATE}")
+    print(f"  股票池: {total_symbols} 只 | 时间: {start_date} ~ {end_date}")
     print(f"  初始资金: {INITIAL_CAPITAL:,.0f}")
     print(f"  行业覆盖: {len(get_industry_distribution())}")
     print(f"{'=' * 100}")
@@ -209,7 +208,7 @@ def run_backtest(config_override: dict | None = None, profile: str = "momentum_v
         {
             str(b.get("time"))
             for b in index_bars
-            if START_DATE <= str(b.get("time", "")) <= END_DATE
+            if start_date <= str(b.get("time", "")) <= end_date
         }
     )
     if len(dates) < 10:
@@ -495,8 +494,8 @@ def run_backtest(config_override: dict | None = None, profile: str = "momentum_v
     ret = net / INITIAL_CAPITAL * 100
 
     # 月数
-    start_d = dt.date.fromisoformat(START_DATE)
-    end_d = dt.date.fromisoformat(END_DATE)
+    start_d = dt.date.fromisoformat(start_date)
+    end_d = dt.date.fromisoformat(end_date)
     total_months = max(1, (end_d.year - start_d.year) * 12 + end_d.month - start_d.month)
     annual_ret = ((1 + ret / 100) ** (12 / total_months) - 1) * 100
 
@@ -507,7 +506,7 @@ def run_backtest(config_override: dict | None = None, profile: str = "momentum_v
     for e in eq:
         ym = e["date"][:7]
         if ym != curr_month:
-            if curr_month and curr_month >= START_DATE[:7]:
+            if curr_month and curr_month >= start_date[:7]:
                 monthly_returns[curr_month] = (prev_te - prev_month_start) / prev_month_start * 100
             curr_month = ym
             prev_month_start = prev_te
@@ -588,7 +587,7 @@ def run_backtest(config_override: dict | None = None, profile: str = "momentum_v
 
     # 参数
     results_text.append(f"  回测参数:")
-    results_text.append(f"    时间范围: {START_DATE} ~ {END_DATE}  ({len(dates)} 个交易日)")
+    results_text.append(f"    时间范围: {start_date} ~ {end_date}  ({len(dates)} 个交易日)")
     results_text.append(f"    初始资金: {INITIAL_CAPITAL:,.0f}")
     results_text.append(f"    股票池:   {total_symbols} 只 (有效: {len(all_bars)})")
     results_text.append(f"    行业覆盖: {len(get_industry_distribution())}")
@@ -729,7 +728,7 @@ def run_backtest(config_override: dict | None = None, profile: str = "momentum_v
     print(output)
 
     # 保存到文件
-    result_file = Path(__file__).resolve().parent.parent / "results" / "backtest_2yr_results.txt"
+    result_file = Path(__file__).resolve().parent.parent / "results" / "backtest_results.txt"
     result_file.parent.mkdir(parents=True, exist_ok=True)
     with open(result_file, "w", encoding="utf-8") as f:
         f.write(output)
@@ -771,12 +770,14 @@ def main():
     parser = argparse.ArgumentParser(description="Astock 全市场回测")
     parser.add_argument("--profile", default="momentum_v5", choices=list_profiles(),
                         help="策略档案 (默认: momentum_v5)")
+    parser.add_argument("--start", default="2024-10-01",
+                        help="起始日期 (默认: 2024-10-01)")
+    parser.add_argument("--end", default="2026-10-01",
+                        help="结束日期 (默认: 2026-10-01)")
     parser.add_argument("--use-best", action="store_true",
                         help="使用 results/best_config_{profile}.json 最优参数")
     parser.add_argument("--list-profiles", action="store_true",
                         help="列出所有可用策略档案")
-    parser.add_argument("--show-accepted", action="store_true", default=True,
-                        help="显示接受的交易记录 (默认: 显示)")
     args = parser.parse_args()
 
     if args.list_profiles:
@@ -803,7 +804,8 @@ def main():
         else:
             print(f"  [WARN] 最优参数文件不存在: {best_file}，使用默认参数")
 
-    results = run_backtest(config_override=config_override, profile=args.profile)
+    results = run_backtest(config_override=config_override, profile=args.profile,
+                          start_date=args.start, end_date=args.end)
     if results:
         print(f"\n{'=' * 40} 概览 ({args.profile}) {'=' * 40}")
         print(f"  股票: {results['valid_symbols']}/{results['total_symbols']} | "

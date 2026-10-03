@@ -1,0 +1,99 @@
+{
+  "profile": "momentum_v5",
+  "date_range": "2025-06-01 ~ 2025-06-10",
+  "total_signals": 1143,
+  "executed_trades": 1122,
+  "no_entry": 21,
+  "wins": 543,
+  "losses": 579,
+  "win_rate": 48.4,
+  "average_return": 0.85,
+  "median_return": -0.17,
+  "average_win": 5.31,
+  "average_loss": -3.33,
+  "max_win": 41.78,
+  "max_loss": -34.87,
+  "average_holding_days": 1.6,
+  "median_holding_days": 1,
+  "by_exit_reason": {
+    "弱2d": {
+      "count": 247,
+      "wins": 0,
+      "total_return": -317.09000000000003,
+      "avg_return": -1.28,
+      "win_rate": 0.0
+    },
+    "回落35%": {
+      "count": 130,
+      "wins": 130,
+      "total_return": 293.8799999999998,
+      "avg_return": 2.26,
+      "win_rate": 100.0
+    },
+    "回落25%": {
+      "count": 330,
+      "wins": 330,
+      "total_return": 1612.3900000000003,
+      "avg_return": 4.89,
+      "win_rate": 100.0
+    },
+    "目标+8%": {
+      "count": 72,
+      "wins": 72,
+      "total_return": 965.0400000000004,
+      "avg_return": 13.4,
+      "win_rate": 100.0
+    },
+    "止损-3%": {
+      "count": 291,
+      "wins": 0,
+      "total_return": -1563.9600000000005,
+      "avg_return": -5.37,
+      "win_rate": 0.0
+    },
+    "时间5d": {
+      "count": 11,
+      "wins": 11,
+      "total_return": 12.500000000000002,
+      "avg_return": 1.14,
+      "win_rate": 100.0
+    },
+    "弱3d": {
+      "count": 28,
+      "wins": 0,
+      "total_return": -32.809999999999995,
+      "avg_return": -1.17,
+      "win_rate": 0.0
+    },
+    "弱4d": {
+      "count": 10,
+      "wins": 0,
+      "total_return": -11.590000000000002,
+      "avg_return": -1.16,
+      "win_rate": 0.0
+    },
+    "弱5d": {
+      "count": 3,
+      "wins": 0,
+      "total_return": -2.0999999999999996,
+      "avg_return": -0.7,
+      "win_rate": 0.0
+    }
+  },
+  "by_regime": {
+    "warmup": {
+      "count": 558,
+      "wins": 279,
+      "total_return": 474.3100000000005,
+      "avg_return": 0.85,
+      "win_rate": 50.0
+    },
+    "hot": {
+      "count": 564,
+      "wins": 264,
+      "total_return": 481.94999999999976,
+      "avg_return": 0.85,
+      "win_rate": 46.8
+    }
+  }
+}
