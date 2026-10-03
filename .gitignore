@@ -12,3 +12,5 @@ data/state/
 *.swo
 data/kline_cache.json
 *.zip
+results/pattern_all_trades.csv
+results/pattern_overlap_summary.csv
