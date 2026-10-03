@@ -359,7 +359,69 @@ def run_backtest(
     final_effective_max_pos = max_positions
     final_score_threshold = min_score_threshold
 
+    # ── Pending sells queue (EXEC-001: D sell signal → D+1 execution) ──
+    pending_sells: list[dict[str, Any]] = []
+
     for day_idx, curr_date in enumerate(trade_dates):
+        # ── 0. 执行昨日 pending sells (D+1 execution at today's open) ──
+        executed_sells: list[dict[str, Any]] = []
+        for ps in pending_sells:
+            sym = ps["sym"]
+            pos = positions.get(sym)
+            if pos is None:
+                continue  # position already gone (shouldn't happen)
+            # Get today's bar for execution
+            today_bars = [b for b in all_bars.get(sym, []) if str(b.get("time", "")) == curr_date]
+            if not today_bars:
+                continue  # no data, try next day
+            bar = today_bars[0]
+            open_price = _safe_float(bar.get("open"))
+            if _safe_float(bar.get("volume")) <= 0:
+                continue  # suspended, keep pending
+            # Limit-down check: if open is at limit-down, cannot sell
+            prev_close = ps.get("prev_close")
+            if prev_close and prev_close > 0:
+                limit_down = round(prev_close * 0.90, 2)
+                if open_price <= limit_down:
+                    continue  # blocked by limit-down, keep position
+            # Execute sell at open
+            revenue = pos["qty"] * open_price
+            fee = sell_cost(revenue, sym)
+            cash += (revenue - fee)
+            total_commissions += fee
+            pnl = (revenue - fee) - (pos["qty"] * pos["entry_price"])
+            pnl_pct = pnl / (pos["qty"] * pos["entry_price"]) * 100
+            hold = (dt.date.fromisoformat(curr_date) - dt.date.fromisoformat(pos["entry_date"])).days
+            trade_log.append({
+                "date": curr_date, "direction": "SELL",
+                "symbol": sym, "price": open_price, "qty": pos["qty"],
+                "amount": revenue, "pnl": pnl, "pnl_pct": pnl_pct,
+                "hold_days": hold, "reason": ps.get("reason", ""),
+                "signal_date": ps.get("signal_date", ""),
+                "execution_date": curr_date,
+                "signal_price": ps.get("signal_price", 0.0),
+                "execution_status": "EXECUTED",
+            })
+            cooldowns[sym] = (dt.date.fromisoformat(curr_date) + dt.timedelta(days=cooldown_days)).isoformat()
+            # Track stats
+            bp = pos.get("buy_point", "?")
+            if bp in stats_by_signal:
+                if pnl > 0:
+                    stats_by_signal[bp]["wins"] += 1
+                else:
+                    stats_by_signal[bp]["losses"] += 1
+                stats_by_signal[bp]["total_pnl"] += pnl
+                stats_by_signal[bp]["total_hold"] += hold
+            grade = pos.get("signal_grade", "C")
+            if grade in stats_by_grade:
+                if pnl > 0:
+                    stats_by_grade[grade]["wins"] += 1
+                else:
+                    stats_by_grade[grade]["losses"] += 1
+                stats_by_grade[grade]["total_pnl"] += pnl
+            executed_sells.append(ps)
+            del positions[sym]
+        pending_sells = [ps for ps in pending_sells if ps not in executed_sells]
         # ── 清理过期冷却 ──
         for sym in list(cooldowns.keys()):
             if curr_date >= cooldowns[sym]:
@@ -519,6 +581,16 @@ def run_backtest(
                 if entry_price <= 0:
                     continue
 
+                # Limit-up check: cannot buy at limit-up (EXEC-005)
+                entry_prev_close = None
+                entry_lookback = [b for b in bars if str(b.get("time", "")) < entry_date]
+                if entry_lookback:
+                    entry_prev_close = _safe_float(entry_lookback[-1].get("close"))
+                if entry_prev_close and entry_prev_close > 0:
+                    limit_up_price = round(entry_prev_close * 1.10, 2)
+                    if entry_price >= limit_up_price:
+                        continue  # Blocked by limit-up
+
                 # Suspension check: skip if entry bar has zero volume
                 if _safe_float(entry_bar.get("volume")) <= 0:
                     continue
@@ -586,7 +658,12 @@ def run_backtest(
                     stats_by_grade[grade] = {"buys": 0, "wins": 0, "losses": 0, "total_pnl": 0.0}
                 stats_by_grade[grade]["buys"] += 1
 
-        # ── 4. 卖出检查 ──
+        # ── 4. 卖出信号检测 (EXEC-001/002/003: PIT safety + conservative intraday) ──
+        # Sell signals are detected based on today's OHLC data BUT:
+        #   - Trailing stop / breakeven use YESTERDAY's max_price (conservative: same-day
+        #     high cannot both raise the trailing stop AND trigger it)
+        #   - Sell execution is deferred to D+1 open (via pending_sells queue)
+        #   - Today's high updates max_price AFTER signal detection (for tomorrow)
         for sym in list(positions.keys()):
             pos = positions[sym]
             today_bars = [b for b in all_bars.get(sym, []) if str(b.get("time", "")) == curr_date]
@@ -596,15 +673,16 @@ def run_backtest(
             high = _safe_float(bar.get("high"))
             low = _safe_float(bar.get("low"))
             close = _safe_float(bar.get("close"))
-
-            if high > pos["max_price"]:
-                pos["max_price"] = high
+            open_price = _safe_float(bar.get("open"))
 
             # T+1: cannot sell same day
             if pos["entry_date"] == curr_date:
+                # Still update max_price for tomorrow's trailing state
+                if high > pos["max_price"]:
+                    pos["max_price"] = high
                 continue
 
-            # Suspension check: skip if volume is zero (no trading)
+            # Suspension check: skip sell signal detection (position remains)
             if _safe_float(bar.get("volume")) <= 0:
                 continue
 
@@ -615,12 +693,17 @@ def run_backtest(
                 prev_bars = [b for b in lookback_all if str(b.get("time", "")) < curr_date]
                 if prev_bars:
                     prev_close = _safe_float(prev_bars[-1].get("close"))
-            max_p = pos["max_price"]
-            max_profit_pct = (max_p - entry_p) / entry_p * 100
+
+            # ── EXEC-002/003: Conservative intraday path ──
+            # Use YESTERDAY's max_price for trailing stop / breakeven calculations.
+            # Today's high may be higher, but we cannot prove high came BEFORE low.
+            # Today's high only affects TOMORROW's trailing state.
+            prev_max_price = pos["max_price"]
+            prev_max_profit_pct = (prev_max_price - entry_p) / entry_p * 100
             curr_profit_pct = (close - entry_p) / entry_p * 100
 
-            sell_triggered = False
-            sell_price = close
+            sell_signal = False
+            signal_price = close
             sell_reason = ""
 
             # Dynamic stop-loss based on signal grade
@@ -633,53 +716,46 @@ def run_backtest(
                 stop_loss_pct = -6.0
                 trail_lock_pct = 8.0
             elif buy_point == "一买":
-                # 一买 (divergence) gets more room
                 stop_loss_pct = -7.0
                 trail_lock_pct = 8.0
             else:
                 stop_loss_pct = -5.5
                 trail_lock_pct = 5.0
 
-            # 移动止盈保护: 一旦涨过2.5%, 止损上移至保本
+            # 移动止盈保护: 基于昨日 max_price 激活 (EXEC-003 conservative)
             be_threshold = 2.5
-            if max_profit_pct >= be_threshold and not pos.get('_breakeven_set'):
+            if prev_max_profit_pct >= be_threshold and not pos.get('_breakeven_set'):
                 pos['_breakeven_set'] = True
 
-            # 阶梯止盈 (trailing)
-            if max_profit_pct >= 20.0:
+            # 阶梯止盈 — 基于昨日 max_price (EXEC-002 conservative)
+            if prev_max_profit_pct >= 20.0:
                 lock = round(entry_p * 1.14, 2)
                 if low <= lock:
-                    sell_triggered, sell_price = True, lock
-                    sell_reason = f"+14%锁利 (曾涨{max_profit_pct:.1f}%)"
-            elif max_profit_pct >= trail_lock_pct:
-                # Trail at 20% retracement from peak (tighter = more profit locked)
-                trail_price = round(entry_p * (1 + max_profit_pct / 100 * 0.8), 2)
+                    sell_signal, signal_price = True, lock
+                    sell_reason = f"+14%锁利 (曾涨{prev_max_profit_pct:.1f}%)"
+            elif prev_max_profit_pct >= trail_lock_pct:
+                trail_price = round(entry_p * (1 + prev_max_profit_pct / 100 * 0.8), 2)
                 if low <= trail_price:
-                    sell_triggered, sell_price = True, trail_price
-                    sell_reason = f"回落锁利 (曾涨{max_profit_pct:.1f}%)"
+                    sell_signal, signal_price = True, trail_price
+                    sell_reason = f"回落锁利 (曾涨{prev_max_profit_pct:.1f}%)"
             elif pos.get('_breakeven_set'):
-                # Breakeven stop: close drops below entry (not just intraday touch)
+                # Breakeven: close drops below entry
                 if close < entry_p * 0.998:
-                    sell_triggered, sell_price = True, close
-                    sell_reason = f"保本出 (曾涨{max_profit_pct:.1f}%)"
+                    sell_signal, signal_price = True, close
+                    sell_reason = f"保本出 (曾涨{prev_max_profit_pct:.1f}%)"
 
             # 动态硬止损 — CONSERVATIVE execution policy
-            # Daily OHLC cannot determine intraday order of stop vs target.
-            # Conservative assumption: when both could trigger, stop executes first.
-            # Gap-through handling: if open gaps below stop, use open as fill price.
-            if not sell_triggered:
+            if not sell_signal:
                 stop = round(entry_p * (1 + stop_loss_pct / 100), 2)
-                open_price = _safe_float(bar.get("open"))
-                # Gap-through: open already below stop
                 if prev_close is not None and open_price <= stop < prev_close:
-                    sell_triggered, sell_price = True, open_price
+                    sell_signal, signal_price = True, open_price
                     sell_reason = f"止损{stop_loss_pct:.0f}%(跳空)"
                 elif low <= stop:
-                    sell_triggered, sell_price = True, stop
+                    sell_signal, signal_price = True, stop
                     sell_reason = f"止损{stop_loss_pct:.0f}%"
 
             # 缠论卖点 (持有时长 >= 3 天才允许)
-            if not sell_triggered:
+            if not sell_signal:
                 held = (dt.date.fromisoformat(curr_date) - dt.date.fromisoformat(pos["entry_date"])).days
                 if held >= 3:
                     lookback = [b for b in all_bars.get(sym, []) if str(b.get("time", "")) <= curr_date]
@@ -687,52 +763,30 @@ def run_backtest(
                         a2 = analyze_chanlun(lookback)
                         sp = a2.get("sell_point")
                         if sp:
-                            sell_triggered, sell_price = True, close
+                            sell_signal, signal_price = True, close
                             sell_reason = f"{sp} {a2.get('trend_type','')}"
                         elif a2.get("trend_type") == "downtrend" and curr_profit_pct < -2:
-                            sell_triggered, sell_price = True, close
+                            sell_signal, signal_price = True, close
                             sell_reason = "转下行出局"
 
             # 情绪冰点且浮亏清仓
-            if not sell_triggered and sent_phase == "ice" and curr_profit_pct < -2:
-                sell_triggered, sell_price = True, close
+            if not sell_signal and sent_phase == "ice" and curr_profit_pct < -2:
+                sell_signal, signal_price = True, close
                 sell_reason = f"冰点{curr_profit_pct:.1f}%清仓"
 
-            if sell_triggered:
-                revenue = pos["qty"] * sell_price
-                fee = sell_cost(revenue, sym)
-                cash += (revenue - fee)
-                total_commissions += fee
-                pnl = (revenue - fee) - (pos["qty"] * entry_p)
-                pnl_pct = pnl / (pos["qty"] * entry_p) * 100
-                hold = (dt.date.fromisoformat(curr_date) - dt.date.fromisoformat(pos["entry_date"])).days
-                trade_log.append({
-                    "date": curr_date, "direction": "SELL",
-                    "symbol": sym, "price": sell_price, "qty": pos["qty"],
-                    "amount": revenue, "pnl": pnl, "pnl_pct": pnl_pct,
-                    "hold_days": hold, "reason": sell_reason,
+            # ── EXEC-001: Sell signal → pending queue (D+1 execution) ──
+            if sell_signal:
+                pending_sells.append({
+                    "sym": sym,
+                    "signal_date": curr_date,
+                    "signal_price": signal_price,
+                    "reason": sell_reason,
+                    "prev_close": close,  # today's close = prev_close for D+1 limit-down check
                 })
-                cooldowns[sym] = (dt.date.fromisoformat(curr_date) + dt.timedelta(days=cooldown_days)).isoformat()
 
-                # Track stats by signal
-                bp = pos.get("buy_point", "?")
-                if bp in stats_by_signal:
-                    if pnl > 0:
-                        stats_by_signal[bp]["wins"] += 1
-                    else:
-                        stats_by_signal[bp]["losses"] += 1
-                    stats_by_signal[bp]["total_pnl"] += pnl
-                    stats_by_signal[bp]["total_hold"] += hold
-
-                grade = pos.get("signal_grade", "?")
-                if grade in stats_by_grade:
-                    if pnl > 0:
-                        stats_by_grade[grade]["wins"] += 1
-                    else:
-                        stats_by_grade[grade]["losses"] += 1
-                    stats_by_grade[grade]["total_pnl"] += pnl
-
-                del positions[sym]
+            # ── Update max_price from today's high (for TOMORROW's state only) ──
+            if high > pos["max_price"]:
+                pos["max_price"] = high
 
         # 日终结算
         pos_val = 0.0
