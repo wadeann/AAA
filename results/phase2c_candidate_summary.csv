@@ -1,0 +1,6 @@
+regime,qualified_count,provisional_count,insufficient_count,low_date_count,total_patterns
+warmup,13,5,1,0,19
+hot,8,11,0,0,19
+cooldown,0,14,3,2,19
+ice,0,0,0,19,19
+OVERALL,21,30,4,21,76
