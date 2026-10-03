@@ -10,6 +10,23 @@ import pytest
 from risk.risk_manager import RiskManager
 
 
+# ── Weekend bypass for tests that don't test weekend logic ──
+# Today might be Saturday/Sunday, which causes _check_weekend to fire first
+# in tests that expect specific layers like "sentiment" or "outflow".
+
+_WEEKDAY = dt.datetime(2026, 10, 1, 10, 0, 0)  # Thursday (weekday=3)
+
+
+@pytest.fixture(autouse=True)
+def _bypass_weekend_for_non_weekend_tests(request):
+    """Patch _now_cst to a weekday for all tests except test_weekend_rejection."""
+    if request.node.name == "test_weekend_rejection":
+        yield  # let it use real time
+    else:
+        with patch.object(RiskManager, "_now_cst", return_value=_WEEKDAY):
+            yield
+
+
 # ── Helpers ──
 
 

@@ -1,0 +1,31 @@
+{
+  "profile": "gap_proof_v2",
+  "params": {
+    "target_pct": 5.0,
+    "stop_pct": -2.5,
+    "hold_days": 3
+  },
+  "sell_rules": {
+    "trail_trigger": 2.5,
+    "trail_high_rate": 0.3,
+    "trail_low_rate": 0.4,
+    "trail_high_thresh": 5.0,
+    "breakeven_peak": 4.0,
+    "breakeven_thresh": 0.5,
+    "weak_hold": 3,
+    "weak_thresh": -0.5,
+    "max_hold": 5
+  },
+  "results": {
+    "ret": 35.0,
+    "annual_ret": 16.19,
+    "surv_annual": 13.19,
+    "sharpe": 0.89,
+    "wr": 49.8,
+    "pf": 1.26,
+    "mdd": 12.76,
+    "trades": 508,
+    "positive_months": 17,
+    "total_months": 24
+  }
+}
